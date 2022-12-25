@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Stencil Component Starter</title>
+
+    <script type="module" src="/build/lawnmower.esm.js"></script>
+    <script nomodule src="/build/lawnmower.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+      html, body, object-editor {
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+        margin: 0px;
+      }
+
+      select {
+        font-family: 'Roboto', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <vr-body id="main" starting-distance="800">
+      <vr-modal id="image-modal" border-radius="10">
+        <vr-image border-radius="20" 
+                  modal="true" 
+                  src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
+      </vr-modal>
+      <vr-div margin="10">
+        <vr-div width="700" height="70" color="#602202" margin="30" layout="Column" item-vertical-align="Top">
+          <vr-div width="500" color="#ffffff" margin="10">
+            <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+              Jumping
+
+              here the and everywhere
+            </vr-text>
+            <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+              Hello Sarah
+
+              How are you?
+            </vr-text>  
+          </vr-div>
+          <vr-text width="600" font-color="#00ff00" background-color="#ff0022" padding="10" text-decoration="italic">
+            This is but a test ererg reg re erger   e ergergerge er g er ger gergerg erg  gregre
+  
+            gerreger
+  
+            ergergergergre
+          </vr-text>
+          <vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>
+          <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+            Halloween
+
+            Spooky
+          </vr-text>  
+        </vr-div>
+        <vr-div color="#602202" height="100" margin="20" layout="Column" >
+          <vr-div margin="20">
+            <vr-text border-radius="10" height="400" font-color="#222222" background-color="#ffffff" padding="15">
+              This is but a test
+
+              This is just a trial run
+            </vr-text>
+            <vr-text background-color="#ff00ff" padding="15" border-radius="10">
+              You can just push reset
+
+              trade me in for a better one
+            </vr-text>
+            <vr-asset 
+              id="fox-asset"
+              active-animation="Walk"
+              radius="500" 
+              y-rotation="90"
+              src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"></vr-asset>
+          </vr-div>
+          <vr-div width="100" height="90" color="#ff00ff"></vr-div>
+          <vr-div width="500" color="#00d000" margin="10"> 
+            <vr-image border-radius="20" 
+                      modal="true" 
+                      src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/catherine-zeta-jones-jenna-ortgea-luis-guzman-isaac-ordonez-wednesday-1660718014.jpg?crop=1.00xw:0.446xh;0,0.0999xh&resize=768:*"></vr-image>
+            <vr-text border-radius="10" font-color="#ffffff" background-color="#222222" padding="10" text-decoration="italic">
+              jump 
+
+              this is it
+            </vr-text>
+          </vr-div>
+          <vr-div color="#000fff" margin="5">
+            <vr-text ffont-color="#222222" background-color="#ffffff" padding="10">
+              not now
+
+              this is a jump
+            </vr-text>
+            <vr-text font-color="#222222" background-color="#ffffff" padding="20" text-decoration="italic">
+              too hot too handle
+
+              this is my jam
+            </vr-text>
+          </vr-div>
+        </vr-div>
+      </vr-div>
+    </vr-body>
+    <script>
+      (async () => {
+        await customElements.whenDefined('vr-body');
+        const main = document.getElementById('main');
+        await main.showModal("image-modal");
+      })();
+
+      const foxElement = document.getElementById("fox-asset");
+
+      foxElement.addEventListener("onClick", async () => {
+        const animationNames = await foxElement.getAnimationNames();
+
+        if (animationNames.length > 0) {
+          const activeAnimation = await foxElement.getActiveAnimationName();
+
+          if (activeAnimation) {
+            for (let i=0; animationNames.length; i++) {
+              if (animationNames[i] == activeAnimation) {
+                if (i < (animationNames.length-1)) {
+                  await foxElement.setActiveAnimation(animationNames[(i+1)]);
+                }
+                else {
+                  await foxElement.setActiveAnimation(animationNames[0]);
+                }
+                break;
+              }
+            }
+          }
+          else {
+            await foxElement.setActiveAnimation(animationNames[0]);
+          }
+        }
+      }, false);
+    </script>
+  </body>
+</html>
