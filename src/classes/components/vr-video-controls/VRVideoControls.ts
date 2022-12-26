@@ -13,8 +13,10 @@ import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
+import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { SceneElement } from "../SceneElement";
+import { VRLayout } from '../vr-layout/VRLayout';
 import { VRVideoControlsConfig } from './VRVideoControlsConfig';
 
 export class VRVideoControls implements SceneElement {
@@ -119,8 +121,41 @@ export class VRVideoControls implements SceneElement {
         return new Vector3(this._x, this._y, this._z);
     }
     
+    public isPartOfLayout(): boolean {
+        if (this._parent) {
+            if (this._parent instanceof VRLayout) return true;
+            if (this._parent instanceof MainScene) return false;
+            else return this._parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this._parent) {
+            if ((this._parent instanceof VRLayout) && 
+                ((this._parent as VRLayout).getId() == layoutId)) {
+                    return true;
+            }
+            else if (this._parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this._parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    
     public getChildSceneElements(): SceneElement[] {
         return [];
+    }
+
+    public getIsChildElement(uuid: string): boolean {
+        return uuid === this._uuid;
     }
 
     ////////// Setters
@@ -144,6 +179,12 @@ export class VRVideoControls implements SceneElement {
     public setVisible(): void {
         this._content.visible = true;
     }
+
+    public enableLayout(layoutId: string): void {
+    }
+
+    public disableLayouts(): void {
+    }
     
     ////////// Public Methods
 
@@ -156,21 +197,21 @@ export class VRVideoControls implements SceneElement {
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
-            if (meshId === this._playMesh.uuid) {
+            if (this._playMesh && (meshId === this._playMesh.uuid)) {
                 this._playMesh.visible = false;
                 this._pauseMesh.visible = true;
 
                 if (this.onPlay) this.onPlay();
             }
             
-            if (meshId === this._pauseMesh.uuid) {
+            if (this._pauseMesh && (meshId === this._pauseMesh.uuid)) {
                 this._pauseMesh.visible = false;
                 this._playMesh.visible = true;
 
                 if (this.onPause) this.onPause();
             }
             
-            if (meshId === this._closeMesh.uuid) {
+            if (this._closeMesh && (meshId === this._closeMesh.uuid)) {
                 if (this.onClose) this.onClose();
             }
 

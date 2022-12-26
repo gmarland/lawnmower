@@ -2,7 +2,6 @@ import {
     MeshBasicMaterial,
     PlaneGeometry,
     Mesh,
-    Object3D,
     Vector3,
     Box3,
     CanvasTexture,
@@ -16,9 +15,11 @@ import {
 
 import { Dimensions } from '../../geometry/Dimensions';
 import { MeshUtils } from '../../geometry/MeshUtils';
+import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 
 import { SceneElement } from "../SceneElement";
+import { VRLayout } from '../vr-layout/VRLayout';
 import { VRVideoConfig } from './VRVideoConfig';
 
 export class VRVideo implements SceneElement {
@@ -66,8 +67,6 @@ export class VRVideo implements SceneElement {
 
         this._placeholderTimestamp = config.placeholderTimestamp;
         
-        this._content = new Object3D();
-        
         this._content.translateZ(this._depth*0.5);
     }
 
@@ -112,9 +111,46 @@ export class VRVideo implements SceneElement {
     public getPosition(): Vector3 {
         return this._content.position;
     }
+
+    public getVisible(): boolean {
+        return this._content.visible;
+    }
     
     public getChildSceneElements(): SceneElement[] {
         return [];
+    }
+
+    public getIsChildElement(uuid: string): boolean {
+        return uuid === this._uuid;
+    }
+    
+    public isPartOfLayout(): boolean {
+        if (this._parent) {
+            if (this._parent instanceof VRLayout) return true;
+            if (this._parent instanceof MainScene) return false;
+            else return this._parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this._parent) {
+            if ((this._parent instanceof VRLayout) && 
+                ((this._parent as VRLayout).getId() == layoutId)) {
+                    return true;
+            }
+            else if (this._parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this._parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
     }
 
     ////////// Setters
@@ -139,6 +175,12 @@ export class VRVideo implements SceneElement {
         this._content.visible = true;
     }
 
+    public enableLayout(layoutId: string): void {
+    }
+
+    public disableLayouts(): void {
+    }
+
     ////////// Public Methods
 
     // --- Data Methods
@@ -150,7 +192,7 @@ export class VRVideo implements SceneElement {
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
-            if (this._mesh.uuid === meshId) {
+            if (this._mesh && (this._mesh.uuid === meshId)) {
                 if (this._playInline) {
                     if (!this._isVideoPlaying) {
                         if (!this._videoStarted) {

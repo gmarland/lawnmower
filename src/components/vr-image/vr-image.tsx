@@ -61,6 +61,8 @@ export class VrImage {
 
       this.onClick.emit();
     };
+    
+    let position = 1;
   }
 
   componentDidLoad() {
@@ -74,7 +76,9 @@ export class VrImage {
       <Host>
         {
           this.modal 
-          ? <vr-modal ref={(el) => this._modalDialog = el as HTMLVrModalElement } border-radius="10">
+          ? <vr-modal ref={(el) => this._modalDialog = el as HTMLVrModalElement } 
+                      parent={this._image} 
+                      border-radius="10">
               <vr-image src={ this.src }></vr-image>
             </vr-modal>
           : null 

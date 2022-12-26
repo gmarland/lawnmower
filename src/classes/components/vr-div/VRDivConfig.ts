@@ -22,6 +22,8 @@ export interface VRDivConfig {
 
     opacity?: number;
 
+    padding?: number;
+
     margin?: number;
 
     xRotation: number;

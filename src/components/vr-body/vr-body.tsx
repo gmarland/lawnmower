@@ -15,7 +15,6 @@ import {
 import ResizeObserver from "resize-observer-polyfill";
 
 import { MainScene } from '../../classes/scene/MainScene';
-import { SceneElement } from '../../classes/components/SceneElement';
 
 @Component({
   tag: 'vr-body',
@@ -34,6 +33,15 @@ export class VrBody {
   private _mainScene: MainScene;
 
   private _mousePoint: Vector2 = new Vector2();
+
+  @Method()
+  public async setLayout(layoutId: string): Promise<void> {
+    return new Promise((resolve) => {
+      this._mainScene.setLayout(layoutId);
+
+      resolve();
+    });
+  }
 
   @Method()
   public async showModal(id: string): Promise<void> {
@@ -126,6 +134,7 @@ export class VrBody {
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();
     });
+
     resizeObserver.observe(this._sceneContainer);
   }
 

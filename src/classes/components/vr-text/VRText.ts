@@ -11,9 +11,11 @@ import { Dimensions } from '../../geometry/Dimensions';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
+import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 
 import { SceneElement } from "../SceneElement";
+import { VRLayout } from '../vr-layout/VRLayout';
 import { VRTextConfig } from './VRTextConfig';
 
 export class VRText implements SceneElement {
@@ -123,6 +125,43 @@ export class VRText implements SceneElement {
         return [];
     }
 
+    public getIsChildElement(uuid: string): boolean {
+        return uuid === this._uuid;
+    }
+
+    public getVisible(): boolean {
+        return this._content.visible;
+    }
+    
+    public isPartOfLayout(): boolean {
+        if (this._parent) {
+            if (this._parent instanceof VRLayout) return true;
+            if (this._parent instanceof MainScene) return false;
+            else return this._parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this._parent) {
+            if ((this._parent instanceof VRLayout) && 
+                ((this._parent as VRLayout).getId() == layoutId)) {
+                    return true;
+            }
+            else if (this._parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this._parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
     ////////// Setters
 
     public setWidth(width: number): void {
@@ -145,6 +184,12 @@ export class VRText implements SceneElement {
         this._content.visible = true;
     }
 
+    public enableLayout(layoutId: string): void {
+    }
+
+    public disableLayouts(): void {
+    }
+
     ////////// Public Methods
 
     // --- Data Methods
@@ -156,7 +201,7 @@ export class VRText implements SceneElement {
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
-            if ((this._mesh.uuid === meshId) && (this.onClick)) {
+            if (this._mesh && (this._mesh.uuid === meshId) && (this.onClick)) {
                 this.onClick();
             }
             resolve();

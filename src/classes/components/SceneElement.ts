@@ -11,6 +11,8 @@ export interface SceneElement {
 
     getPlacementLocation(): SceneElementPlacement;
 
+    getContent(): Promise<Group>;
+
     getPosition(): Vector3;
 
     getDimensions(): Dimensions;
@@ -19,9 +21,9 @@ export interface SceneElement {
 
     getChildSceneElements(): Array<SceneElement>;
 
-    addChildElement(position: number, childElement: SceneElement): void;
-
-    getContent(): Promise<Group>;
+    getIsChildElement(uuid: string): boolean;
+    
+    getVisible(): boolean;
 
     setWidth(width: number): void;
 
@@ -30,6 +32,16 @@ export interface SceneElement {
     setHidden(): void;
     
     setVisible(): void;
+
+    addChildElement(position: number, childElement: SceneElement): void;
+
+    isPartOfLayout(): boolean;
+
+    isLayoutChild(layoutId): boolean;
+
+    enableLayout(layoutId: string): void;
+
+    disableLayouts(): void;
 
     clicked(meshId: string): Promise<void>;
 

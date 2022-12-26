@@ -14,6 +14,7 @@ import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
 import { VRModal } from '../components/vr-modal/VRModal';
+import { VRLayout } from '../components/vr-layout/VRLayout';
 
 export class MainScene {
     public static BasePlaneWidth: number = 1000;
@@ -37,8 +38,9 @@ export class MainScene {
     private _camera: Camera;
     private _renderer: Renderer;
 
+    private _selectedLayout?: string = null;
+
     private _childElements: SceneElement[] = new Array<SceneElement>();
-    
     private _modalElements: VRModal[] = new Array<VRModal>();
 
     private _isInitialized: boolean = false;
@@ -92,8 +94,10 @@ export class MainScene {
 
             if (this._modalElements[i].getID() == id) selectModalElement = this._modalElements[i];
         }
-
-        if (selectModalElement) selectModalElement.setVisible();
+        
+        if (selectModalElement &&
+            (!selectModalElement.isPartOfLayout() ||
+            selectModalElement.isLayoutChild(this.getCurrentLayout()))) selectModalElement.setVisible();
     }
 
     public showModalDialogByUUID(uuid: string) {
@@ -105,7 +109,9 @@ export class MainScene {
             if (this._modalElements[i].getUUID() == uuid) selectModalElement = this._modalElements[i];
         }
 
-        if (selectModalElement) selectModalElement.setVisible();
+        if (selectModalElement &&
+            (!selectModalElement.isPartOfLayout() ||
+            selectModalElement.isLayoutChild(this.getCurrentLayout()))) selectModalElement.setVisible();
     }
 
     public hideModalDialog() {
@@ -142,7 +148,18 @@ export class MainScene {
 
     public async attachToScene(childElement: SceneElement): Promise<void> {
         return new Promise(async (resolve) => {
+            let currentLayout = this.getCurrentLayout();
+
+            if (!(childElement instanceof VRLayout)) {
+                if (childElement.isPartOfLayout()) {
+                    if (childElement.getVisible() && childElement.isLayoutChild(currentLayout)) childElement.setVisible();
+                    else childElement.setHidden();
+                }
+            }
+            
             if (childElement.getPlacementLocation() == SceneElementPlacement.Main) {
+                childElement.enableLayout(currentLayout);
+    
                 this._mainObjectContainer.add(await childElement.getContent());
 
                 const mainBox = new Box3().setFromObject(this._mainObjectContainer);
@@ -188,6 +205,23 @@ export class MainScene {
     public resize(): void {
         this._camera.resize();
         this._renderer.resize();
+    }
+    
+    private getCurrentLayout() {
+        let currentLayout = this._selectedLayout;
+        if(!currentLayout) currentLayout = "index";
+
+        return currentLayout;
+    }
+    
+    public setLayout(layoutId: string) {
+        this._selectedLayout = layoutId;
+
+        let currentLayout = this.getCurrentLayout();
+
+        for (let i=0; i<this._childElements.length; i++) {
+            this._childElements[i].enableLayout(currentLayout);
+        }
     }
 
     private startRender(): void {

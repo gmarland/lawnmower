@@ -79,7 +79,8 @@ export class VrVideo {
         {
           this.play360 
           ? <vr-360video ref={(el) => this._video360Element = el as HTMLVr360videoElement}
-                          src={ this.src }></vr-360video>
+                          src={ this.src }
+                          parent={ this._video }></vr-360video>
           : null
         }
       </Host>

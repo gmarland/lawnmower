@@ -15,6 +15,8 @@ import { VRAssetConfig } from './VRAssetConfig';
 import { AssetLoader } from './AssetLoader';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
+import { VRLayout } from '../vr-layout/VRLayout';
+import { MainScene } from '../../scene/MainScene';
 
 export class VRAsset implements SceneElement {
     private _depth: number;
@@ -148,8 +150,45 @@ export class VRAsset implements SceneElement {
         return this._content.position;
     }
 
+    public getVisible(): boolean {
+        return this._content.visible;
+    }
+
     public getChildSceneElements(): SceneElement[] {
         return [];
+    }
+
+    public getIsChildElement(uuid: string): boolean {
+        return uuid === this._uuid;
+    }
+    
+    public isPartOfLayout(): boolean {
+        if (this._parent) {
+            if (this._parent instanceof VRLayout) return true;
+            if (this._parent instanceof MainScene) return false;
+            else return this._parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this._parent) {
+            if ((this._parent instanceof VRLayout) && 
+                ((this._parent as VRLayout).getId() == layoutId)) {
+                    return true;
+            }
+            else if (this._parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this._parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
     }
 
     ////////// Setters
@@ -196,6 +235,12 @@ export class VRAsset implements SceneElement {
         this._content.visible = true;
     }
 
+    public enableLayout(layoutId: string): void {
+    }
+
+    public disableLayouts(): void {
+    }
+
     ////////// Public Methods
 
     // --- Data Methods
@@ -219,7 +264,7 @@ export class VRAsset implements SceneElement {
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
-            if (MeshUtils.ObjectContainsUid(meshId, this._loadedAsset) && (this.onClick)) {
+            if (this._loadedAsset && MeshUtils.ObjectContainsUid(meshId, this._loadedAsset) && (this.onClick)) {
                 this.onClick();
             }
 

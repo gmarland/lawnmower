@@ -7,7 +7,8 @@ import {
   Event,
   EventEmitter,
   getAssetPath,
-  Method
+  Method,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -111,12 +112,9 @@ export class VrModal {
 
       position++;
     });
-  }
 
-  componentDidLoad() {
     this.addToRoot.emit(this._modal);
-  }
-  
+  } 
 
   render() {
     return (

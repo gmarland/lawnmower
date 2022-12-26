@@ -21,7 +21,7 @@ import { RowVRDiv } from '../../classes/components/vr-div/RowVRDiv';
   styleUrl: 'vr-div.scss',
   shadow: true,
 })
-export class VrPanel {
+export class VrDiv {
   // *** Required for positioning ***
 
   @Prop() public parent: SceneElement;
@@ -54,6 +54,8 @@ export class VrPanel {
 
   @Prop() public margin?: number;
 
+  @Prop() public padding?: number;
+
   @Prop() public xRotation: number = 0;
   
   @Prop() public yRotation: number = 0;
@@ -71,6 +73,7 @@ export class VrPanel {
       height: this.height, 
       width: this.width, 
       color: this.color,
+      padding: this.padding,
       margin: this.margin,
       borderRadius: this.borderRadius,
       opacity: this.opacity, 
@@ -79,12 +82,8 @@ export class VrPanel {
       zRotation: this.zRotation
     };
 
-    if (VRDivLayout[this.layout] == VRDivLayout.Column) {
-      this._div = new ColumnVRDiv(this.depth, this.parent, config);
-    }
-    else {
-      this._div = new RowVRDiv(this.depth, this.parent, config);
-    }
+    if (VRDivLayout[this.layout] == VRDivLayout.Column) this._div = new ColumnVRDiv(this.depth, this.parent, config);
+    else this._div = new RowVRDiv(this.depth, this.parent, config);
     
     let position = 1;
 

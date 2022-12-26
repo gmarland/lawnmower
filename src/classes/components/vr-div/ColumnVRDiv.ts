@@ -38,15 +38,17 @@ export class ColumnVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
                 
-                const childLayout = await childElement.getContent(); 
+                if (childElement.getVisible()) {
+                    const childLayout = await childElement.getContent(); 
 
-                const childLayoutBox = new Box3().setFromObject(childLayout);
+                    const childLayoutBox = new Box3().setFromObject(childLayout);
 
-                childLayout.position.x -= childLayoutBox.min.x;
+                    childLayout.position.x -= childLayoutBox.min.x;
 
-                childLayout.translateY((childLayoutBox.max.y-(childLayoutBox.max.y-childLayoutBox.min.y)/2)*-1);
+                    childLayout.translateY((childLayoutBox.max.y-(childLayoutBox.max.y-childLayoutBox.min.y)/2)*-1);
 
-                childLayoutContainer.add(childLayout);
+                    childLayoutContainer.add(childLayout);
+                }
             }
             
             this.layoutChildrenItems(childLayoutContainer);
@@ -86,28 +88,32 @@ export class ColumnVRDiv extends VRDiv {
         let currentSize = 0;
             
         for (let i=0; i<childLayoutContainer.children.length; i++) {
-            const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+            if (childLayoutContainer.children[i].visible) {
+                const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
 
-            childLayoutContainer.children[i].translateX(currentSize);
+                childLayoutContainer.children[i].translateX(currentSize);
 
-            currentSize += (childLayoutBox.max.x - childLayoutBox.min.x) + this.getMargin();
+                currentSize += (childLayoutBox.max.x - childLayoutBox.min.x) + this.getMargin();
+            }
         }
 
         const childLayoutContainerBox = new Box3().setFromObject(childLayoutContainer);
         
         for (let i=0; i< childLayoutContainer.children.length; i++) {
-            const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+            if (childLayoutContainer.children[i].visible) {
+                const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
 
-            let yDiff = 0;
+                let yDiff = 0;
 
-            if (this.getItemVerticalAlign() == ItemVerticalAlign.Top) {
-                yDiff = childLayoutContainerBox.max.y - childLayoutBox.max.y;
+                if (this.getItemVerticalAlign() == ItemVerticalAlign.Top) {
+                    yDiff = childLayoutContainerBox.max.y - childLayoutBox.max.y;
+                }
+                else if (this.getItemVerticalAlign() == ItemVerticalAlign.Bottom) {
+                    yDiff = childLayoutContainerBox.min.y - childLayoutBox.min.y;
+                }
+
+                childLayoutContainer.children[i].position.y += yDiff;
             }
-            else if (this.getItemVerticalAlign() == ItemVerticalAlign.Bottom) {
-                yDiff = childLayoutContainerBox.min.y - childLayoutBox.min.y;
-            }
-
-            childLayoutContainer.children[i].position.y += yDiff;
         }
     }
 
@@ -129,12 +135,14 @@ export class ColumnVRDiv extends VRDiv {
 
                 for (let i=0; i< keys.length; i++) {
                     const childElement = this.getChildElements().get(keys[i]);
-                    
-                    const dimensions = childElement.getDimensions(); 
 
-                    if (!dimensions.width) {
-                        totalSpace += childElement.getCalculatedDimensions().width;
-                        dynamicWidths.push(childElement);
+                    if (childElement.getVisible()) {
+                        const dimensions = childElement.getDimensions(); 
+
+                        if (!dimensions.width) {
+                            totalSpace += childElement.getCalculatedDimensions().width;
+                            dynamicWidths.push(childElement);
+                        }
                     }
                 }
 

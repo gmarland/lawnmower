@@ -27,9 +27,13 @@ export class RowVRDiv extends VRDiv {
             childLayoutContainer.name = "child";
     
             for (let i=0; i< keys.length; i++) {
-                const childLayout = await this.getChildElements().get(keys[i]).getContent(); 
-    
-                childLayoutContainer.add(childLayout);
+                const childContent = await this.getChildElements().get(keys[i]);
+
+                if (childContent.getVisible()) {
+                    const childLayout = await childContent.getContent(); 
+        
+                    childLayoutContainer.add(childLayout);
+                }
             }
 
             this.layoutChildrenItems(childLayoutContainer);
@@ -73,28 +77,32 @@ export class RowVRDiv extends VRDiv {
         let currentSize = 0;
 
         for (let i=0; i<childLayoutContainer.children.length; i++) {
-            const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
-            
-            childLayoutContainer.children[i].translateY(currentSize*-1);
+            if (childLayoutContainer.children[i].visible) {
+                const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+                
+                childLayoutContainer.children[i].translateY(currentSize*-1);
 
-            currentSize += (childLayoutBox.max.y - childLayoutBox.min.y) + this.getMargin();
+                currentSize += (childLayoutBox.max.y - childLayoutBox.min.y) + this.getMargin();
+            }
         }
 
         const childLayoutContainerBox = new Box3().setFromObject(childLayoutContainer);
         
         for (let i=0; i< childLayoutContainer.children.length; i++) {
-            const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
-    
-            let xDiff = 0;
+            if (childLayoutContainer.children[i].visible) {
+                const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+        
+                let xDiff = 0;
 
-            if (this.getItemHorizontalAlign() == ItemHorizontalAlign.Left) {
-                xDiff = childLayoutContainerBox.min.x - childLayoutBox.min.x;
-            }
-            else if (this.getItemHorizontalAlign() == ItemHorizontalAlign.Right) {
-                xDiff = childLayoutContainerBox.max.x - childLayoutBox.max.x;
-            }
+                if (this.getItemHorizontalAlign() == ItemHorizontalAlign.Left) {
+                    xDiff = childLayoutContainerBox.min.x - childLayoutBox.min.x;
+                }
+                else if (this.getItemHorizontalAlign() == ItemHorizontalAlign.Right) {
+                    xDiff = childLayoutContainerBox.max.x - childLayoutBox.max.x;
+                }
 
-            childLayoutContainer.children[i].translateX(xDiff);
+                childLayoutContainer.children[i].translateX(xDiff);
+            }
         }
     }
 
@@ -122,15 +130,17 @@ export class RowVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
                 
-                const dimensions = childElement.getDimensions(); 
+                if (childElement.getVisible()) {
+                    const dimensions = childElement.getDimensions(); 
 
-                if (!dimensions.width) {
-                    const calculatedWidth = childElement.getCalculatedDimensions().width;
-                    
-                    if (calculatedWidth != spareSpace) {
-                        await childElement.setCalculatedWidth(spareSpace);
+                    if (!dimensions.width) {
+                        const calculatedWidth = childElement.getCalculatedDimensions().width;
+                        
+                        if (calculatedWidth != spareSpace) {
+                            await childElement.setCalculatedWidth(spareSpace);
 
-                        widthsUpdated = true;
+                            widthsUpdated = true;
+                        }
                     }
                 }
             }
@@ -140,8 +150,10 @@ export class RowVRDiv extends VRDiv {
                 childLayoutContainer.position.y = 0;
                 
                 for (let i=0; i<childLayoutContainer.children.length; i++) {
-                    const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
-                    childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
+                    if (childLayoutContainer.children[i].visible) {
+                        const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+                        childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
+                    }
                 }
 
                 this.layoutChildrenItems(childLayoutContainer);

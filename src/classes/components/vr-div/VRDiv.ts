@@ -20,6 +20,8 @@ import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
+import { VRLayout } from '../vr-layout/VRLayout';
+import { MainScene } from '../../scene/MainScene';
 
 export class VRDiv implements SceneElement {
     private _depth: number;
@@ -35,7 +37,7 @@ export class VRDiv implements SceneElement {
     private _color: string = "";
     
     private _margin: number = 0;
-    private _padding: number = 10;
+    private _padding: number = 0;
 
     private _opacity: number = 1;
 
@@ -77,6 +79,7 @@ export class VRDiv implements SceneElement {
 
         if (config.opacity) this._opacity = config.opacity;
 
+        if (config.padding) this._padding = config.padding;
         if (config.margin) this._margin = config.margin;
 
         this._xRotation = config.xRotation;
@@ -173,8 +176,58 @@ export class VRDiv implements SceneElement {
         return this._content.position;
     }
 
+    public getVisible(): boolean {
+        return this._content.visible;
+    }
+
     public getDepth(): number {
         return this._depth;
+    }
+
+    public getIsChildElement(uuid: string): boolean {
+        if (uuid === this._uuid) {
+            return true;
+        }
+        else {
+            let sceneElements = this.getChildSceneElements();
+            
+            for (let i=0; i< sceneElements.length; i++) {
+                if (sceneElements[i].getIsChildElement(uuid)) {
+                    return true;
+                } 
+            }
+
+            return false;
+        }
+    }
+    
+    public isPartOfLayout(): boolean {
+        if (this._parent) {
+            if (this._parent instanceof VRLayout) return true;
+            if (this._parent instanceof MainScene) return false;
+            else return this._parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this._parent) {
+            if ((this._parent instanceof VRLayout) && 
+                ((this._parent as VRLayout).getId() == layoutId)) {
+                    return true;
+            }
+            else if (this._parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this._parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
     }
 
     ////////// Setters
@@ -231,6 +284,22 @@ export class VRDiv implements SceneElement {
         this._content.visible = true;
     }
 
+    public enableLayout(layoutId: string): void {
+        const childElements = this.getChildSceneElements();
+
+        for (let i=0; i<childElements.length; i++) {
+            childElements[i].enableLayout(layoutId);
+        }
+    }
+
+    public disableLayouts(): void {
+        const childElements = this.getChildSceneElements();
+
+        for (let i=0; i<childElements.length; i++) {
+            childElements[i].disableLayouts();
+        }
+    }
+
     ////////// Public Methods
 
     // --- Data Methods
@@ -259,7 +328,7 @@ export class VRDiv implements SceneElement {
                 }
             }
 
-            if ((body.uuid === meshId) && (this.onClick)) {
+            if (body && (body.uuid === meshId) && (this.onClick)) {
                 this.onClick();
             }
             
@@ -270,21 +339,13 @@ export class VRDiv implements SceneElement {
     public buildPanelMesh(): Mesh {
         let height = 0;
 
-        if (this._height) {
-            height = this._height;
-        }
-        else {
-            height = this._padding;
-        }
+        if (this._height) height = this._height;
+        else height = this._padding;
 
         let width = 0;
 
-        if (this._width) {
-            width = this._width;
-        }
-        else {
-            width = this._padding;
-        }
+        if (this._width) width = this._width;
+        else width = this._padding;
 
         let materialOptions;
 

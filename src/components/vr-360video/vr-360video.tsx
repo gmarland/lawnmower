@@ -100,7 +100,7 @@ export class Vr360Video {
       this._video.reset();
 
       this._controls.hide();
-      this._video.hide();
+      this._video.setHidden();
       
       this.showCurrentLayout.emit();
     }
@@ -111,7 +111,8 @@ export class Vr360Video {
   render() {
     return (
       <Host>
-        <vr-video-controls ref={(el) => this._controls = el as HTMLVrVideoControlsElement}></vr-video-controls>
+        <vr-video-controls ref={(el) => this._controls = el as HTMLVrVideoControlsElement} 
+                            parent={this._video}></vr-video-controls>
       </Host>
     );
   }
