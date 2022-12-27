@@ -17,7 +17,7 @@ export class VRLayout implements SceneElement {
 
     private _uuid: string;
 
-    private _content: Group = new Group();
+    private _content?: Group = null;
 
     private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
 
@@ -27,8 +27,6 @@ export class VRLayout implements SceneElement {
         this._id = id;
         
         this._uuid = MeshUtils.generateId();
-
-        this._content.visible = false;
     }
 
     ////////// Getters
@@ -45,10 +43,6 @@ export class VRLayout implements SceneElement {
         return SceneElementPlacement.Main;
     }
 
-    public getPosition() {
-        return new Vector3(0,0,0);
-    }
-
     public getDimensions(): Dimensions {
         return {
             width: 0,
@@ -56,13 +50,25 @@ export class VRLayout implements SceneElement {
         }
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        const dimensions = new Box3().setFromObject(this._content);
-
-        return {
-            width: dimensions.max.x-dimensions.min.x,
-            height: dimensions.max.y-dimensions.min.y
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
+    }
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
 
     public getChildSceneElements(): SceneElement[] {
@@ -101,15 +107,11 @@ export class VRLayout implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
+            if (!this._content) {
+                this._content = new Group();
+                this._content.visible = false;
 
-            let keys = Array.from(this._childElements.keys());
-            keys.sort(function(a, b){return a-b});
-            
-            for (let i=0; i< keys.length; i++) {
-                this._content.add(await this._childElements.get(keys[i]).getContent());
+                await this.draw();
             }
 
             resolve(this._content);
@@ -200,6 +202,25 @@ export class VRLayout implements SceneElement {
         this._childElements.set(position, childElement);
     }
     
+    // --- Rendering Methods
+
+    public async draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            for (let i=(this._content.children.length-1); i>=0; i--) {
+                this._content.remove(this._content.children[i]);
+            }
+
+            let keys = Array.from(this._childElements.keys());
+            keys.sort(function(a, b){return a-b});
+            
+            for (let i=0; i< keys.length; i++) {
+                this._content.add(await this._childElements.get(keys[i]).getContent());
+            }
+            
+            resolve();
+        });
+    }
+
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
             let keys = Array.from(this._childElements.keys());

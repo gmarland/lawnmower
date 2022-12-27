@@ -29,8 +29,10 @@ export class VRModal implements SceneElement {
 
     private _baseImagePath: string;
 
-    private _width: number; 
+    private _width: number; //Defined width from the HTML tag
     private _height: number;
+
+    private _setWidth?: number = null; // Set through the API, typically through a parent div
 
     private _padding: number;
 
@@ -49,7 +51,7 @@ export class VRModal implements SceneElement {
     
     private _mesh?: Mesh = null;
     private _closeButtonMesh?: Mesh = null;
-    private _content: Object3D = new Object3D();
+    private _content?: Object3D = null;
 
     private  _childElement: SceneElement = null;
 
@@ -101,9 +103,15 @@ export class VRModal implements SceneElement {
 
     public async getContent(): Promise<Object3D> {
         return new Promise(async (resolve) => {
-            await this.generateContent(this._width);
-
-            resolve(this._content);
+            return new Promise(async (resolve) => {
+                if (!this._content) {
+                    this._content = new Object3D();
+                    this._content.translateZ(this._depth*0.5);
+                    await this.draw();
+                }
+                
+                resolve(this._content);
+            });
         });
     }
 
@@ -114,17 +122,25 @@ export class VRModal implements SceneElement {
         };
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        const dimensions = new Box3().setFromObject(this._content);
-
-        return {
-            width: dimensions.max.x-dimensions.min.x,
-            height: dimensions.max.y-dimensions.min.y
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
-    public getPosition(): Vector3 {
-        return new Vector3(0,0,this._offset);
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
 
     public getChildSceneElements(): SceneElement[] {
@@ -174,12 +190,10 @@ export class VRModal implements SceneElement {
         this._width = width;
     }
     
-    public setCalculatedWidth(width: number): Promise<void> {
-        return new Promise(async (resolve) => {
-            await this.generateContent(width);
+    public async setCalculatedWidth(width: number): Promise<void> {
+        this._setWidth = width;
 
-            resolve();
-        });
+        return this.draw();
     }
 
     public setHidden(): void {
@@ -205,6 +219,15 @@ export class VRModal implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public async draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._setWidth !== null) await this.generateContent(this._setWidth);
+            else await this.generateContent(this._width);
+
+            resolve();
+        });
+    }
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {

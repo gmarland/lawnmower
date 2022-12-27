@@ -33,7 +33,7 @@ export class VRText implements SceneElement {
 
     private _text: string;
 
-    private _width: number = 0; //Defined width from the HTML taf
+    private _width: number = 0; //Defined width from the HTML tag
     private _height: number = 0;
     
     private _setWidth?: number = null; // Set through the API, typically through a parent div
@@ -49,7 +49,7 @@ export class VRText implements SceneElement {
     private _padding: number = 0;
 
     private _mesh?: Mesh = null;
-    private _content: Group = null;
+    private _content?: Group = null;
 
     public onClick?: Function = null;
 
