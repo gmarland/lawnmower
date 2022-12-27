@@ -13,11 +13,11 @@ export interface SceneElement {
 
     getContent(): Promise<Group>;
 
-    getPosition(): Vector3;
+    getPosition(): Promise<Vector3>;
 
     getDimensions(): Dimensions;
 
-    getCalculatedDimensions(): Dimensions;
+    getCalculatedDimensions(): Promise<Dimensions>;
 
     getChildSceneElements(): Array<SceneElement>;
 
@@ -42,6 +42,8 @@ export interface SceneElement {
     enableLayout(layoutId: string): void;
 
     disableLayouts(): void;
+
+    draw(): Promise<void>;
 
     clicked(meshId: string): Promise<void>;
 

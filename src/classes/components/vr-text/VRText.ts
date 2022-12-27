@@ -33,10 +33,11 @@ export class VRText implements SceneElement {
 
     private _text: string;
 
-    private _width: number = 0; 
+    private _width: number = 0; //Defined width from the HTML taf
     private _height: number = 0;
     
-    private _calculatedWidth: number = 0;
+    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    private _calculatedWidth?: number = null; // Calculated through drawing the text
 
     private _borderRadius: number;
 
@@ -48,7 +49,7 @@ export class VRText implements SceneElement {
     private _padding: number = 0;
 
     private _mesh?: Mesh = null;
-    private _content: Group = new Group();
+    private _content: Group = null;
 
     public onClick?: Function = null;
 
@@ -79,8 +80,6 @@ export class VRText implements SceneElement {
         else this._fontColor = "#000000";
 
         if (config.padding) this._padding = config.padding;
-
-        this._content.translateZ(this._depth*0.5);
     }
 
     ////////// Getters
@@ -95,7 +94,11 @@ export class VRText implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            await this.generateContent(this._width);
+            if (!this._content) {
+                this._content = new Group();
+                this._content.translateZ(this._depth*0.5);
+                await this.draw();
+            }
             
             resolve(this._content);
         });
@@ -108,17 +111,25 @@ export class VRText implements SceneElement {
         }
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        const dimensions = new Box3().setFromObject(this._content);
-
-        return {
-            width: dimensions.max.x-dimensions.min.x,
-            height: dimensions.max.y-dimensions.min.y
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
-    public getPosition(): Vector3 {
-        return this._content.position;
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
     
     public getChildSceneElements(): SceneElement[] {
@@ -169,11 +180,9 @@ export class VRText implements SceneElement {
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
-        return new Promise(async (resolve) => {
-            await this.generateContent(width);
+        this._setWidth = width;
 
-            resolve();
-        });
+        return this.draw();
     }
 
     public setHidden(): void {
@@ -198,6 +207,15 @@ export class VRText implements SceneElement {
     }
     
     // --- Rendering Methods
+
+    public async draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._setWidth !== null) await this.generateContent(this._setWidth);
+            else await this.generateContent(this._width);
+
+            resolve();
+        });
+    }
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
@@ -315,6 +333,8 @@ export class VRText implements SceneElement {
                         }
                     }
                 }
+
+                if (currentLine.trim().length > 0) lines.push(currentLine.trim());
             }
             else {
                 if (words.length > 1) {
@@ -342,14 +362,16 @@ export class VRText implements SceneElement {
                             }
                         }
                     }
+
+                    if (currentLine.trim().length > 0) lines.push(currentLine.trim());
+        
+                    this._calculatedWidth = 0;
+
+                    for (let i=0; i<lines.length; i++) {
+                        const newTextLenth = context.measureText(lines[i]).width + (this._padding*2);
+                        if (newTextLenth > this._calculatedWidth) this._calculatedWidth = newTextLenth;
+                    }
                 }
-            }
-
-            if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-
-            for (let i=0; i<lines.length; i++) {
-                const newTextLenth = context.measureText(lines[i]).width + (this._padding*2);
-                if (newTextLenth > this._calculatedWidth) this._calculatedWidth = newTextLenth;
             }
         }
         
