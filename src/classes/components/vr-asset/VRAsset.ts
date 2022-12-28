@@ -4,7 +4,8 @@ import {
     AnimationClip,
     BoxGeometry,
     Mesh,
-    Vector3
+    Vector3,
+    Box3
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";
@@ -27,7 +28,7 @@ export class VRAsset implements SceneElement {
 
     private _src: string;
 
-    private _loadedAsset: Group;
+    private _loadedAsset?: Group = null;
 
     private _animations: Array<AnimationClip>;
 
@@ -45,6 +46,7 @@ export class VRAsset implements SceneElement {
     private _zRotation: number;
 
     private _radius: number; 
+    private _setRadius?: number;
 
     private _xRotationSpeed: number = 0;
     private _yRotationSpeed: number = 0;
@@ -139,15 +141,25 @@ export class VRAsset implements SceneElement {
         };
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        return {
-            width: this._radius,
-            height: this._radius
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
-    public getPosition(): Vector3 {
-        return this._content.position;
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
 
     public getVisible(): boolean {
@@ -222,6 +234,8 @@ export class VRAsset implements SceneElement {
     }
 
     public setCalculatedWidth(width: number): Promise<void> {
+        this._setRadius = width;
+
         return new Promise((resolve) => {
             resolve();
         })
@@ -261,6 +275,12 @@ export class VRAsset implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public async draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            resolve();
+        });
+    }
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
