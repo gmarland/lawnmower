@@ -34,6 +34,7 @@ export class ColumnVRDiv extends VRDiv {
             keys.sort(function(a, b){return a-b});
 
             const childLayoutContainer = new Object3D();
+            childLayoutContainer.name = "child";
 
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
@@ -140,9 +141,10 @@ export class ColumnVRDiv extends VRDiv {
                         const dimensions = childElement.getDimensions(); 
 
                         if (!dimensions.width) {
-                            const dimensions = new Box3().setFromObject(await childElement.getContent());
+                            const actualDimensions = new Box3().setFromObject(await childElement.getContent())
+                            const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
                             
-                            totalSpace += dimensions.width;
+                            totalSpace += actualWidth;
                             dynamicWidths.push(childElement);
                         }
                     }
@@ -151,8 +153,11 @@ export class ColumnVRDiv extends VRDiv {
                 let seperateSpace = totalSpace/dynamicWidths.length;
 
                 for (let i=(dynamicWidths.length-1); i>=0 ; i--) {
-                    if (dynamicWidths[i].getCalculatedDimensions().width > seperateSpace) {
-                        totalSpace -= dynamicWidths[i].getCalculatedDimensions().width;
+                    const actualDimensions = new Box3().setFromObject(await dynamicWidths[i].getContent());
+                    const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
+
+                    if (actualWidth > seperateSpace) {
+                        totalSpace -= actualDimensions.width;
                         seperateSpace = totalSpace/(dynamicWidths.length-1);
                         dynamicWidths.splice(i,1);
                     }

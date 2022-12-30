@@ -172,6 +172,8 @@ export class VRImage implements SceneElement {
     // --- Rendering Methods
 
     public draw(): Promise<void> {
+        this._initialized = true;
+        
         return new Promise(async (resolve) => {
             if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
             else await this.generateContent(this._setWidth);

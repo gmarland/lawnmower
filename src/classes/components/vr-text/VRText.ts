@@ -196,6 +196,8 @@ export class VRText implements SceneElement {
     // --- Rendering Methods
 
     public async draw(): Promise<void> {
+        this._initialized = true;
+
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.generateContent(this._setWidth);
             else await this.generateContent(this._initialWidth);

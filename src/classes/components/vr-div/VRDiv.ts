@@ -420,6 +420,7 @@ export class VRDiv implements SceneElement {
                     if (this._content.children[i].name == "body") body = this._content.children[i];
                     else if (this._content.children[i].name == "child") child = this._content.children[i];
                 }
+                console.log("yoyos", this._content)
     
                 if (body && child) {
                     const contentBox = new Box3().setFromObject(body);
