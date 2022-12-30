@@ -38,8 +38,9 @@ export class VRVideoControls implements SceneElement {
     private _baseImagePath: string;
     
     private _width: number;
-
     private _height: number;
+    
+    private _setWidth?: number = null; // Set through the API, typically through a parent div
 
     private _borderRadius: number = 10;
     
@@ -108,17 +109,25 @@ export class VRVideoControls implements SceneElement {
         return this._content.visible;
     }
     
-    public getCalculatedDimensions(): Dimensions {
-        const dimensions = new Box3().setFromObject(this._content);
-
-        return {
-            width: dimensions.max.x-dimensions.min.x,
-            height: dimensions.max.y-dimensions.min.y
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
-    public getPosition(): Vector3 {
-        return new Vector3(this._x, this._y, this._z);
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
     
     public isPartOfLayout(): boolean {
@@ -165,11 +174,9 @@ export class VRVideoControls implements SceneElement {
     }
     
     public setCalculatedWidth(width: number): Promise<void> {
-        return new Promise(async (resolve) => {
-            await this.generateContent(width);
+        this._setWidth = width;
 
-            resolve();
-        });
+        return this.draw();
     }
 
     public setHidden(): void {
@@ -194,6 +201,15 @@ export class VRVideoControls implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._width !== null) await this.generateContent(this._width);
+            else await this.generateContent(this._setWidth);
+
+            resolve();
+        });
+    }
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {

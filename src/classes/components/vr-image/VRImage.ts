@@ -32,6 +32,8 @@ export class VRImage implements SceneElement {
 
     private _width: number; 
     private _height: number;
+    
+    private _setWidth?: number = null; // Set through the API, typically through a parent div
 
     private _borderRadius: number;
 
@@ -84,17 +86,25 @@ export class VRImage implements SceneElement {
         };
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        const dimensions = new Box3().setFromObject(this._content);
-
-        return {
-            width: dimensions.max.x-dimensions.min.x,
-            height: dimensions.max.y-dimensions.min.y
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
-    public getPosition(): Vector3 {
-        return this._content.position;
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
 
     public getVisible(): boolean {
@@ -145,7 +155,9 @@ export class VRImage implements SceneElement {
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
-        await this.generateContent(width);
+        this._setWidth = width;
+
+        return this.draw();
     }
 
     public setHidden(): void {
@@ -170,6 +182,15 @@ export class VRImage implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._width !== null) await this.generateContent(this._width);
+            else await this.generateContent(this._setWidth);
+
+            resolve();
+        });
+    }
 
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {

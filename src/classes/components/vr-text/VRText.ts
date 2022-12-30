@@ -33,11 +33,12 @@ export class VRText implements SceneElement {
 
     private _text: string;
 
-    private _width: number = 0; //Defined width from the HTML tag
-    private _height: number = 0;
+    private _initialWidth: number = 0; //Defined width from the HTML tag
+    private _initialHeight: number = 0;
+    
+    private _calculatedWidth?: number = null; // Calculated through drawing the text
     
     private _setWidth?: number = null; // Set through the API, typically through a parent div
-    private _calculatedWidth?: number = null; // Calculated through drawing the text
 
     private _borderRadius: number;
 
@@ -68,8 +69,8 @@ export class VRText implements SceneElement {
         
         this._text = text;
 
-        this._width = config.width;
-        this._height = config.height;
+        this._initialWidth = config.width;
+        this._initialHeight = config.height;
 
         this._borderRadius = config.borderRadius;
         
@@ -106,7 +107,7 @@ export class VRText implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
+            width: this._initialWidth,
             height: this._calculatedHeight
         }
     }
@@ -176,7 +177,7 @@ export class VRText implements SceneElement {
     ////////// Setters
 
     public setWidth(width: number): void {
-        this._width = width;
+        this._setWidth = width;
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
@@ -211,7 +212,7 @@ export class VRText implements SceneElement {
     public async draw(): Promise<void> {
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._width);
+            else await this.generateContent(this._initialWidth);
 
             resolve();
         });
@@ -384,7 +385,7 @@ export class VRText implements SceneElement {
         textContainer.style.width = this._calculatedWidth + "px"
         textContainer.width = this._calculatedWidth;
         
-        if (this._height) this._calculatedHeight = this._height;
+        if (this._initialHeight) this._calculatedHeight = this._initialHeight;
         else this._calculatedHeight = (lineHeight*lines.length) + (this._padding*2);
 
         textContainer.style.height = this._calculatedHeight + "px"
