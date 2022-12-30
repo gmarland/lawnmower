@@ -31,8 +31,8 @@ export class VRVideo implements SceneElement {
 
     private _src: string;
 
-    private _width: number; //Defined width from the HTML tag
-    private _height: number;
+    private _initialWidth: number; //Defined width from the HTML tag
+    private _initialHeight: number;
 
     private _setWidth?: number = null; // Set through the API, typically through a parent div
 
@@ -65,8 +65,8 @@ export class VRVideo implements SceneElement {
 
         this._playInline = config.playInline;
 
-        this._width = config.width;
-        this._height = config.height;
+        this._initialWidth = config.width;
+        this._initialHeight = config.height;
 
         this._placeholderTimestamp = config.placeholderTimestamp;
         
@@ -97,7 +97,7 @@ export class VRVideo implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
+            width: this._initialWidth,
             height: this._calculatedHeight
         };
     }
@@ -154,7 +154,7 @@ export class VRVideo implements SceneElement {
     ////////// Setters
 
     public setWidth(width: number): void {
-        this._width = width;
+        this._initialWidth = width;
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
@@ -191,7 +191,7 @@ export class VRVideo implements SceneElement {
         
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._width);
+            else await this.generateContent(this._initialWidth);
 
             resolve();
         });
@@ -264,7 +264,7 @@ export class VRVideo implements SceneElement {
         var that = this;
 
         return new Promise(async (resolve) => {
-            this._calculatedHeight = this._height;
+            this._calculatedHeight = this._initialHeight;
 
             this._video = document.createElement("video");
             this._video.setAttribute("loop", "");
@@ -274,8 +274,8 @@ export class VRVideo implements SceneElement {
             this._video.addEventListener( "loadedmetadata", function (e) {
                 const videoTexture = new VideoTexture(that._video);
     
-                if (that._height) {
-                    that._calculatedHeight = that._height;
+                if (that._initialHeight) {
+                    that._calculatedHeight = that._initialHeight;
                 }
                 else if (width) {
                     const widthRatio = videoTexture.image.videoWidth/width;
