@@ -7,7 +7,8 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
-    SphereGeometry
+    SphereGeometry,
+    Box3
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";
@@ -31,7 +32,7 @@ export class VR360Video implements SceneElement {
     private _videoWidthSegments: number;
     private _videoHieghtSegments: number;
 
-    private _setVideoRadius: number;
+    private _setVideoRadius?: number = null;
 
     private _video: HTMLVideoElement;
     private _videoStarted: boolean = false;
@@ -100,7 +101,7 @@ export class VR360Video implements SceneElement {
     }
 
     public getVisible(): boolean {
-        return (this._content != null) && this._content.visible;
+        return this._content.visible;
     }
     
     public getChildSceneElements(): SceneElement[] {

@@ -2,7 +2,8 @@ import {
     PerspectiveCamera,
     Vector3,
     MathUtils,
-    Scene
+    Scene,
+    Box3
 } from 'three';
 import { SceneElement } from '../components/SceneElement';
 
@@ -63,7 +64,7 @@ export class Camera {
             var height = 2 * Math.tan( vFOV / 2 ) * elementPosition.z;
 
             elementContent.translateY(((height/2)*-1) + (element.getDimensions().height/2) + elementPosition.y);
-
+            
             resolve();
         })
     }

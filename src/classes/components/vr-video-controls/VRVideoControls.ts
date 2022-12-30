@@ -269,32 +269,32 @@ export class VRVideoControls implements SceneElement {
             this._mesh.rotation.y = GeometryUtils.degToRad(180);
             this._mesh.rotation.z = GeometryUtils.degToRad(180);
             
-            this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialWidth-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/close.png'),
                 transparent: true,
                 side: DoubleSide
             }));
 
-            this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialWidth-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/play.png'),
                 transparent: true,
                 side: DoubleSide
             }));
 
-            this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialWidth-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/pause.png'),
                 transparent: true,
                 side: DoubleSide
             }));
             this._pauseMesh.visible = false;
 
-            this._closeMesh.translateX(((width/2)*-1) + (this._initialWidth/2));
+            this._closeMesh.translateX(((this._initialWidth/2)*-1) + (this._initialHeight/2));
             this._closeMesh.translateZ(-0.2);
 
-            this._playMesh.translateX((width/2) - (this._initialWidth/2));
+            this._playMesh.translateX((this._initialWidth/2) - (this._initialHeight/2));
             this._playMesh.translateZ(-0.2);
 
-            this._pauseMesh.translateX((width/2) - (this._initialWidth/2));
+            this._pauseMesh.translateX((this._initialWidth/2) - (this._initialHeight/2));
             this._pauseMesh.translateZ(-0.2);
 
             this._mesh.add(this._closeMesh);
