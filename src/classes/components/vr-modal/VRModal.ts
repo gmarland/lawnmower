@@ -51,7 +51,9 @@ export class VRModal implements SceneElement {
     
     private _mesh?: Mesh = null;
     private _closeButtonMesh?: Mesh = null;
-    private _content?: Object3D = null;
+
+    private _content?: Object3D = new Object3D();
+    private _initialized: boolean = false;
 
     private  _childElement: SceneElement = null;
 
@@ -78,13 +80,12 @@ export class VRModal implements SceneElement {
         this._borderColor = config.borderColor;
         this._borderWidth = config.borderWidth;
         
-        this._content = new Object3D();
-        
         this._offset = config.offset;
         
         this._backgroundColor = config.backgroundColor;
 
         this._content.visible = false;
+        this._content.translateZ(this._depth*0.5);
     }
 
     ////////// Getters
@@ -103,11 +104,7 @@ export class VRModal implements SceneElement {
 
     public async getContent(): Promise<Object3D> {
         return new Promise(async (resolve) => {
-            if (!this._content) {
-                this._content = new Object3D();
-                this._content.translateZ(this._depth*0.5);
-                await this.draw();
-            }
+            if (!this._initialized) await this.draw();
             
             resolve(this._content);
         });
@@ -206,6 +203,8 @@ export class VRModal implements SceneElement {
     // --- Rendering Methods
 
     public async draw(): Promise<void> {
+        this. _initialized = true;
+        
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.generateContent(this._setWidth);
             else await this.generateContent(this._width);

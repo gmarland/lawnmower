@@ -17,7 +17,8 @@ export class VRLayout implements SceneElement {
 
     private _uuid: string;
 
-    private _content?: Group = null;
+    private _content?: Group = new Group();
+    private _initialized: boolean = false;
 
     private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
 
@@ -27,6 +28,8 @@ export class VRLayout implements SceneElement {
         this._id = id;
         
         this._uuid = MeshUtils.generateId();
+        
+        this._content.visible = false;
     }
 
     ////////// Getters
@@ -94,12 +97,7 @@ export class VRLayout implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this._content) {
-                this._content = new Group();
-                this._content.visible = false;
-
-                await this.draw();
-            }
+            if (!this._initialized) await this.draw();
 
             resolve(this._content);
         });
@@ -192,6 +190,8 @@ export class VRLayout implements SceneElement {
     // --- Rendering Methods
 
     public async draw(): Promise<void> {
+        this._initialized = true;
+
         return new Promise(async (resolve) => {
             for (let i=(this._content.children.length-1); i>=0; i--) {
                 this._content.remove(this._content.children[i]);

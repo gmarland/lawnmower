@@ -49,7 +49,8 @@ export class VRVideo implements SceneElement {
     private _mesh?: Mesh = null;
     private _playButton?: Mesh = null;
 
-    private _content?: Group = null;
+    private _content?: Group = new Group();
+    private _initialized: boolean = false;
 
     public onClick?: Function = null;
 
@@ -68,6 +69,8 @@ export class VRVideo implements SceneElement {
         this._height = config.height;
 
         this._placeholderTimestamp = config.placeholderTimestamp;
+        
+        this._content.translateZ(this._depth*0.5);
     }
 
     ////////// Getters
@@ -82,12 +85,7 @@ export class VRVideo implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this._content) {
-                this._content = new Group();
-                this._content.translateZ(this._depth*0.5);
-
-                await this.draw();
-            }
+            if (!this._initialized) await this.draw();
             
             resolve(this._content);
         });
@@ -189,6 +187,8 @@ export class VRVideo implements SceneElement {
     // --- Rendering Methods
 
     public async draw(): Promise<void> {
+        this._initialized = true;
+        
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.generateContent(this._setWidth);
             else await this.generateContent(this._width);

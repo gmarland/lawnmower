@@ -72,8 +72,8 @@ export class VRDiv implements SceneElement {
         this._itemVerticalAlign = config.itemVerticalAlign;
         this._itemHorizontalAlign = config.itemHorizontalAlign;
 
-        this._initialWidth = config.width;
-        this._initialHeight = config.height;
+        if(config.width) this._initialWidth = config.width;
+        if(config.height) this._initialHeight = config.height;
 
         this._borderRadius = config.borderRadius;
         
@@ -420,8 +420,6 @@ export class VRDiv implements SceneElement {
                     if (this._content.children[i].name == "body") body = this._content.children[i];
                     else if (this._content.children[i].name == "child") child = this._content.children[i];
                 }
-                console.log("yoyos", this._content)
-    
                 if (body && child) {
                     const contentBox = new Box3().setFromObject(body);
 

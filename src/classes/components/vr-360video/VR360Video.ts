@@ -39,7 +39,8 @@ export class VR360Video implements SceneElement {
 
     private _mesh?: Mesh = null;
 
-    private _content: Group;
+    private _content: Object3D = new Object3D();
+    private _initialized: boolean = false;
 
     public onClick?: Function = null;
 
@@ -57,6 +58,8 @@ export class VR360Video implements SceneElement {
         this._parent = parent;
         
         this._src = src;
+        
+        this._content.visible = false;
     }
 
     ////////// Getters
@@ -71,11 +74,7 @@ export class VR360Video implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this._content) {
-                this._content = new Group();
-                this._content.visible = false;
-                await this.draw();
-            }
+            if (!this._initialized) await this.draw();
 
             resolve(this._content);
         });
@@ -202,6 +201,8 @@ export class VR360Video implements SceneElement {
     // --- Rendering Methods
 
     public draw(): Promise<void> {
+        this._initialized = true;
+        
         return new Promise(async (resolve) => {
             if (this._setVideoRadius !== null) await this.generateContent(this._setVideoRadius);
             else await this.generateContent(this._videoRadius);

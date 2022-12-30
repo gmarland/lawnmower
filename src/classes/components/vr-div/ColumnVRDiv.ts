@@ -157,7 +157,7 @@ export class ColumnVRDiv extends VRDiv {
                     const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
 
                     if (actualWidth > seperateSpace) {
-                        totalSpace -= actualDimensions.width;
+                        totalSpace -= actualWidth;
                         seperateSpace = totalSpace/(dynamicWidths.length-1);
                         dynamicWidths.splice(i,1);
                     }
