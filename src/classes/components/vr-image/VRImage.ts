@@ -30,8 +30,8 @@ export class VRImage implements SceneElement {
 
     private _src: string;
 
-    private _width: number; 
-    private _height: number;
+    private _initialWidth?: number = null; 
+    private _initialHeight?: number = null;
     
     private _setWidth?: number = null; // Set through the API, typically through a parent div
 
@@ -39,8 +39,9 @@ export class VRImage implements SceneElement {
 
     private _calculatedHeight: number;
 
-    private _mesh?: Mesh = null;
+    private _mesh?: Mesh;
     private _content: Object3D = new Object3D();
+    private _initialized: boolean = false;
 
     public onClick?: Function = null;
 
@@ -53,8 +54,8 @@ export class VRImage implements SceneElement {
         
         this._src = src;
 
-        this._width = config.width;
-        this._height = config.height;
+        if (config.width) this._initialWidth = config.width;
+        if (config.height) this._initialHeight = config.height;
 
         this._borderRadius = config.borderRadius;
         
@@ -73,7 +74,7 @@ export class VRImage implements SceneElement {
 
     public async getContent(): Promise<Object3D> {
         return new Promise(async (resolve) => {
-            await this.generateContent(this._width);
+            if (!this._initialized) await this.draw();
 
             resolve(this._content);
         });
@@ -81,14 +82,14 @@ export class VRImage implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
+            width: this._initialWidth,
             height: this._calculatedHeight
         };
     }
 
     public async getCalculatedDimensions(): Promise<Dimensions> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.draw(); 
     
             const dimensions = new Box3().setFromObject(this._content);
     
@@ -101,14 +102,14 @@ export class VRImage implements SceneElement {
     
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.draw();
     
             resolve(this._content.position);
         });
     }
 
     public getVisible(): boolean {
-        return (this._content != null) && this._content.visible;
+        return this._content.visible;
     }
     
     public getChildSceneElements(): SceneElement[] {
@@ -151,7 +152,7 @@ export class VRImage implements SceneElement {
     ////////// Setters
 
     public setWidth(width: number): void {
-        this._width = width;
+        this._initialWidth = width;
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
@@ -185,7 +186,8 @@ export class VRImage implements SceneElement {
 
     public draw(): Promise<void> {
         return new Promise(async (resolve) => {
-            if (this._width !== null) await this.generateContent(this._width);
+            console.log(this._initialWidth)
+            if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
             else await this.generateContent(this._setWidth);
 
             resolve();
@@ -233,8 +235,8 @@ export class VRImage implements SceneElement {
                 tex.wrapS = ClampToEdgeWrapping;
                 tex.wrapT = RepeatWrapping;
 
-                if (this._height) {
-                    this._calculatedHeight = this._height;
+                if (this._initialHeight) {
+                    this._calculatedHeight = this._initialHeight;
                 }
                 else if (width) {
                     const widthRatio = tex.image.width/width;

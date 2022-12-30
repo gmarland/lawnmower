@@ -50,7 +50,8 @@ export class VRText implements SceneElement {
     private _padding: number = 0;
 
     private _mesh?: Mesh = null;
-    private _content?: Group = null;
+    private _content?: Group = new Group();
+    private _initialized: boolean = false;
 
     public onClick?: Function = null;
 
@@ -81,6 +82,8 @@ export class VRText implements SceneElement {
         else this._fontColor = "#000000";
 
         if (config.padding) this._padding = config.padding;
+        
+        this._content.translateZ(this._depth*0.5);
     }
 
     ////////// Getters
@@ -95,11 +98,7 @@ export class VRText implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this._content) {
-                this._content = new Group();
-                this._content.translateZ(this._depth*0.5);
-                await this.draw();
-            }
+            if (!this._initialized) await this.draw();
             
             resolve(this._content);
         });
@@ -114,7 +113,7 @@ export class VRText implements SceneElement {
 
     public async getCalculatedDimensions(): Promise<Dimensions> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.draw();
     
             const dimensions = new Box3().setFromObject(this._content);
     
@@ -127,7 +126,7 @@ export class VRText implements SceneElement {
     
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.draw();
     
             resolve(this._content.position);
         });
@@ -142,7 +141,7 @@ export class VRText implements SceneElement {
     }
 
     public getVisible(): boolean {
-        return (this._content != null) && this._content.visible;
+        return this._content.visible;
     }
     
     public isPartOfLayout(): boolean {

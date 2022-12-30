@@ -102,7 +102,7 @@ export class VRLayout implements SceneElement {
     }
 
     public getVisible(): boolean {
-        return (this._content != null) && this._content.visible;
+        return (this._content == null) || this._content.visible;
     }
 
     public async getContent(): Promise<Group> {

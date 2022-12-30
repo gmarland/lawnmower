@@ -52,7 +52,7 @@ export class VRVideoControls implements SceneElement {
     
     private _z: number;
 
-    private _content: Group = new Group();
+    private _content: Group;
 
     public onPlay?: Function = null;
     public onPause?: Function = null;
@@ -75,9 +75,6 @@ export class VRVideoControls implements SceneElement {
         this._x = config.x;
         this._y = config.y;
         this._z = config.z;
-        
-        this._content = new Group();
-        this._content.visible = false;
     }
 
     ////////// Getters
@@ -92,7 +89,12 @@ export class VRVideoControls implements SceneElement {
     
     public getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            await this.generateContent(this._width);
+            if (!this._content) {
+                this._content = new Group();
+                this._content.visible = false;
+
+                await this.draw();
+            }
 
             resolve(this._content);
         });
@@ -106,7 +108,7 @@ export class VRVideoControls implements SceneElement {
     }
 
     public getVisible() {
-        return (this._content != null) && this._content.visible;
+        return (this._content == null) || this._content.visible;
     }
     
     public async getCalculatedDimensions(): Promise<Dimensions> {

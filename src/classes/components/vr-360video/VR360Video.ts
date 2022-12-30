@@ -40,7 +40,7 @@ export class VR360Video implements SceneElement {
 
     private _mesh?: Mesh = null;
 
-    private _content: Group = new Group();
+    private _content: Group;
 
     public onClick?: Function = null;
 
