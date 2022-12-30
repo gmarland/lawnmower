@@ -131,19 +131,6 @@ export class VRDiv implements SceneElement {
             height: this._initialHeight
         }
     }
-
-    public async getCalculatedDimensions(): Promise<Dimensions> {
-        return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
-    
-            const dimensions = new Box3().setFromObject(this._content);
-    
-            resolve({
-                width: dimensions.max.x-dimensions.min.x,
-                height: dimensions.max.y-dimensions.min.y
-            });
-        });
-    }
     
     public getChildSceneElements(): SceneElement[] {
         let keys = Array.from(this._childElements.keys());

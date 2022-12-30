@@ -86,19 +86,6 @@ export class VRImage implements SceneElement {
             height: this._calculatedHeight
         };
     }
-
-    public async getCalculatedDimensions(): Promise<Dimensions> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw(); 
-    
-            const dimensions = new Box3().setFromObject(this._content);
-    
-            resolve({
-                width: dimensions.max.x-dimensions.min.x,
-                height: dimensions.max.y-dimensions.min.y
-            });
-        });
-    }
     
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {
@@ -186,7 +173,6 @@ export class VRImage implements SceneElement {
 
     public draw(): Promise<void> {
         return new Promise(async (resolve) => {
-            console.log(this._initialWidth)
             if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
             else await this.generateContent(this._setWidth);
 

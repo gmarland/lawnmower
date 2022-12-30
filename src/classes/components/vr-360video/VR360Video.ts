@@ -92,19 +92,6 @@ export class VR360Video implements SceneElement {
             height: -1
         };
     }
-
-    public async getCalculatedDimensions(): Promise<Dimensions> {
-        return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
-    
-            const dimensions = new Box3().setFromObject(this._content);
-    
-            resolve({
-                width: dimensions.max.x-dimensions.min.x,
-                height: dimensions.max.y-dimensions.min.y
-            });
-        });
-    }
     
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {

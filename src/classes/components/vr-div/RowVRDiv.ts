@@ -134,7 +134,9 @@ export class RowVRDiv extends VRDiv {
                     const dimensions = childElement.getDimensions(); 
 
                     if (!dimensions.width) {
-                        const calculatedWidth = (await childElement.getCalculatedDimensions()).width;
+                        const dimensions = new Box3().setFromObject(await childElement.getContent());
+                        
+                        const calculatedWidth = dimensions.width;
                         
                         if (calculatedWidth != spareSpace) {
                             await childElement.setCalculatedWidth(spareSpace);

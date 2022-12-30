@@ -37,8 +37,8 @@ export class VRVideoControls implements SceneElement {
 
     private _baseImagePath: string;
     
-    private _width: number;
-    private _height: number;
+    private _initialWidth?: number = null; 
+    private _initialHeight?: number = null;
     
     private _setWidth?: number = null; // Set through the API, typically through a parent div
 
@@ -69,8 +69,8 @@ export class VRVideoControls implements SceneElement {
 
         this._color = config.color;
 
-        this._width = config.width;
-        this._height = config.height;
+        if (config.width) this._initialWidth = config.width;
+        if (config.height) this._initialHeight = config.height;
 
         this._x = config.x;
         this._y = config.y;
@@ -102,26 +102,13 @@ export class VRVideoControls implements SceneElement {
     
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
-            height: this._height
+            width: this._initialHeight,
+            height: this._initialHeight
         }
     }
 
     public getVisible() {
         return (this._content == null) || this._content.visible;
-    }
-    
-    public async getCalculatedDimensions(): Promise<Dimensions> {
-        return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
-    
-            const dimensions = new Box3().setFromObject(this._content);
-    
-            resolve({
-                width: dimensions.max.x-dimensions.min.x,
-                height: dimensions.max.y-dimensions.min.y
-            });
-        });
     }
     
     public async getPosition(): Promise<Vector3> {
@@ -172,7 +159,7 @@ export class VRVideoControls implements SceneElement {
     ////////// Setters
 
     public setWidth(width: number): void {
-        this._width = width;
+        this._setWidth = width;
     }
     
     public setCalculatedWidth(width: number): Promise<void> {
@@ -206,7 +193,7 @@ export class VRVideoControls implements SceneElement {
 
     public draw(): Promise<void> {
         return new Promise(async (resolve) => {
-            if (this._width !== null) await this.generateContent(this._width);
+            if (this._initialHeight !== null) await this.generateContent(this._initialHeight);
             else await this.generateContent(this._setWidth);
 
             resolve();
@@ -271,7 +258,7 @@ export class VRVideoControls implements SceneElement {
 
             // Build layout
         
-            const geometry = PlaneUtils.getPlane(width, this._height, this._borderRadius);
+            const geometry = PlaneUtils.getPlane(width, this._initialHeight, this._borderRadius);
     
             const material = MaterialUtils.getBasicMaterial({
                 color: new Color(this._color),
@@ -282,30 +269,30 @@ export class VRVideoControls implements SceneElement {
             this._mesh.rotation.y = GeometryUtils.degToRad(180);
             this._mesh.rotation.z = GeometryUtils.degToRad(180);
             
-            this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(this._height-(this._padding*2), this._height-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/close.png'),
                 transparent: true,
                 side: DoubleSide
             }));
 
-            this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(this._height-(this._padding*2), this._height-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/play.png'),
                 transparent: true,
                 side: DoubleSide
             }));
 
-            this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(this._height-(this._padding*2), this._height-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/pause.png'),
                 transparent: true,
                 side: DoubleSide
             }));
             this._pauseMesh.visible = false;
 
-            this._closeMesh.translateX(((width/2)*-1) + (this._height/2));
+            this._closeMesh.translateX(((width/2)*-1) + (this._initialHeight/2));
             this._closeMesh.translateZ(-0.2);
-            this._playMesh.translateX((width/2) - (this._height/2));
+            this._playMesh.translateX((width/2) - (this._initialHeight/2));
             this._playMesh.translateZ(-0.2);
-            this._pauseMesh.translateX((width/2) - (this._height/2));
+            this._pauseMesh.translateX((width/2) - (this._initialHeight/2));
             this._pauseMesh.translateZ(-0.2);
 
             this._mesh.add(this._closeMesh);

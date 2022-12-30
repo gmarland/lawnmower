@@ -16,9 +16,7 @@ export interface SceneElement {
     getPosition(): Promise<Vector3>;
 
     getDimensions(): Dimensions;
-
-    getCalculatedDimensions(): Promise<Dimensions>;
-
+    
     getChildSceneElements(): Array<SceneElement>;
 
     getIsChildElement(uuid: string): boolean;
