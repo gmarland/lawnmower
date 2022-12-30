@@ -2,8 +2,7 @@ import {
     PerspectiveCamera,
     Vector3,
     MathUtils,
-    Scene,
-    Box3
+    Scene
 } from 'three';
 import { SceneElement } from '../components/SceneElement';
 

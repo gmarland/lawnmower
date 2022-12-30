@@ -7,8 +7,7 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
-    SphereGeometry,
-    Box3
+    SphereGeometry
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";

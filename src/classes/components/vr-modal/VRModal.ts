@@ -103,15 +103,13 @@ export class VRModal implements SceneElement {
 
     public async getContent(): Promise<Object3D> {
         return new Promise(async (resolve) => {
-            return new Promise(async (resolve) => {
-                if (!this._content) {
-                    this._content = new Object3D();
-                    this._content.translateZ(this._depth*0.5);
-                    await this.draw();
-                }
-                
-                resolve(this._content);
-            });
+            if (!this._content) {
+                this._content = new Object3D();
+                this._content.translateZ(this._depth*0.5);
+                await this.draw();
+            }
+            
+            resolve(this._content);
         });
     }
 
