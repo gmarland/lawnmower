@@ -2,7 +2,6 @@ import {
     Mesh,
     Object3D,
     Vector3,
-    Box3,
     CanvasTexture,
     LinearFilter,
     TextureLoader,
@@ -173,7 +172,7 @@ export class VRImage implements SceneElement {
 
     public draw(): Promise<void> {
         this._initialized = true;
-        
+
         return new Promise(async (resolve) => {
             if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
             else await this.generateContent(this._setWidth);
