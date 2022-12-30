@@ -18,51 +18,55 @@ export class RowVRDiv extends VRDiv {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            // Build out the child content
-    
-            let keys = Array.from(this.getChildElements().keys());
-            keys.sort(function(a, b){return a-b});
-            
-            const childLayoutContainer = new Object3D();
-            childLayoutContainer.name = "child";
-    
-            for (let i=0; i< keys.length; i++) {
-                const childContent = await this.getChildElements().get(keys[i]);
-
-                if (childContent.getVisible()) {
-                    const childLayout = await childContent.getContent(); 
+            if (!this.getInitialized()) {
+                this.setInitialized(true);
+                
+                // Build out the child content
         
-                    childLayoutContainer.add(childLayout);
+                let keys = Array.from(this.getChildElements().keys());
+                keys.sort(function(a, b){return a-b});
+                
+                const childLayoutContainer = new Object3D();
+                childLayoutContainer.name = "child";
+        
+                for (let i=0; i< keys.length; i++) {
+                    const childContent = await this.getChildElements().get(keys[i]);
+
+                    if (childContent.getVisible()) {
+                        const childLayout = await childContent.getContent(); 
+            
+                        childLayoutContainer.add(childLayout);
+                    }
+                }
+
+                this.layoutChildrenItems(childLayoutContainer);
+        
+                this.centerContentBox(childLayoutContainer);
+        
+                // Build out the panel
+        
+                const mesh = this.buildPanelMesh();
+        
+                this.getContentObject().add(mesh);
+
+                this.repositionContainer(mesh, childLayoutContainer);
+        
+                this.getContentObject().add(childLayoutContainer);
+
+                if (await this.resizeFullWidthPanels(childLayoutContainer)) {
+                    this.repositionContainer(mesh, childLayoutContainer);
+                }
+
+                this.resizePanelBody(mesh, childLayoutContainer);
+                
+                if ((this.getXRotation()) || (this.getYRotation()) || (this.getZRotation())) {
+                    this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation(),), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
+                    
+                    const rotatedElement = new Box3().setFromObject(this.getContentObject());
+                    this.getContentObject().position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
                 }
             }
-
-            this.layoutChildrenItems(childLayoutContainer);
-    
-            this.centerContentBox(childLayoutContainer);
-    
-            // Build out the panel
-    
-            const mesh = this.buildPanelMesh();
-    
-            this.getContentObject().add(mesh);
-
-            this.repositionContainer(mesh, childLayoutContainer);
-    
-            this.getContentObject().add(childLayoutContainer);
-
-            if (await this.resizeFullWidthPanels(childLayoutContainer)) {
-                this.repositionContainer(mesh, childLayoutContainer);
-            }
-
-            this.resizePanelBody(mesh, childLayoutContainer);
             
-            if ((this.getXRotation()) || (this.getYRotation()) || (this.getZRotation())) {
-                this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation(),), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
-                
-                const rotatedElement = new Box3().setFromObject(this.getContentObject());
-                this.getContentObject().position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
-            }
-    
             resolve(this.getContentObject());
         });
     }

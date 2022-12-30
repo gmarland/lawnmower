@@ -85,7 +85,7 @@ export class VRModal implements SceneElement {
         this._backgroundColor = config.backgroundColor;
 
         this._content.visible = false;
-        this._content.translateZ(this._depth*0.5);
+        this._content.position.z = this._offset;
     }
 
     ////////// Getters

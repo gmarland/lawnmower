@@ -54,6 +54,7 @@ export class VRDiv implements SceneElement {
     private _zRotation: number;
 
     private _content: Group = new Group();
+    private _initialized: boolean = false;
 
     private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
 
@@ -80,7 +81,7 @@ export class VRDiv implements SceneElement {
         this._color = config.color;
 
         if (config.opacity) this._opacity = config.opacity;
-
+        
         if (config.padding) this._padding = config.padding;
         if (config.margin) this._margin = config.margin;
 
@@ -88,7 +89,7 @@ export class VRDiv implements SceneElement {
         this._yRotation = config.yRotation;
         this._zRotation = config.zRotation;
         
-        this._content.translateZ(this._depth*0.5);
+        this._content.translateZ(0.5);
     }
 
     ////////// Getters
@@ -164,17 +165,21 @@ export class VRDiv implements SceneElement {
     public getContent(): Object3D {
         return null;
     }
+
+    public getInitialized(): boolean {
+        return this._initialized;
+    }
      
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.getContent(); 
     
             resolve(this._content.position);
         });
     }
 
     public getVisible(): boolean {
-        return (this._content == null) || this._content.visible;
+        return this._content.visible;
     }
 
     public getDepth(): number {
@@ -233,10 +238,6 @@ export class VRDiv implements SceneElement {
         this._setWidth = width;
     }
 
-    public setContentObject(content: Object3D): void {
-        this._content = content;
-    }
-
     public async setCalculatedWidth(width: number): Promise<void> {
         this._setWidth = width;
 
@@ -251,6 +252,10 @@ export class VRDiv implements SceneElement {
         this._content.visible = true;
     }
 
+    public setInitialized(initialized: boolean): void {
+        this._initialized = initialized;
+    }
+     
     public enableLayout(layoutId: string): void {
         const childElements = this.getChildSceneElements();
 
@@ -364,9 +369,9 @@ export class VRDiv implements SceneElement {
             ((normalizingBox.max.y-normalizingBox.min.y) > (meshBox.max.y-meshBox.min.y))) {
             let xSize = ((normalizingBox.max.x-normalizingBox.min.x)+(this._padding*2));
             let ySize = ((normalizingBox.max.y-normalizingBox.min.y)+(this._padding*2));
-
+            
             mesh.geometry.dispose();
-            mesh.geometry = PlaneUtils.getPlane(xSize , ySize, this._borderRadius)
+            mesh.geometry = PlaneUtils.getPlane(xSize, ySize, this._borderRadius)
             mesh.geometry.computeBoundingBox();
             mesh.geometry.computeBoundingSphere();
 
@@ -412,7 +417,7 @@ export class VRDiv implements SceneElement {
 
     public async updateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
-            if (!this._initialWidth) {
+            if (!width) {
                 let body = null;
                 let child = null;
     
@@ -420,6 +425,7 @@ export class VRDiv implements SceneElement {
                     if (this._content.children[i].name == "body") body = this._content.children[i];
                     else if (this._content.children[i].name == "child") child = this._content.children[i];
                 }
+
                 if (body && child) {
                     const contentBox = new Box3().setFromObject(body);
 

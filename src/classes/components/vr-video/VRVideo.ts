@@ -70,7 +70,7 @@ export class VRVideo implements SceneElement {
 
         this._placeholderTimestamp = config.placeholderTimestamp;
         
-        this._content.translateZ(this._depth*0.5);
+        this._content.translateZ(0.5);
     }
 
     ////////// Getters

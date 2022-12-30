@@ -58,7 +58,7 @@ export class VRImage implements SceneElement {
 
         this._borderRadius = config.borderRadius;
         
-        this._content.translateZ(this._depth*0.5);
+        this._content.translateZ(0.5);
     }
 
     ////////// Getters
