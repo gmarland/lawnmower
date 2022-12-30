@@ -7,7 +7,8 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
-    SphereGeometry
+    SphereGeometry,
+    Box3
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";
@@ -30,6 +31,8 @@ export class VR360Video implements SceneElement {
     private _videoRadius: number;
     private _videoWidthSegments: number;
     private _videoHieghtSegments: number;
+
+    private _setVideoRadius: number;
 
     private _video: HTMLVideoElement;
     private _videoStarted: boolean = false;
@@ -55,8 +58,6 @@ export class VR360Video implements SceneElement {
         this._parent = parent;
         
         this._src = src;
-        
-        this._content.visible = false;
     }
 
     ////////// Getters
@@ -71,7 +72,11 @@ export class VR360Video implements SceneElement {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            await this.generateContent(this._videoRadius);
+            if (!this._content) {
+                this._content = new Group();
+                this._content.visible = false;
+                await this.draw();
+            }
 
             resolve(this._content);
         });
@@ -88,15 +93,25 @@ export class VR360Video implements SceneElement {
         };
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        return {
-            width: -1,
-            height: -1
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
-    public getPosition(): Vector3 {
-        return new Vector3(0, 0, 0);
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            resolve(this._content.position);
+        });
     }
 
     public getVisible(): boolean {
@@ -147,11 +162,9 @@ export class VR360Video implements SceneElement {
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
-        return new Promise(async (resolve) => {
-            await this.generateContent(width);
+        this._setVideoRadius = width;
 
-            resolve();
-        });
+        return this.draw();
     }
 
     public setHidden(): void {
@@ -201,6 +214,15 @@ export class VR360Video implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._setVideoRadius !== null) await this.generateContent(this._setVideoRadius);
+            else await this.generateContent(this._videoRadius);
+
+            resolve();
+        });
+    }
     
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {

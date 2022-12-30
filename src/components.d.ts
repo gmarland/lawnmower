@@ -75,12 +75,6 @@ export namespace Components {
         "src": string;
         "width": number;
     }
-    interface VrLayout {
-        "depth": number;
-        "id": string;
-        "parent": SceneElement;
-        "position": number;
-    }
     interface VrModal {
         "backgroundColor": string;
         "borderColor": string;
@@ -200,12 +194,6 @@ declare global {
         prototype: HTMLVrImageElement;
         new (): HTMLVrImageElement;
     };
-    interface HTMLVrLayoutElement extends Components.VrLayout, HTMLStencilElement {
-    }
-    var HTMLVrLayoutElement: {
-        prototype: HTMLVrLayoutElement;
-        new (): HTMLVrLayoutElement;
-    };
     interface HTMLVrModalElement extends Components.VrModal, HTMLStencilElement {
     }
     var HTMLVrModalElement: {
@@ -236,7 +224,6 @@ declare global {
         "vr-body": HTMLVrBodyElement;
         "vr-div": HTMLVrDivElement;
         "vr-image": HTMLVrImageElement;
-        "vr-layout": HTMLVrLayoutElement;
         "vr-modal": HTMLVrModalElement;
         "vr-text": HTMLVrTextElement;
         "vr-video": HTMLVrVideoElement;
@@ -308,12 +295,6 @@ declare namespace LocalJSX {
         "src"?: string;
         "width"?: number;
     }
-    interface VrLayout {
-        "depth"?: number;
-        "id"?: string;
-        "parent"?: SceneElement;
-        "position"?: number;
-    }
     interface VrModal {
         "backgroundColor"?: string;
         "borderColor"?: string;
@@ -377,7 +358,6 @@ declare namespace LocalJSX {
         "vr-body": VrBody;
         "vr-div": VrDiv;
         "vr-image": VrImage;
-        "vr-layout": VrLayout;
         "vr-modal": VrModal;
         "vr-text": VrText;
         "vr-video": VrVideo;
@@ -393,7 +373,6 @@ declare module "@stencil/core" {
             "vr-body": LocalJSX.VrBody & JSXBase.HTMLAttributes<HTMLVrBodyElement>;
             "vr-div": LocalJSX.VrDiv & JSXBase.HTMLAttributes<HTMLVrDivElement>;
             "vr-image": LocalJSX.VrImage & JSXBase.HTMLAttributes<HTMLVrImageElement>;
-            "vr-layout": LocalJSX.VrLayout & JSXBase.HTMLAttributes<HTMLVrLayoutElement>;
             "vr-modal": LocalJSX.VrModal & JSXBase.HTMLAttributes<HTMLVrModalElement>;
             "vr-text": LocalJSX.VrText & JSXBase.HTMLAttributes<HTMLVrTextElement>;
             "vr-video": LocalJSX.VrVideo & JSXBase.HTMLAttributes<HTMLVrVideoElement>;
