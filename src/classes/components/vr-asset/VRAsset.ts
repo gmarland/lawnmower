@@ -163,7 +163,7 @@ export class VRAsset implements SceneElement {
     }
 
     public getVisible(): boolean {
-        return this._content.visible;
+        return (this._content != null) && this._content.visible;
     }
 
     public getChildSceneElements(): SceneElement[] {

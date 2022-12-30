@@ -30,9 +30,11 @@ export class VRDiv implements SceneElement {
 
     private _uuid: string;
 
-    private _width: number; 
-    private _height?: number;
+    private _initialWidth?: number; 
+    private _initialHeight?: number;
     private _borderRadius: number;
+
+    private _setWidth: number;
 
     private _color: string = "";
     
@@ -70,8 +72,8 @@ export class VRDiv implements SceneElement {
         this._itemVerticalAlign = config.itemVerticalAlign;
         this._itemHorizontalAlign = config.itemHorizontalAlign;
 
-        this._width = config.width;
-        this._height = config.height;
+        this._initialWidth = config.width;
+        this._initialHeight = config.height;
 
         this._borderRadius = config.borderRadius;
         
@@ -125,18 +127,22 @@ export class VRDiv implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
-            height: this._height
+            width: this._initialWidth,
+            height: this._initialHeight
         }
     }
 
-    public getCalculatedDimensions(): Dimensions {
-        const dimensions = new Box3().setFromObject(this._content);
-
-        return {
-            width: dimensions.max.x-dimensions.min.x,
-            height: dimensions.max.y-dimensions.min.y
-        }
+    public async getCalculatedDimensions(): Promise<Dimensions> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
+    
+            const dimensions = new Box3().setFromObject(this._content);
+    
+            resolve({
+                width: dimensions.max.x-dimensions.min.x,
+                height: dimensions.max.y-dimensions.min.y
+            });
+        });
     }
     
     public getChildSceneElements(): SceneElement[] {
@@ -171,13 +177,17 @@ export class VRDiv implements SceneElement {
     public getContent(): Object3D {
         return null;
     }
+     
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this._content) await this.getContent(); 
     
-    public getPosition(): Vector3 {
-        return this._content.position;
+            resolve(this._content.position);
+        });
     }
 
     public getVisible(): boolean {
-        return this._content.visible;
+        return (this._content != null) && this._content.visible;
     }
 
     public getDepth(): number {
@@ -233,7 +243,7 @@ export class VRDiv implements SceneElement {
     ////////// Setters
 
     public setWidth(width: number): void {
-        this._width = width;
+        this._setWidth = width;
     }
 
     public setContentObject(content: Object3D): void {
@@ -241,39 +251,9 @@ export class VRDiv implements SceneElement {
     }
 
     public async setCalculatedWidth(width: number): Promise<void> {
-        return new Promise(async (resolve) => {
-            if (!this._width) {
-                let body = null;
-                let child = null;
-    
-                for (let i=0; i<this._content.children.length; i++) {
-                    if (this._content.children[i].name == "body") body = this._content.children[i];
-                    else if (this._content.children[i].name == "child") child = this._content.children[i];
-                }
-    
-                if (body && child) {
-                    const contentBox = new Box3().setFromObject(body);
+        this._setWidth = width;
 
-                    let xSize = (contentBox.max.x-contentBox.min.x);
-
-                    if (xSize != width) {
-                        let ySize = (contentBox.max.y-contentBox.min.y);
-
-                        body.geometry.dispose();
-                        body.geometry = PlaneUtils.getPlane(width, ySize, this._borderRadius)
-                        body.geometry.computeBoundingBox();
-                        body.geometry.computeBoundingSphere();
-                    }
-    
-                    // This seems to cause a redraw
-                    new Box3().setFromObject(body);
-    
-                    await this.resizeFullWidthPanels(body, child);
-                }
-            }
-
-            resolve();
-        });
+        return this.draw();
     }
 
     public setHidden(): void {
@@ -309,6 +289,15 @@ export class VRDiv implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public async draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._setWidth !== null) await this.updateContent(this._setWidth);
+            else await this.updateContent(this._initialWidth);
+
+            resolve();
+        });
+    }
     
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
@@ -339,12 +328,12 @@ export class VRDiv implements SceneElement {
     public buildPanelMesh(): Mesh {
         let height = 0;
 
-        if (this._height) height = this._height;
+        if (this._initialHeight) height = this._initialHeight;
         else height = this._padding;
 
         let width = 0;
 
-        if (this._width) width = this._width;
+        if (this._initialWidth) width = this._initialWidth;
         else width = this._padding;
 
         let materialOptions;
@@ -433,6 +422,42 @@ export class VRDiv implements SceneElement {
     }
 
     ////////// Virtual Methods
+
+    public async updateContent(width: number): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (!this._initialWidth) {
+                let body = null;
+                let child = null;
+    
+                for (let i=0; i<this._content.children.length; i++) {
+                    if (this._content.children[i].name == "body") body = this._content.children[i];
+                    else if (this._content.children[i].name == "child") child = this._content.children[i];
+                }
+    
+                if (body && child) {
+                    const contentBox = new Box3().setFromObject(body);
+
+                    let xSize = (contentBox.max.x-contentBox.min.x);
+
+                    if (xSize != width) {
+                        let ySize = (contentBox.max.y-contentBox.min.y);
+
+                        body.geometry.dispose();
+                        body.geometry = PlaneUtils.getPlane(width, ySize, this._borderRadius)
+                        body.geometry.computeBoundingBox();
+                        body.geometry.computeBoundingSphere();
+                    }
+    
+                    // This seems to cause a redraw
+                    new Box3().setFromObject(body);
+    
+                    await this.resizeFullWidthPanels(body, child);
+                }
+            }
+
+            resolve();
+        });
+    }
 
     protected centerContentBox(childLayoutContainer: Object3D): void {};
 

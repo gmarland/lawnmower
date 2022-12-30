@@ -35,7 +35,7 @@ export class Camera {
             this._placeElements.push(element);
 
             const elementContent = await element.getContent();
-            const elementPosition = element.getPosition();
+            const elementPosition = await element.getPosition();
 
             this._scene.add(elementContent);
             
@@ -52,7 +52,7 @@ export class Camera {
             this._attachedElements.push(element);
 
             const elementContent = await element.getContent();
-            const elementPosition = element.getPosition();
+            const elementPosition = await element.getPosition();
 
             this._scene.add(elementContent);
             this._camera.add(elementContent);

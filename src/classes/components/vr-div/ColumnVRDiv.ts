@@ -140,7 +140,7 @@ export class ColumnVRDiv extends VRDiv {
                         const dimensions = childElement.getDimensions(); 
 
                         if (!dimensions.width) {
-                            totalSpace += childElement.getCalculatedDimensions().width;
+                            totalSpace += (await childElement.getCalculatedDimensions()).width;
                             dynamicWidths.push(childElement);
                         }
                     }

@@ -106,7 +106,7 @@ export class VRVideoControls implements SceneElement {
     }
 
     public getVisible() {
-        return this._content.visible;
+        return (this._content != null) && this._content.visible;
     }
     
     public async getCalculatedDimensions(): Promise<Dimensions> {

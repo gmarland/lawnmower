@@ -171,7 +171,7 @@ export class MainScene {
                 this._modalElements.push(childElement as VRModal);
 
                 const modalDialog = await childElement.getContent();
-                modalDialog.position.z = childElement.getPosition().z;
+                modalDialog.position.z = (await childElement.getPosition()).z;
 
                 this._modalContainer.add(modalDialog);
             }
