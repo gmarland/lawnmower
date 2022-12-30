@@ -1,5 +1,4 @@
 import { 
-    Box3,
     Group,
     Vector3,
     Mesh,

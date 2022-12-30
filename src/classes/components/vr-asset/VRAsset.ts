@@ -4,8 +4,7 @@ import {
     AnimationClip,
     BoxGeometry,
     Mesh,
-    Vector3,
-    Box3
+    Vector3
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";

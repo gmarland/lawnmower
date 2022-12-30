@@ -2,7 +2,6 @@ import {
     Mesh,
     Group,
     Vector3,
-    Box3,
     CanvasTexture,
     LinearFilter
 } from 'three';
