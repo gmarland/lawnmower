@@ -2,6 +2,7 @@ import {
     Group,
     Vector3
 } from 'three';
+
 import { Dimensions } from '../../geometry/Dimensions';
 
 import { MeshUtils } from "../../geometry/MeshUtils";
@@ -54,7 +55,7 @@ export class VRLayout implements SceneElement {
     
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.draw(); 
     
             resolve(this._content.position);
         });

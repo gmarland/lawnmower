@@ -170,12 +170,12 @@ export class VRImage implements SceneElement {
 
     // --- Rendering Methods
 
-    public draw(): Promise<void> {
+    public async draw(): Promise<void> {
         this._initialized = true;
 
         return new Promise(async (resolve) => {
-            if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
-            else await this.generateContent(this._setWidth);
+            if (this._setWidth !== null) await this.generateContent(this._setWidth);
+            else await this.generateContent(this._initialWidth);
 
             resolve();
         });
@@ -267,7 +267,7 @@ export class VRImage implements SceneElement {
             
             let buildHeight = 0;
             if (this._calculatedHeight) buildHeight = this._calculatedHeight;
-    
+            
             const geometry = PlaneUtils.getPlane(buildWidth, buildHeight, this._borderRadius);
             
             const material = MaterialUtils.getBasicMaterial({
