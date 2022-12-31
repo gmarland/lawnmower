@@ -4,8 +4,7 @@ import {
     Mesh,
     Color,
     DoubleSide,
-    TextureLoader,
-    Box3
+    TextureLoader
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";
@@ -155,7 +154,7 @@ export class VRVideoControls implements SceneElement {
     }
 
     ////////// Setters
-    
+
     public setWidth(width: number): Promise<void> {
         this._setWidth = width;
 

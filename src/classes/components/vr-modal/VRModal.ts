@@ -7,6 +7,7 @@ import {
     DoubleSide,
     TextureLoader
 } from 'three';
+
 import { Dimensions } from '../../geometry/Dimensions';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
