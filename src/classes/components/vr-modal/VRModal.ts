@@ -119,9 +119,9 @@ export class VRModal implements SceneElement {
     
     public async getPosition(): Promise<Vector3> {
         return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
+            if (!this._initialized) await this.draw(); 
     
-            resolve(this._content.position);
+            resolve(new Vector3(0,0,this._offset));
         });
     }
 
@@ -134,7 +134,7 @@ export class VRModal implements SceneElement {
     }
 
     public getVisible(): boolean {
-        return (this._content != null) && this._content.visible;
+        return this._content.visible;
     }
     
     public isPartOfLayout(): boolean {
@@ -252,7 +252,7 @@ export class VRModal implements SceneElement {
             let dialogHeight = this._height ? this._height : 0;
 
             if (this._childElement) {
-                this._childElement.setWidth(this._width-(this._padding*2));
+                await this._childElement.setCalculatedWidth(this._width-(this._padding*2));
 
                 const childContent = await this._childElement.getContent();
                 
