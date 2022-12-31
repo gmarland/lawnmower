@@ -155,12 +155,8 @@ export class VRVideoControls implements SceneElement {
     }
 
     ////////// Setters
-
-    public setWidth(width: number): void {
-        this._setWidth = width;
-    }
     
-    public setCalculatedWidth(width: number): Promise<void> {
+    public setWidth(width: number): Promise<void> {
         this._setWidth = width;
 
         return this.draw();

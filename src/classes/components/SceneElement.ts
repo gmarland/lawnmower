@@ -25,7 +25,7 @@ export interface SceneElement {
 
     setWidth(width: number): void;
 
-    setCalculatedWidth(width: number): Promise<void>;
+    setWidth(width: number): Promise<void>;
 
     setHidden(): void;
     

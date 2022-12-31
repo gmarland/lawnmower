@@ -166,7 +166,7 @@ export class ColumnVRDiv extends VRDiv {
                 
                 if (dynamicWidths.length > 0) {
                     for (let i=0; i< dynamicWidths.length; i++) {
-                        await dynamicWidths[i].setCalculatedWidth(seperateSpace);
+                        await dynamicWidths[i].setWidth(seperateSpace);
                     }
 
                     childLayoutContainer.position.x = 0;

@@ -168,11 +168,7 @@ export class VRModal implements SceneElement {
 
     ////////// Setters
 
-    public setWidth(width: number): void {
-        this._width = width;
-    }
-    
-    public async setCalculatedWidth(width: number): Promise<void> {
+    public async setWidth(width: number): Promise<void> {
         this._setWidth = width;
 
         return this.draw();
@@ -252,7 +248,7 @@ export class VRModal implements SceneElement {
             let dialogHeight = this._height ? this._height : 0;
 
             if (this._childElement) {
-                await this._childElement.setCalculatedWidth(this._width-(this._padding*2));
+                await this._childElement.setWidth(this._width-(this._padding*2));
 
                 const childContent = await this._childElement.getContent();
                 

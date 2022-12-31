@@ -143,11 +143,7 @@ export class VR360Video implements SceneElement {
 
     ////////// Setters
 
-    public setWidth(width: number): void {
-        this._videoRadius = width;
-    }
-
-    public async setCalculatedWidth(width: number): Promise<void> {
+    public async setWidth(width: number): Promise<void> {
         this._setVideoRadius = width;
 
         return this.draw();

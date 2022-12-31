@@ -191,10 +191,6 @@ export class VRAsset implements SceneElement {
 
     ////////// Setters
 
-    public setWidth(width: number): void {
-        this._radius = width;
-    }
-
     public setActiveAnimation(animationName: string): void {
         this._activeAnimation = animationName;
         
@@ -219,7 +215,7 @@ export class VRAsset implements SceneElement {
         this._zRotationSpeed = rotationSpeed;
     }
 
-    public setCalculatedWidth(width: number): Promise<void> {
+    public setWidth(width: number): Promise<void> {
         this._setRadius = width;
 
         return new Promise((resolve) => {

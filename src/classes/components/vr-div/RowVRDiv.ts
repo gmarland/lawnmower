@@ -142,7 +142,7 @@ export class RowVRDiv extends VRDiv {
                         const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
                         
                         if (actualWidth != spareSpace) {
-                            await childElement.setCalculatedWidth(spareSpace);
+                            await childElement.setWidth(spareSpace);
 
                             widthsUpdated = true;
                         }
