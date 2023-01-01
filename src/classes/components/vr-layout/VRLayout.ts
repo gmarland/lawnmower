@@ -29,6 +29,7 @@ export class VRLayout implements SceneElement {
         
         this._uuid = MeshUtils.generateId();
         
+        this._content.name = "layout";
         this._content.visible = false;
     }
 
@@ -164,6 +165,8 @@ export class VRLayout implements SceneElement {
         for (let i=0; i< keys.length; i++) {
             this._childElements.get(keys[i]).enableLayout(layoutId);
         }
+
+        this._parent.draw();
     }
 
     public disableLayouts(): void {
@@ -172,8 +175,10 @@ export class VRLayout implements SceneElement {
         let keys = Array.from(this._childElements.keys());
 
         for (let i=0; i< keys.length; i++) {
-            this._childElements.get(keys[i]).setHidden();
+            this._childElements.get(keys[i]).disableLayouts();
         }
+
+        this._parent.draw();
     }
     
     ////////// Public Methods

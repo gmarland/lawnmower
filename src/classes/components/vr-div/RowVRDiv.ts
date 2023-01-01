@@ -1,7 +1,8 @@
 import { 
     Object3D,
     Box3,
-    Group
+    Group,
+    Mesh
 } from 'three';
 
 import { ItemHorizontalAlign } from '../../geometry/ItemHorizontalAlign';
@@ -32,11 +33,7 @@ export class RowVRDiv extends VRDiv {
                 for (let i=0; i< keys.length; i++) {
                     const childContent = await this.getChildElements().get(keys[i]);
 
-                    if (childContent.getVisible()) {
-                        const childLayout = await childContent.getContent(); 
-            
-                        childLayoutContainer.add(childLayout);
-                    }
+                    childLayoutContainer.add(await childContent.getContent());
                 }
 
                 this.layoutChildrenItems(childLayoutContainer);
@@ -53,7 +50,13 @@ export class RowVRDiv extends VRDiv {
         
                 this.getContentObject().add(childLayoutContainer);
 
-                if (await this.resizeFullWidthPanels(childLayoutContainer)) {
+                if (await this.resizeFullWidthPanels(mesh, childLayoutContainer)) {
+                    this.resetChildPositions(childLayoutContainer);
+    
+                    this.layoutChildrenItems(childLayoutContainer);
+                    
+                    this.centerContentBox(childLayoutContainer);
+                    
                     this.repositionContainer(mesh, childLayoutContainer);
                 }
 
@@ -110,17 +113,15 @@ export class RowVRDiv extends VRDiv {
         }
     }
 
-    public async resizeFullWidthPanels(childLayoutContainer: Object3D): Promise<boolean> {
+    public async resizeFullWidthPanels(width: number, childLayoutContainer: Object3D): Promise<boolean> {
         return new Promise(async (resolve) => {
             const meshBox = new Box3().setFromObject(childLayoutContainer);
-
-            const panelWidth = this.getDimensions().width;
             const childWidth = ((meshBox.max.x-meshBox.min.x));
 
             let spareSpace;
             
-            if (panelWidth && (((panelWidth - this.getPadding())*2) > childWidth)) {
-                spareSpace = panelWidth;
+            if (width && (((width - this.getPadding())*2) > childWidth)) {
+                spareSpace = (width - this.getPadding());
             } 
             else {
                 spareSpace = childWidth;
@@ -150,23 +151,19 @@ export class RowVRDiv extends VRDiv {
                 }
             }
 
-            if (widthsUpdated) {
-                childLayoutContainer.position.x = 0;
-                childLayoutContainer.position.y = 0;
-                
-                for (let i=0; i<childLayoutContainer.children.length; i++) {
-                    if (childLayoutContainer.children[i].visible) {
-                        const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
-                        childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
-                    }
-                }
-
-                this.layoutChildrenItems(childLayoutContainer);
-                
-                this.centerContentBox(childLayoutContainer);
-            }
-
             resolve(widthsUpdated);
         });
+    }
+
+    public resetChildPositions(childLayoutContainer: Object3D): void {
+        childLayoutContainer.position.x = 0;
+        childLayoutContainer.position.y = 0;
+        
+        for (let i=0; i<childLayoutContainer.children.length; i++) {
+            if (childLayoutContainer.children[i].visible) {
+                const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+                childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
+            }
+        }
     }
 }

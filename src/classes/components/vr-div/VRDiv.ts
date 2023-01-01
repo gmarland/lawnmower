@@ -282,7 +282,7 @@ export class VRDiv implements SceneElement {
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.updateContent(this._setWidth);
             else await this.updateContent(this._initialWidth);
-
+            
             resolve();
         });
     }
@@ -424,22 +424,41 @@ export class VRDiv implements SceneElement {
 
                 if (body && child) {
                     const contentBox = new Box3().setFromObject(body);
+                    const childBox = new Box3().setFromObject(child);
 
-                    let xSize = (contentBox.max.x-contentBox.min.x);
+                    const xBodySize = (contentBox.max.x-contentBox.min.x);
 
-                    if (xSize != width) {
-                        let ySize = (contentBox.max.y-contentBox.min.y);
+                    const xSize = (childBox.max.x-childBox.min.x);
+                    const ySize = (childBox.max.y-childBox.min.y);
 
+                    if (xBodySize != width) await this.resizeFullWidthPanels(width, child);
+
+                    this.resetChildPositions(child);
+
+                    this.layoutChildrenItems(child);
+                    
+                    this.centerContentBox(child);
+             
+                    this.repositionContainer(body, child);
+                    
+                    const updatedChildBox = new Box3().setFromObject(child);
+
+                    const updatedXSize = (updatedChildBox.max.x-updatedChildBox.min.x);
+                    const updatedYSize = (updatedChildBox.max.y-updatedChildBox.min.y);
+                    
+                    if ((xSize !== updatedXSize) || 
+                        (ySize !== updatedYSize)) {
                         body.geometry.dispose();
-                        body.geometry = PlaneUtils.getPlane(width, ySize, this._borderRadius)
+                        body.geometry = PlaneUtils.getPlane(updatedXSize + (this._padding*2), updatedXSize + (this._padding*2), this._borderRadius)
                         body.geometry.computeBoundingBox();
                         body.geometry.computeBoundingSphere();
+
+                        const updatedContentBox = new Box3().setFromObject(body);
+
+                        body.translateY((updatedContentBox.max.y-contentBox.max.y)*-1);
+
+                        if ((this._parent) && (this._parent.draw)) this._parent.draw();
                     }
-    
-                    // This seems to cause a redraw
-                    new Box3().setFromObject(body);
-    
-                    await this.resizeFullWidthPanels(body, child);
                 }
             }
 
@@ -451,5 +470,7 @@ export class VRDiv implements SceneElement {
 
     protected layoutChildrenItems(childLayoutContainer: Object3D): void {};
 
-    protected resizeFullWidthPanels(mesh: Mesh, childLayoutContainer: Object3D): void {};
+    protected resizeFullWidthPanels(width: number, childLayoutContainer: Object3D): any {};
+
+    protected resetChildPositions(childLayoutContainer: Object3D): void {};
 }

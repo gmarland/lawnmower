@@ -82,6 +82,7 @@ export class VRText implements SceneElement {
 
         if (config.padding) this._padding = config.padding;
         
+        this._content.name = "text"
         this._content.translateZ(0.5);
     }
 

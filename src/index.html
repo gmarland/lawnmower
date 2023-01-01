@@ -46,13 +46,15 @@
               How are you?
             </vr-text>  
           </vr-div>
-          <vr-text width="600" font-color="#00ff00" background-color="#ff0022" padding="10" text-decoration="italic">
-            This is but a test ererg reg re erger   e ergergerge er g er ger gergerg erg  gregre
-  
-            gerreger
-  
-            ergergergergre
-          </vr-text>
+          <vr-layout id="doom">
+            <vr-text width="600" font-color="#00ff00" background-color="#ff0022" padding="10" text-decoration="italic">
+              This is but a test ererg reg re erger   e ergergerge er g er ger gergerg erg  gregre
+    
+              gerreger
+    
+              ergergergergre
+            </vr-text>
+          </vr-layout>
           <vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>
           <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
             Halloween
@@ -90,17 +92,19 @@
               this is it
             </vr-text>
           </vr-div>
-          <vr-div color="#000fff" margin="5">
+          <vr-div color="#000fff" margin="5" padding="10">
             <vr-text ffont-color="#222222" background-color="#ffffff" padding="10">
               not now
 
               this is a jump
-            </vr-text>
-            <vr-text font-color="#222222" background-color="#ffffff" padding="20" text-decoration="italic">
-              too hot too handle
 
-              this is my jam
+              rergreerg
             </vr-text>
+            <vr-layout id="doom">
+              <vr-text font-color="#222222" background-color="#ffffff" padding="20" text-decoration="italic">
+                too hot too handle
+              </vr-text>
+            </vr-layout>
           </vr-div>
         </vr-div>
       </vr-div>
@@ -109,7 +113,11 @@
       (async () => {
         await customElements.whenDefined('vr-body');
         const main = document.getElementById('main');
-        await main.showModal("image-modal");
+        //await main.showModal("image-modal");
+        
+        setTimeout(() => {
+          main.setLayout("doom");
+        }, 3000);
       })();
 
       const foxElement = document.getElementById("fox-asset");
