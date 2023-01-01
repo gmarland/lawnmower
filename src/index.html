@@ -33,7 +33,7 @@
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
       </vr-modal>
       <vr-div margin="10">
-        <vr-div width="700" height="70" color="#602201" margin="30" layout="Column" item-vertical-align="Top" padding="10">
+        <vr-div width="700" height="70" color="#002201" margin="30" layout="Column" item-vertical-align="Top" padding="10">
           <vr-div width="500" color="#ffffff" margin="10">
             <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
               Jumping
@@ -74,12 +74,14 @@
   
               trade me in for a better one
             </vr-text>
-            <vr-asset 
-              id="fox-asset"
-              active-animation="Walk"
-              radius="500" 
-              y-rotation="90"
-              src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"></vr-asset>
+            <vr-layout id="boom">
+              <vr-asset 
+                id="fox-asset"
+                active-animation="Walk"
+                radius="500" 
+                y-rotation="90"
+                src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"></vr-asset>
+            </vr-layout>
           </vr-div>
           <vr-div width="100" height="90" color="#ff00ff"></vr-div>
           <vr-div width="500" color="#00d000" margin="10"> 
@@ -117,6 +119,10 @@
         
         setTimeout(() => {
           main.setLayout("doom");
+          
+          setTimeout(() => {
+            main.setLayout("boom");
+          }, 3000);
         }, 3000);
       })();
 
