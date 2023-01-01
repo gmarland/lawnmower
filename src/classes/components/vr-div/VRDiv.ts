@@ -449,7 +449,7 @@ export class VRDiv implements SceneElement {
                     if ((xSize !== updatedXSize) || 
                         (ySize !== updatedYSize)) {
                         body.geometry.dispose();
-                        body.geometry = PlaneUtils.getPlane(updatedXSize + (this._padding*2), updatedXSize + (this._padding*2), this._borderRadius)
+                        body.geometry = PlaneUtils.getPlane(updatedXSize + (this._padding*2), updatedYSize + (this._padding*2), this._borderRadius)
                         body.geometry.computeBoundingBox();
                         body.geometry.computeBoundingSphere();
 
