@@ -1,8 +1,7 @@
 import { 
     Object3D,
     Box3,
-    Group,
-    Mesh
+    Group
 } from 'three';
 
 import { ItemHorizontalAlign } from '../../geometry/ItemHorizontalAlign';
@@ -43,6 +42,7 @@ export class RowVRDiv extends VRDiv {
                 // Build out the panel
         
                 const mesh = this.buildPanelMesh();
+                const meshBox = new Box3().setFromObject(mesh);
         
                 this.getContentObject().add(mesh);
 
@@ -50,7 +50,7 @@ export class RowVRDiv extends VRDiv {
         
                 this.getContentObject().add(childLayoutContainer);
 
-                if (await this.resizeFullWidthPanels(mesh, childLayoutContainer)) {
+                if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
                     this.resetChildPositions(childLayoutContainer);
     
                     this.layoutChildrenItems(childLayoutContainer);
@@ -134,7 +134,7 @@ export class RowVRDiv extends VRDiv {
 
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
-                
+
                 if (childElement.getVisible()) {
                     const dimensions = childElement.getDimensions(); 
 

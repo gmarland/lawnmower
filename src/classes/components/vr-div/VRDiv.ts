@@ -356,18 +356,26 @@ export class VRDiv implements SceneElement {
         return main;
     }
 
-    public resizePanelBody(mesh: Mesh, childLayoutContainer: Object3D): void {
+    public resizePanelBody(mesh: Mesh, childLayoutContainer: Object3D): boolean {
         const meshBox = new Box3().setFromObject(mesh);
+        const childBox = new Box3().setFromObject(childLayoutContainer);
 
-        let normalizingBox = new Box3().setFromObject(childLayoutContainer);
+        let bodyXSize = (meshBox.max.x-meshBox.min.x);
+        if (isNaN(bodyXSize) || !isFinite(bodyXSize)) bodyXSize = (this._padding*2);
 
-        if (((normalizingBox.max.x-normalizingBox.min.x) > (meshBox.max.x-meshBox.min.x)) || 
-            ((normalizingBox.max.y-normalizingBox.min.y) > (meshBox.max.y-meshBox.min.y))) {
-            let xSize = ((normalizingBox.max.x-normalizingBox.min.x)+(this._padding*2));
-            let ySize = ((normalizingBox.max.y-normalizingBox.min.y)+(this._padding*2));
-            
+        let bodyYSize = (meshBox.max.y-meshBox.min.y);
+        if (isNaN(bodyYSize) || !isFinite(bodyYSize)) bodyYSize = (this._padding*2);
+
+        let childXSize = ((childBox.max.x-childBox.min.x)+(this._padding*2));
+        if (isNaN(childXSize) || !isFinite(childXSize)) childXSize = (this._padding*2);
+
+        let childYSize = ((childBox.max.y-childBox.min.y)+(this._padding*2));
+        if (isNaN(childYSize) || !isFinite(childYSize)) childYSize = (this._padding*2);
+
+        if ((childXSize !== bodyXSize) || 
+            (childYSize !== bodyYSize)) {
             mesh.geometry.dispose();
-            mesh.geometry = PlaneUtils.getPlane(xSize, ySize, this._borderRadius)
+            mesh.geometry = PlaneUtils.getPlane(childXSize, childYSize, this._borderRadius)
             mesh.geometry.computeBoundingBox();
             mesh.geometry.computeBoundingSphere();
 
@@ -378,6 +386,11 @@ export class VRDiv implements SceneElement {
             
             if (this._horizontalAlign == HorizontalAlign.Left) mesh.position.x += scaledMeshBox.max.x-meshBox.max.x;
             else if (this._horizontalAlign == HorizontalAlign.Right) mesh.position.x -= scaledMeshBox.max.x-meshBox.max.x;
+            
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -413,53 +426,31 @@ export class VRDiv implements SceneElement {
 
     public async updateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
-            if (!width) {
-                let body = null;
-                let child = null;
-    
-                for (let i=0; i<this._content.children.length; i++) {
-                    if (this._content.children[i].name == "body") body = this._content.children[i];
-                    else if (this._content.children[i].name == "child") child = this._content.children[i];
-                }
+            let body = null;
+            let child = null;
 
-                if (body && child) {
-                    const contentBox = new Box3().setFromObject(body);
-                    const childBox = new Box3().setFromObject(child);
+            for (let i=0; i<this._content.children.length; i++) {
+                if (this._content.children[i].name == "body") body = this._content.children[i];
+                else if (this._content.children[i].name == "child") child = this._content.children[i];
+            }
 
-                    const xBodySize = (contentBox.max.x-contentBox.min.x);
+            if (body && child) {
+                const contentBox = new Box3().setFromObject(body);
 
-                    const xSize = (childBox.max.x-childBox.min.x);
-                    const ySize = (childBox.max.y-childBox.min.y);
+                const xBodySize = (contentBox.max.x-contentBox.min.x);
 
-                    if (xBodySize != width) await this.resizeFullWidthPanels(width, child);
+                if ((!width) || (xBodySize != width)) await this.resizeFullWidthPanels(width, child);
 
-                    this.resetChildPositions(child);
+                this.resetChildPositions(child);
 
-                    this.layoutChildrenItems(child);
-                    
-                    this.centerContentBox(child);
-             
-                    this.repositionContainer(body, child);
-                    
-                    const updatedChildBox = new Box3().setFromObject(child);
-
-                    const updatedXSize = (updatedChildBox.max.x-updatedChildBox.min.x);
-                    const updatedYSize = (updatedChildBox.max.y-updatedChildBox.min.y);
-                    
-                    if ((xSize !== updatedXSize) || 
-                        (ySize !== updatedYSize)) {
-                        body.geometry.dispose();
-                        body.geometry = PlaneUtils.getPlane(updatedXSize + (this._padding*2), updatedYSize + (this._padding*2), this._borderRadius)
-                        body.geometry.computeBoundingBox();
-                        body.geometry.computeBoundingSphere();
-
-                        const updatedContentBox = new Box3().setFromObject(body);
-
-                        body.translateY((updatedContentBox.max.y-contentBox.max.y)*-1);
-
-                        if ((this._parent) && (this._parent.draw)) this._parent.draw();
-                    }
-                }
+                this.layoutChildrenItems(child);
+                
+                this.centerContentBox(child);
+            
+                this.repositionContainer(body, child);
+                
+                const bodyResized = this.resizePanelBody(body, child);
+                if (bodyResized && (this._parent) && (this._parent.draw)) this._parent.draw();
             }
 
             resolve();
