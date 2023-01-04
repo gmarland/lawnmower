@@ -19,8 +19,6 @@ import { VRLayout } from '../vr-layout/VRLayout';
 import { VR360VideoConfig } from './VR360VideoConfig';
 
 export class VR360Video implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _uuid: string;
@@ -46,9 +44,7 @@ export class VR360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, src: string, config: VR360VideoConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, src: string, config: VR360VideoConfig) {
         this._uuid = MeshUtils.generateId();
 
         this._videoRadius = config.videoRadius;

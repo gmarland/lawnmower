@@ -47,6 +47,9 @@ export class MainScene {
     
     private _mainObjectContainer: Object3D = new Object3D();
     private _modalContainer: Object3D = new Object3D();
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     // ===== exposedEvents
 
@@ -230,6 +233,37 @@ export class MainScene {
             
             resolve();
         });
+    }
+    
+    public async draw(): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
+
+                const mainObjectBox = new Box3().setFromObject(this._mainObjectContainer);
+
+                this._mainObjectContainer.translateX(((mainObjectBox.max.x+mainObjectBox.min.x)/2)*-1);
+                this._mainObjectContainer.translateY(((mainObjectBox.max.y+mainObjectBox.min.y)/2)*-1);
+
+                
+                this._drawing = false;
+                
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    resolve();
+                }
+                else {
+                    resolve();
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve();
+            }
+        })
     }
 
     private startRender(): void {

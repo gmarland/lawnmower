@@ -108,7 +108,7 @@ export class VrAsset {
   }
 
   componentWillLoad() {
-    this._asset = new VRAsset(this.depth, this.parent, this.src, { 
+    this._asset = new VRAsset(this.parent, this.src, { 
       activeAnimation: this.activeAnimation,
       radius: this.radius, 
       xRotation: this.xRotation,

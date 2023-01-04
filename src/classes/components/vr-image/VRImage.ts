@@ -21,8 +21,6 @@ import { VRLayout } from '../vr-layout/VRLayout';
 import { VRImageConfig } from './VRImageConfig';
 
 export class VRImage implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _uuid: string;
@@ -44,9 +42,7 @@ export class VRImage implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, src: string, config: VRImageConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, src: string, config: VRImageConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();

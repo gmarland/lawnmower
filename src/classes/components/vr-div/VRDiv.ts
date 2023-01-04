@@ -302,6 +302,7 @@ export class VRDiv implements SceneElement {
                 
                 if (this._redraw) {
                     await this.draw();
+                    
                     resolve();
                 }
                 else {
@@ -467,7 +468,7 @@ export class VRDiv implements SceneElement {
                 await this.generateContent(body, child);
 
                 const bodyResized = this.resizePanelBody(body, child);
-                if (bodyResized && (this._parent) && (this._parent.draw)) this._parent.draw();
+                if (bodyResized) this._parent.draw();
             }
 
             resolve();

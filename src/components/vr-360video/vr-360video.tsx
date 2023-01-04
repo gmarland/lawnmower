@@ -71,7 +71,7 @@ export class Vr360Video {
   }
 
   componentWillLoad() {
-    this._video = new VR360Video(this.depth, this.parent, this.src, { 
+    this._video = new VR360Video(this.parent, this.src, { 
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,
       videoHieghtSegments: this.videoHieghtSegments

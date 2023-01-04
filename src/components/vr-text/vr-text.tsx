@@ -64,7 +64,7 @@ export class VrText {
       }
     }
 
-    this._textblock = new VRText(this.depth, this.parent, this.el.innerHTML, { 
+    this._textblock = new VRText(this.parent, this.el.innerHTML, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,

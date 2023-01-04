@@ -19,8 +19,6 @@ import { VRLayout } from '../vr-layout/VRLayout';
 import { VRVideoControlsConfig } from './VRVideoControlsConfig';
 
 export class VRVideoControls implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _uuid: string;
@@ -58,9 +56,7 @@ export class VRVideoControls implements SceneElement {
     public onPause?: Function = null;
     public onClose?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, config: VRVideoControlsConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, config: VRVideoControlsConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();

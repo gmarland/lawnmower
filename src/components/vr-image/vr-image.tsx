@@ -48,7 +48,7 @@ export class VrImage {
   private _modalDialog: HTMLVrModalElement;
 
   componentWillLoad() {
-    this._image = new VRImage(this.depth, this.parent, this.src, { 
+    this._image = new VRImage(this.parent, this.src, { 
         width: this.width, 
         height: this.height,
         borderRadius: this.borderRadius

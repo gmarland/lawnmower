@@ -77,7 +77,7 @@ export class VrVideoControls {
   }
 
   componentWillLoad() {
-    this._videoControls = new VRVideoControls(this.depth, this.parent, {
+    this._videoControls = new VRVideoControls(this.parent, {
       baseImagePath: getAssetPath('assets'),
       color: this.color,
       width: this.width,

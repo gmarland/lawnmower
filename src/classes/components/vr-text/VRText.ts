@@ -18,8 +18,6 @@ import { VRLayout } from '../vr-layout/VRLayout';
 import { VRTextConfig } from './VRTextConfig';
 
 export class VRText implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _uuid: string;
@@ -54,9 +52,7 @@ export class VRText implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, text: string, config: VRTextConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, text: string, config: VRTextConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
