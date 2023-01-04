@@ -15,24 +15,31 @@ import {
 import ResizeObserver from "resize-observer-polyfill";
 
 import { MainScene } from '../../classes/scene/MainScene';
+import { SceneElement } from '../../classes/components/SceneElement';
+import { SceneElementFactory } from '../../classes/components/SceneElementFactory';
 
 @Component({
-  tag: 'vr-body',
-  styleUrl: 'vr-body.scss',
+  tag: 'vr-document',
+  styleUrl: 'vr-document.scss',
   shadow: true,
 })
-export class VrBody {
+export class VrDocument {
   @Element() el: HTMLElement
 
   @Prop() startingDistance: number = 500;
 
   private _sceneContainer: HTMLDivElement;
 
-  private _resizeObserver: ResizeObserver;
-
   private _mainScene: MainScene;
 
   private _mousePoint: Vector2 = new Vector2();
+
+  @Method()
+  public async createElement(elementName: string): Promise<SceneElement> {
+    return new Promise((resolve) => {
+      resolve(SceneElementFactory.getSceneElement(elementName));
+    });
+  }
 
   @Method()
   public async setLayout(layoutId: string): Promise<void> {

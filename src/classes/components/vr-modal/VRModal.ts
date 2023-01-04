@@ -95,7 +95,7 @@ export class VRModal implements SceneElement {
         return this._id;
     }
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
     }
 

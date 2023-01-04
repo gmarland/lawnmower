@@ -49,18 +49,28 @@ export class VRImage implements SceneElement {
         
         this._src = src;
 
-        if (config.width) this._initialWidth = config.width;
-        if (config.height) this._initialHeight = config.height;
+        if (config) {
+            if (config.width) this._initialWidth = config.width;
+            if (config.height) this._initialHeight = config.height;
 
-        this._borderRadius = config.borderRadius;
+            this._borderRadius = config.borderRadius;
+        }
         
         this._content.translateZ(0.5);
     }
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+    
+    public get src(): string {
+        return this._src;
+    }
+
+    public set src(value: string) {
+        this._src = value;
     }
     
     public getPlacementLocation(): SceneElementPlacement {

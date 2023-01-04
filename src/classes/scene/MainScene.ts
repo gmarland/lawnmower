@@ -109,7 +109,7 @@ export class MainScene {
         for (let i=0; i<this._modalElements.length; i++) {
             this._modalElements[i].setHidden();
 
-            if (this._modalElements[i].getUUID() == uuid) selectModalElement = this._modalElements[i];
+            if (this._modalElements[i].uuid == uuid) selectModalElement = this._modalElements[i];
         }
 
         if (selectModalElement &&

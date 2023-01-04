@@ -60,7 +60,7 @@ export class VR360Video implements SceneElement {
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
     }
     

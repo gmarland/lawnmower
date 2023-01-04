@@ -27,7 +27,7 @@
     </style>
   </head>
   <body>
-    <vr-body id="main" starting-distance="800">
+    <vr-document id="main" starting-distance="800">
       <vr-modal id="image-modal" border-radius="10">
         <vr-image border-radius="20" 
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
@@ -113,8 +113,12 @@
     </vr-body>
     <script>
       (async () => {
-        await customElements.whenDefined('vr-body');
+        await customElements.whenDefined('vr-document');
         const main = document.getElementById('main');
+
+        const vrImage = await main.createElement("vr-image");
+        console.log(vrImage);
+
         //await main.showModal("image-modal");
         
         setTimeout(() => {

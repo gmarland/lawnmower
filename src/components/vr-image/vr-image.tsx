@@ -61,8 +61,6 @@ export class VrImage {
 
       this.onClick.emit();
     };
-    
-    let position = 1;
   }
 
   componentDidLoad() {
