@@ -36,8 +36,8 @@ export class VrBody {
 
   @Method()
   public async setLayout(layoutId: string): Promise<void> {
-    return new Promise((resolve) => {
-      this._mainScene.setLayout(layoutId);
+    return new Promise(async (resolve) => {
+      await this._mainScene.setLayout(layoutId);
 
       resolve();
     });

@@ -37,9 +37,9 @@ export interface SceneElement {
 
     isLayoutChild(layoutId): boolean;
 
-    enableLayout(layoutId: string): void;
+    enableLayout(layoutId: string): Promise<void>;
 
-    disableLayouts(): void;
+    disableLayouts(): Promise<void>;
 
     draw(): Promise<void>;
 

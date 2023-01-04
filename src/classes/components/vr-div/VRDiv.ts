@@ -254,21 +254,29 @@ export class VRDiv implements SceneElement {
     public setInitialized(initialized: boolean): void {
         this._initialized = initialized;
     }
-     
-    public enableLayout(layoutId: string): void {
-        const childElements = this.getChildSceneElements();
 
-        for (let i=0; i<childElements.length; i++) {
-            childElements[i].enableLayout(layoutId);
-        }
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise(async (resolve) => {
+            const childElements = this.getChildSceneElements();
+    
+            for (let i=0; i<childElements.length; i++) {
+                await childElements[i].enableLayout(layoutId);
+            }
+            
+            resolve();
+        });
     }
 
-    public disableLayouts(): void {
-        const childElements = this.getChildSceneElements();
+    public disableLayouts(): Promise<void> {
+        return new Promise(async (resolve) => {
+            const childElements = this.getChildSceneElements();
+    
+            for (let i=0; i<childElements.length; i++) {
+                await childElements[i].disableLayouts();
+            }
 
-        for (let i=0; i<childElements.length; i++) {
-            childElements[i].disableLayouts();
-        }
+            resolve();
+        });
     }
 
     ////////// Public Methods

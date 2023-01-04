@@ -176,10 +176,16 @@ export class VRText implements SceneElement {
         this._content.visible = true;
     }
 
-    public enableLayout(layoutId: string): void {
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
-    public disableLayouts(): void {
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     ////////// Public Methods

@@ -156,29 +156,37 @@ export class VRLayout implements SceneElement {
         this._content.visible = true;
     }
 
-    public enableLayout(layoutId: string): void {
-        if (this._id == layoutId) this.setVisible();
-        else this.setHidden();
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._id == layoutId) this.setVisible();
+            else this.setHidden();
+    
+            let keys = Array.from(this._childElements.keys());
+    
+            for (let i=0; i< keys.length; i++) {
+                await this._childElements.get(keys[i]).enableLayout(layoutId);
+            }
+    
+            await this._parent.draw();
 
-        let keys = Array.from(this._childElements.keys());
-
-        for (let i=0; i< keys.length; i++) {
-            this._childElements.get(keys[i]).enableLayout(layoutId);
-        }
-
-        this._parent.draw();
+            resolve();
+        });
     }
 
-    public disableLayouts(): void {
-        this.setHidden();
+    public disableLayouts(): Promise<void> {
+        return new Promise(async (resolve) => {
+            this.setHidden();
 
-        let keys = Array.from(this._childElements.keys());
+            let keys = Array.from(this._childElements.keys());
 
-        for (let i=0; i< keys.length; i++) {
-            this._childElements.get(keys[i]).disableLayouts();
-        }
+            for (let i=0; i< keys.length; i++) {
+                await this._childElements.get(keys[i]).disableLayouts();
+            }
+        
+            await this._parent.draw();
 
-        this._parent.draw();
+            resolve();
+        });
     }
     
     ////////// Public Methods

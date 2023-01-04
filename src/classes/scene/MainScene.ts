@@ -158,7 +158,7 @@ export class MainScene {
             }
             
             if (childElement.getPlacementLocation() == SceneElementPlacement.Main) {
-                childElement.enableLayout(currentLayout);
+                await childElement.enableLayout(currentLayout);
     
                 this._mainObjectContainer.add(await childElement.getContent());
 
@@ -214,14 +214,22 @@ export class MainScene {
         return currentLayout;
     }
     
-    public setLayout(layoutId: string) {
-        this._selectedLayout = layoutId;
-
-        let currentLayout = this.getCurrentLayout();
-
-        for (let i=0; i<this._childElements.length; i++) {
-            this._childElements[i].enableLayout(currentLayout);
-        }
+    public setLayout(layoutId: string): Promise<void> {
+        return new Promise(async (resolve) => {
+            this._selectedLayout = layoutId;
+    
+            let currentLayout = this.getCurrentLayout();
+    
+            this._mainObjectContainer.visible = false;
+    
+            for (let i=0; i<this._childElements.length; i++) {
+                await this._childElements[i].enableLayout(currentLayout);
+            }
+    
+            this._mainObjectContainer.visible = true;
+            
+            resolve();
+        });
     }
 
     private startRender(): void {
