@@ -457,6 +457,8 @@ export class VRDiv implements SceneElement {
         });
     }
 
+    protected generateContent(childLayoutContainer: Object3D): any {};
+
     protected centerContentBox(childLayoutContainer: Object3D): void {};
 
     protected layoutChildrenItems(childLayoutContainer: Object3D): void {};

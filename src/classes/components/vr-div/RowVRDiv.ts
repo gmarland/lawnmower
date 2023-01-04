@@ -23,17 +23,10 @@ export class RowVRDiv extends VRDiv {
                 
                 // Build out the child content
         
-                let keys = Array.from(this.getChildElements().keys());
-                keys.sort(function(a, b){return a-b});
-                
                 const childLayoutContainer = new Object3D();
                 childLayoutContainer.name = "child";
         
-                for (let i=0; i< keys.length; i++) {
-                    const childContent = await this.getChildElements().get(keys[i]);
-
-                    childLayoutContainer.add(await childContent.getContent());
-                }
+                await this.generateContent(childLayoutContainer);
 
                 this.layoutChildrenItems(childLayoutContainer);
         
@@ -160,10 +153,27 @@ export class RowVRDiv extends VRDiv {
         childLayoutContainer.position.y = 0;
         
         for (let i=0; i<childLayoutContainer.children.length; i++) {
-            if (childLayoutContainer.children[i].visible) {
-                const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
-                childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
-            }
+            const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
+            childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
         }
+    }
+
+    public async generateContent(childLayoutContainer: Object3D): Promise<void> {
+        return new Promise(async (resolve) => {
+            for (let i=(childLayoutContainer.children.length-1); i>=0; i--) {
+                childLayoutContainer.remove(childLayoutContainer.children[i]);
+            }
+
+            let keys = Array.from(this.getChildElements().keys());
+            keys.sort(function(a, b){return a-b});
+    
+            for (let i=0; i< keys.length; i++) {
+                const childContent = await this.getChildElements().get(keys[i]);
+
+                if (childContent.getVisible()) childLayoutContainer.add(await childContent.getContent());
+            }
+
+            resolve();
+        });
     }
 }

@@ -30,25 +30,10 @@ export class ColumnVRDiv extends VRDiv {
                 
                 // Build out the child content
 
-                let keys = Array.from(this.getChildElements().keys());
-                keys.sort(function(a, b){return a-b});
-
                 const childLayoutContainer = new Object3D();
                 childLayoutContainer.name = "child";
 
-                for (let i=0; i< keys.length; i++) {
-                    const childElement = this.getChildElements().get(keys[i]);
-                    
-                    const childLayout = await childElement.getContent(); 
-
-                    const childLayoutBox = new Box3().setFromObject(childLayout);
-
-                    childLayout.position.x -= childLayoutBox.min.x;
-
-                    childLayout.translateY((childLayoutBox.max.y-(childLayoutBox.max.y-childLayoutBox.min.y)/2)*-1);
-
-                    childLayoutContainer.add(childLayout);
-                }
+                await this.generateContent(childLayoutContainer);
                 
                 this.layoutChildrenItems(childLayoutContainer);
 
@@ -188,5 +173,32 @@ export class ColumnVRDiv extends VRDiv {
 
             childLayoutContainer.children[i].position.x = (childLayoutBox.max.x-childLayoutBox.min.x)/2;
         }
+    }
+
+    public async generateContent(childLayoutContainer: Object3D): Promise<void> {
+        return new Promise(async (resolve) => {
+            for (let i=(childLayoutContainer.children.length-1); i>=0; i--) {
+                childLayoutContainer.remove(childLayoutContainer.children[i]);
+            }
+
+            let keys = Array.from(this.getChildElements().keys());
+            keys.sort(function(a, b){return a-b});
+    
+
+            for (let i=0; i< keys.length; i++) {
+                const childElement = this.getChildElements().get(keys[i]);
+                
+                const childLayout = await childElement.getContent(); 
+
+                const childLayoutBox = new Box3().setFromObject(childLayout);
+
+                childLayout.translateX(childLayoutBox.min.x*-1);
+                childLayout.translateY((childLayoutBox.max.y-(childLayoutBox.max.y-childLayoutBox.min.y)/2)*-1);
+
+                if (childElement.getVisible()) childLayoutContainer.add(childLayout);
+            }
+
+            resolve();
+        });
     }
 }
