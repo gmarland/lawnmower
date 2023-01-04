@@ -57,6 +57,9 @@ export class VRDiv implements SceneElement {
     private _initialized: boolean = false;
 
     private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onClick?: Function = null;
 
@@ -280,10 +283,28 @@ export class VRDiv implements SceneElement {
 
     public async draw(): Promise<void> {
         return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.updateContent(this._setWidth);
-            else await this.updateContent(this._initialWidth);
-            
-            resolve();
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
+
+                if (this._setWidth !== null) await this.updateContent(this._setWidth);
+                else await this.updateContent(this._initialWidth);
+                
+                this._drawing = false;
+                
+                if (this._redraw) {
+                    await this.draw();
+                    resolve();
+                }
+                else {
+                    resolve();
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve();
+            }
         });
     }
     

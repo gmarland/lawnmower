@@ -45,7 +45,7 @@ export class RowVRDiv extends VRDiv {
 
     public centerContentBox(childLayoutContainer: Object3D): void {
         let normalizingBox = new Box3().setFromObject(childLayoutContainer);
-
+        
         childLayoutContainer.position.y += ((normalizingBox.max.y-normalizingBox.min.y)/2);
     }
 
