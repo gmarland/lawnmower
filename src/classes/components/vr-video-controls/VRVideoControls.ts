@@ -81,6 +81,11 @@ export class VRVideoControls implements SceneElement {
         return this._uuid;
     }
 
+    public get width() {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth;
+    }
+
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.AttachedToCamera;
     }
@@ -151,10 +156,8 @@ export class VRVideoControls implements SceneElement {
 
     ////////// Setters
 
-    public setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
     public setHidden(): void {

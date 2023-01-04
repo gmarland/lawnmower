@@ -77,6 +77,11 @@ export class VRAsset implements SceneElement {
         return this._uuid;
     }
     
+    public get width(): number {
+        if (this._setRadius !== null) return this._setRadius;
+        else return this._radius;
+    }
+    
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.Main;
     }
@@ -211,12 +216,8 @@ export class VRAsset implements SceneElement {
         this._zRotationSpeed = rotationSpeed;
     }
 
-    public setWidth(width: number): Promise<void> {
-        this._setRadius = width;
-
-        return new Promise((resolve) => {
-            resolve();
-        })
+    public set width(value: number) {
+        this._setRadius = value;
     }
 
     public setHidden(): void {

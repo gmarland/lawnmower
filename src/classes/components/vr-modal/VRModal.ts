@@ -30,7 +30,7 @@ export class VRModal implements SceneElement {
 
     private _baseImagePath: string;
 
-    private _width: number; //Defined width from the HTML tag
+    private _initialWidth: number; //Defined width from the HTML tag
     private _height: number;
 
     private _setWidth?: number = null; // Set through the API, typically through a parent div
@@ -69,7 +69,7 @@ export class VRModal implements SceneElement {
         
         this._baseImagePath = config.baseImagePath;
 
-        this._width = config.width;
+        this._initialWidth = config.width;
         this._height = config.height;
 
         this._closeButtonWidth = config.closeButtonWidth;
@@ -99,6 +99,11 @@ export class VRModal implements SceneElement {
         return this._uuid;
     }
 
+    public get width() {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth;
+    }
+
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.Modal;
     }
@@ -113,7 +118,7 @@ export class VRModal implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
+            width: this._initialWidth,
             height: this._calculatedHeight
         };
     }
@@ -169,10 +174,8 @@ export class VRModal implements SceneElement {
 
     ////////// Setters
 
-    public async setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
     public setHidden(): void {
@@ -210,7 +213,7 @@ export class VRModal implements SceneElement {
         
         return new Promise(async (resolve) => {
             if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._width);
+            else await this.generateContent(this._initialWidth);
 
             resolve();
         });
@@ -251,11 +254,12 @@ export class VRModal implements SceneElement {
                 }
             }
             
-            let dialogWidth = this._width;
+            let dialogWidth = width;
             let dialogHeight = this._height ? this._height : 0;
 
             if (this._childElement) {
-                await this._childElement.setWidth(this._width-(this._padding*2));
+                this._childElement.width = (this._initialWidth-(this._padding*2));
+                await this._childElement.draw();
 
                 const childContent = await this._childElement.getContent();
                 

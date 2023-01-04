@@ -7,8 +7,7 @@ import {
   Event,
   EventEmitter,
   getAssetPath,
-  Method,
-  Watch
+  Method
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -66,7 +65,7 @@ export class VrModal {
   @Method()
   public async getUUID(): Promise<string> {
     return new Promise((resolve) => {
-      resolve(this._modal.getUUID());
+      resolve(this._modal.uuid);
     });
   }
 

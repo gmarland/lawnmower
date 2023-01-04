@@ -1,4 +1,5 @@
 import { 
+    Box3,
     Group,
     Vector3
 } from 'three';
@@ -38,6 +39,13 @@ export class VRLayout implements SceneElement {
     public get uuid(): string {
         return this._uuid;
     }
+    
+    public get width(): number {
+        const contentBox = new Box3().setFromObject(this._content);
+
+        return (contentBox.max.x - contentBox.min.x);
+    }
+
 
     public getId() {
         return this._id;
@@ -135,17 +143,14 @@ export class VRLayout implements SceneElement {
 
     ////////// Setters
 
-    public setWidth(width: number): Promise<void> {
-        return new Promise(async (resolve) => {
-            let keys = Array.from(this._childElements.keys());
-            keys.sort(function(a, b){return a-b});
-            
-            for (let i=0; i< keys.length; i++) {
-                await this._childElements.get(keys[i]).setWidth(width);
-            }
 
-            resolve();
-        })
+    public set width(value: number) {
+        let keys = Array.from(this._childElements.keys());
+        keys.sort(function(a, b){return a-b});
+        
+        for (let i=0; i< keys.length; i++) {
+            this._childElements.get(keys[i]).width = value;
+        }
     }
 
     public setHidden(): void {

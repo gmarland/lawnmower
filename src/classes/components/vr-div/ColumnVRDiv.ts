@@ -128,7 +128,8 @@ export class ColumnVRDiv extends VRDiv {
                 
                 if (dynamicWidths.length > 0) {
                     for (let i=0; i< dynamicWidths.length; i++) {
-                        await dynamicWidths[i].setWidth(seperateSpace);
+                        dynamicWidths[i].width = seperateSpace;
+                        await dynamicWidths[i].draw();
                     }
                 }
             }

@@ -63,6 +63,11 @@ export class VR360Video implements SceneElement {
     public get uuid(): string {
         return this._uuid;
     }
+
+    public get width(): number {
+        if (this._setVideoRadius !== null) return this._setVideoRadius;
+        else return this._videoRadius;
+    }
     
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.PlacedAtCamera;
@@ -138,10 +143,8 @@ export class VR360Video implements SceneElement {
 
     ////////// Setters
 
-    public async setWidth(width: number): Promise<void> {
-        this._setVideoRadius = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setVideoRadius = value;
     }
 
     public setHidden(): void {

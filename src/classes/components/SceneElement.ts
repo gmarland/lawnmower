@@ -9,6 +9,8 @@ import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 export interface SceneElement {
     uuid: string;
 
+    width: number;
+
     getPlacementLocation(): SceneElementPlacement;
 
     getContent(): Promise<Group>;
@@ -22,8 +24,6 @@ export interface SceneElement {
     getIsChildElement(uuid: string): boolean;
     
     getVisible(): boolean;
-
-    setWidth(width: number): Promise<void>;
 
     setHidden(): void;
     
