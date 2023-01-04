@@ -5,7 +5,6 @@ import {
     Vector3,
     Box3,
     CanvasTexture,
-    LinearFilter,
     VideoTexture,
     PolyhedronGeometry,
     Color,
