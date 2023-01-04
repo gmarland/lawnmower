@@ -34,7 +34,7 @@ export class VRDiv implements SceneElement {
     private _initialHeight?: number;
     private _borderRadius: number;
 
-    private _setWidth: number;
+    private _setWidth?: number = null
 
     private _color: string = "";
     
@@ -435,20 +435,8 @@ export class VRDiv implements SceneElement {
             }
 
             if (body && child) {
-                const contentBox = new Box3().setFromObject(body);
+                await this.generateContent(body, child);
 
-                const xBodySize = (contentBox.max.x-contentBox.min.x);
-
-                if ((!width) || (xBodySize != width)) await this.resizeFullWidthPanels(width, child);
-
-                this.resetChildPositions(child);
-
-                this.layoutChildrenItems(child);
-                
-                this.centerContentBox(child);
-            
-                this.repositionContainer(body, child);
-                
                 const bodyResized = this.resizePanelBody(body, child);
                 if (bodyResized && (this._parent) && (this._parent.draw)) this._parent.draw();
             }
@@ -457,7 +445,7 @@ export class VRDiv implements SceneElement {
         });
     }
 
-    protected generateContent(childLayoutContainer: Object3D): any {};
+    protected generateContent(body: Mesh, childLayoutContainer: Object3D): any {};
 
     protected centerContentBox(childLayoutContainer: Object3D): void {};
 

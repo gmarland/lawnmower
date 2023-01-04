@@ -1,4 +1,5 @@
 import { 
+    Mesh,
     Object3D,
     Box3,
     Group
@@ -26,41 +27,16 @@ export class RowVRDiv extends VRDiv {
                 const childLayoutContainer = new Object3D();
                 childLayoutContainer.name = "child";
         
-                await this.generateContent(childLayoutContainer);
-
-                this.layoutChildrenItems(childLayoutContainer);
-        
-                this.centerContentBox(childLayoutContainer);
-        
                 // Build out the panel
         
-                const mesh = this.buildPanelMesh();
-                const meshBox = new Box3().setFromObject(mesh);
+                const body = this.buildPanelMesh();
         
-                this.getContentObject().add(mesh);
-
-                this.repositionContainer(mesh, childLayoutContainer);
-        
+                this.getContentObject().add(body);
                 this.getContentObject().add(childLayoutContainer);
+        
+                await this.generateContent(body, childLayoutContainer);
 
-                if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
-                    this.resetChildPositions(childLayoutContainer);
-    
-                    this.layoutChildrenItems(childLayoutContainer);
-                    
-                    this.centerContentBox(childLayoutContainer);
-                    
-                    this.repositionContainer(mesh, childLayoutContainer);
-                }
-
-                this.resizePanelBody(mesh, childLayoutContainer);
-                
-                if ((this.getXRotation()) || (this.getYRotation()) || (this.getZRotation())) {
-                    this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation(),), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
-                    
-                    const rotatedElement = new Box3().setFromObject(this.getContentObject());
-                    this.getContentObject().position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
-                }
+                this.resizePanelBody(body, childLayoutContainer);
             }
             
             resolve(this.getContentObject());
@@ -158,7 +134,7 @@ export class RowVRDiv extends VRDiv {
         }
     }
 
-    public async generateContent(childLayoutContainer: Object3D): Promise<void> {
+    public async generateContent(body: Mesh, childLayoutContainer: Object3D): Promise<void> {
         return new Promise(async (resolve) => {
             for (let i=(childLayoutContainer.children.length-1); i>=0; i--) {
                 childLayoutContainer.remove(childLayoutContainer.children[i]);
@@ -170,7 +146,39 @@ export class RowVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childContent = await this.getChildElements().get(keys[i]);
 
-                if (childContent.getVisible()) childLayoutContainer.add(await childContent.getContent());
+                if (childContent.getVisible()) {
+                    const childLayout = await childContent.getContent(); 
+
+                    const container = new Group();
+                    container.add(childLayout);
+
+                    childLayoutContainer.add(container);
+                }
+            }
+            
+            this.layoutChildrenItems(childLayoutContainer);
+        
+            this.centerContentBox(childLayoutContainer);
+
+            this.repositionContainer(body, childLayoutContainer);
+            
+            const meshBox = new Box3().setFromObject(body);
+
+            if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
+                this.resetChildPositions(childLayoutContainer);
+
+                this.layoutChildrenItems(childLayoutContainer);
+                
+                this.centerContentBox(childLayoutContainer);
+                
+                this.repositionContainer(body, childLayoutContainer);
+            }
+            
+            if ((this.getXRotation()) || (this.getYRotation()) || (this.getZRotation())) {
+                this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation(),), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
+                
+                const rotatedElement = new Box3().setFromObject(this.getContentObject());
+                this.getContentObject().position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
             }
 
             resolve();
