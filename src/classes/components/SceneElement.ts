@@ -9,6 +9,8 @@ import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 export interface SceneElement {
     uuid: string;
 
+    dynamicWidth: boolean;
+
     width: number;
 
     visible: boolean;

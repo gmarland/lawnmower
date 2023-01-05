@@ -76,6 +76,10 @@ export class VRAsset implements SceneElement {
     public get uuid(): string {
         return this._uuid;
     }
+
+    public get dynamicWidth(): boolean {
+        return false;
+    }
     
     public get width(): number {
         if (this._setRadius !== null) return this._setRadius;

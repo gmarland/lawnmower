@@ -31,8 +31,8 @@ export class VRVideo implements SceneElement {
 
     private _src: string;
 
-    private _initialWidth: number; //Defined width from the HTML tag
-    private _initialHeight: number;
+    private _initialWidth?: number = null; //Defined width from the HTML tag
+    private _initialHeight?: number = null;
 
     private _setWidth?: number = null; // Set through the API, typically through a parent div
 
@@ -83,9 +83,13 @@ export class VRVideo implements SceneElement {
         return this._uuid;
     }
 
+    public get dynamicWidth(): boolean {
+        return false;
+    }
+
     public get width() {
         if (this._setWidth !== null) return this._setWidth;
-        else return this._initialWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
     }
 
     public get visible(): boolean {
@@ -110,7 +114,7 @@ export class VRVideo implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
+            width: this.width,
             height: this._calculatedHeight
         };
     }
@@ -201,8 +205,7 @@ export class VRVideo implements SceneElement {
 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                if (this._setWidth !== null) await this.generateContent(this._setWidth);
-                else await this.generateContent(this._initialWidth);
+                await this.generateContent(this.width);
                 
                 this._drawing = false;
                         

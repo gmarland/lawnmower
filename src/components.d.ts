@@ -107,13 +107,14 @@ export namespace Components {
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
-        "height": number;
+        "height"?: number;
         "padding"?: number;
         "parent": SceneElement;
         "position": number;
         "text": string;
         "textDecoration": string;
-        "width": number;
+        "visible": boolean;
+        "width"?: number;
     }
     interface VrVideo {
         "depth": number;
@@ -347,6 +348,7 @@ declare namespace LocalJSX {
         "position"?: number;
         "text"?: string;
         "textDecoration"?: string;
+        "visible"?: boolean;
         "width"?: number;
     }
     interface VrVideo {

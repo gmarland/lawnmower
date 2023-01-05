@@ -69,6 +69,10 @@ export class VR360Video implements SceneElement {
         return this._uuid;
     }
 
+    public get dynamicWidth(): boolean {
+        return false;
+    }
+
     public get width(): number {
         if (this._setVideoRadius !== null) return this._setVideoRadius;
         else return this._videoRadius;

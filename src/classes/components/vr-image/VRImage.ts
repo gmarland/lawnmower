@@ -73,9 +73,13 @@ export class VRImage implements SceneElement {
         return this._uuid;
     }
 
+    public get dynamicWidth(): boolean {
+        return (this._initialWidth != null);
+    }
+
     public get width(): number {
         if (this._setWidth !== null) return this._setWidth;
-        else return this._initialWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
     }
 
     public get height(): number {

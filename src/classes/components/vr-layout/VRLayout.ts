@@ -49,6 +49,10 @@ export class VRLayout implements SceneElement {
         return this._uuid;
     }
     
+    public get dynamicWidth(): boolean {
+        return true;
+    }
+    
     public get width(): number {
         const contentBox = new Box3().setFromObject(this._content);
 

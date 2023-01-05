@@ -85,9 +85,13 @@ export class VRVideoControls implements SceneElement {
         return this._uuid;
     }
 
+    public get dynamicWidth(): boolean {
+        return (this._initialWidth != null);
+    }
+
     public get width() {
         if (this._setWidth !== null) return this._setWidth;
-        else return this._initialWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
     }
 
     public get visible(): boolean {
@@ -108,7 +112,7 @@ export class VRVideoControls implements SceneElement {
     
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
+            width: this.width,
             height: this._initialHeight
         }
     }
