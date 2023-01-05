@@ -31,10 +31,11 @@ export class VRImage implements SceneElement {
     private _initialHeight?: number = null;
     
     private _setWidth?: number = null; // Set through the API, typically through a parent div
+    private _setHeight?: number = null;
 
     private _borderRadius: number;
 
-    private _calculatedHeight: number;
+    private _calculatedHeight?: number = null;
 
     private _mesh?: Mesh;
     private _content: Object3D = new Object3D();
@@ -69,6 +70,12 @@ export class VRImage implements SceneElement {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth;
     }
+
+    public get height() {
+        if (this._calculatedHeight !== null) return this._calculatedHeight;
+        else if (this._setHeight !== null) return this._setHeight;
+        else return this._initialHeight;
+    }
     
     public get src(): string {
         return this._src;
@@ -88,8 +95,8 @@ export class VRImage implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
-            height: this._calculatedHeight
+            width: this.width,
+            height: this.height
         };
     }
     
@@ -150,6 +157,10 @@ export class VRImage implements SceneElement {
 
     public set width(value: number) {
         this._setWidth = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
     }
 
     public setHidden(): void {
@@ -233,7 +244,10 @@ export class VRImage implements SceneElement {
                 tex.wrapS = ClampToEdgeWrapping;
                 tex.wrapT = RepeatWrapping;
 
-                if (this._initialHeight) {
+                if (this._setHeight) {
+                    this._calculatedHeight = this._setHeight;
+                }
+                else if (this._initialHeight) {
                     this._calculatedHeight = this._initialHeight;
                 }
                 else if (width) {

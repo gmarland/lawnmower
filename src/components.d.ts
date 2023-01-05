@@ -60,7 +60,6 @@ export namespace Components {
         "zRotation": number;
     }
     interface VrDocument {
-        "createElement": (elementName: string) => Promise<SceneElement>;
         "hideModal": () => Promise<void>;
         "setLayout": (layoutId: string) => Promise<void>;
         "showModal": (id: string) => Promise<void>;
