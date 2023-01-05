@@ -73,6 +73,7 @@ export namespace Components {
         "parent": SceneElement;
         "position": number;
         "src": string;
+        "visible": boolean;
         "width": number;
     }
     interface VrLayout {
@@ -306,6 +307,7 @@ declare namespace LocalJSX {
         "parent"?: SceneElement;
         "position"?: number;
         "src"?: string;
+        "visible"?: boolean;
         "width"?: number;
     }
     interface VrLayout {

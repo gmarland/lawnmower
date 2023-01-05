@@ -119,18 +119,24 @@
 
         //await main.showModal("image-modal");
         
-        setTimeout(() => {
+        // ----- Testing activating different layouts
+        /*setTimeout(() => {
           main.setLayout("doom");
           
-          const demoImage = document.getElementById('demo-image');
-          demoImage.src = "https://media.istockphoto.com/id/90976521/photo/hastings-in-east-sussex-england.jpg?s=1024x1024&w=is&k=20&c=AFi1FWZLyTDpeY_6_pchKUzmluTqsTx-nkUcauXXMk8=";
-          demoImage.borderRadius = 6;
-          demoImage.height=1000
-
           setTimeout(() => {
             main.setLayout("boom");
           }, 3000);
-        }, 3000);
+        }, 3000);*/
+
+
+        // ----- Testing changing image visibility
+        /*setTimeout(() => {
+          document.getElementById('demo-image').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('demo-image').visible = true;
+          }, 3000);
+        }, 3000);*/
       })();
 
       const foxElement = document.getElementById("fox-asset");
