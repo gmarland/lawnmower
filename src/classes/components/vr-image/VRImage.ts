@@ -6,8 +6,7 @@ import {
     LinearFilter,
     TextureLoader,
     ClampToEdgeWrapping,
-    RepeatWrapping,
-    Box3
+    RepeatWrapping
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';

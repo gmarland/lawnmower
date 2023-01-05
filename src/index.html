@@ -33,17 +33,59 @@
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
       </vr-modal>
       <vr-div margin="10" color="#ff2211">
-        <vr-div width="700" height="70" color="#ffffff" margin="30" layout="Column" item-vertical-align="Top" padding="10">
-          <vr-div width="500" color="#ffffff" margin="10">
-            <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+        <vr-div width="700" height="70" color="#00ffff" margin="30" layout="Column" item-vertical-align="Top" padding="10">
+          <vr-div width="500" color="#fffff1" margin="10"padding="10">
+            <vr-text id="demo-text-1" font-color="#222222" background-color="#ff00f1" padding="15" text-decoration="bold">
               Jumping
 
-              here the and everywhere
+              erverv
+
+
+              erverv
             </vr-text>
-            <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+            <vr-text id="demo-text-2" font-color="#222222" background-color="#ff00f2" padding="15" text-decoration="bold">
               Hello Sarah
 
               How are you?
+
+              reher
+
+              erher
+
+
+              erherherherher
+
+
+              erherherherherhh erherherherher
+
+
+              erherherherher
+              ererg
+
+
+              herehe
+            </vr-text>  
+            <vr-text id="demo-text-2" font-color="#222222" background-color="#ff00f3" padding="15" text-decoration="bold">
+              Hello Sarah
+
+              How are you?
+
+              reher
+
+              erher
+
+
+              erherherherher
+
+
+              erherherherherhh erherherherher
+
+
+              erherherherher
+              ererg
+
+
+              herehe
             </vr-text>  
           </vr-div>
           <vr-layout id="doom">
@@ -128,6 +170,15 @@
           }, 3000);
         }, 3000);*/
 
+        // ----- Testing images
+
+        // ----- Testing changing image properties
+        /*setTimeout(() => {
+        const demoImage = document.getElementById('demo-image');
+          demoImage.src = "https://media.istockphoto.com/id/90976521/photo/hastings-in-east-sussex-england.jpg?s=1024x1024&w=is&k=20&c=AFi1FWZLyTDpeY_6_pchKUzmluTqsTx-nkUcauXXMk8=";
+          demoImage.borderRadius = 6;
+          demoImage.height=1000;
+        }, 3000);*/
 
         // ----- Testing changing image visibility
         /*setTimeout(() => {
@@ -137,6 +188,17 @@
             document.getElementById('demo-image').visible = true;
           }, 3000);
         }, 3000);*/
+
+        // ----- Testing text
+
+        // ----- Testing changing text properties
+        setTimeout(() => {
+          document.getElementById('demo-text-2').text = "now now now new text\n\r rever\n\r boom";
+
+          setTimeout(() => {
+            document.getElementById('demo-text-1').text = "why why why new text";
+          }, 3000);
+        }, 3000);
       })();
 
       const foxElement = document.getElementById("fox-asset");

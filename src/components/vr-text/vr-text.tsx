@@ -5,7 +5,8 @@ import {
   Element, 
   Prop,
   Event,
-  EventEmitter
+  EventEmitter,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -29,6 +30,8 @@ export class VrText {
 
   @Element() el: HTMLElement
 
+  @Prop({ mutable: true }) public text: string;
+
   @Prop() public width: number;
 
   @Prop() public height: number;
@@ -51,9 +54,25 @@ export class VrText {
 
   private _textblock: VRText;
 
+  @Watch('text')
+  private updateText(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._textblock) {
+        this._textblock.text = newValue;
+  
+        const dimensionsUpdated = await this._textblock.draw();
+        if (dimensionsUpdated) await this._textblock.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
   componentWillLoad() {
     let bold = false;
     let italic = false;
+
+    this.text = this.el.innerHTML;
 
     if (this.textDecoration) {
       const decorations = this.textDecoration.split(" ");
@@ -64,7 +83,7 @@ export class VrText {
       }
     }
 
-    this._textblock = new VRText(this.parent, this.el.innerHTML, { 
+    this._textblock = new VRText(this.parent, this.text, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,

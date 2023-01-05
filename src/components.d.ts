@@ -111,6 +111,7 @@ export namespace Components {
         "padding"?: number;
         "parent": SceneElement;
         "position": number;
+        "text": string;
         "textDecoration": string;
         "width": number;
     }
@@ -344,6 +345,7 @@ declare namespace LocalJSX {
         "padding"?: number;
         "parent"?: SceneElement;
         "position"?: number;
+        "text"?: string;
         "textDecoration"?: string;
         "width"?: number;
     }

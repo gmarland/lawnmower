@@ -51,7 +51,7 @@ export class RowVRDiv extends VRDiv {
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {
         let currentSize = 0;
-
+        
         for (let i=0; i<childLayoutContainer.children.length; i++) {
             if (childLayoutContainer.children[i].visible) {
                 const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
