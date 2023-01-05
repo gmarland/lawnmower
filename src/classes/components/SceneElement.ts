@@ -11,6 +11,8 @@ export interface SceneElement {
 
     width: number;
 
+    visible: boolean;
+
     getPlacementLocation(): SceneElementPlacement;
 
     getContent(): Promise<Group>;
@@ -22,12 +24,6 @@ export interface SceneElement {
     getChildSceneElements(): Array<SceneElement>;
 
     getIsChildElement(uuid: string): boolean;
-    
-    getVisible(): boolean;
-
-    setHidden(): void;
-    
-    setVisible(): void;
 
     addChildElement(position: number, childElement: SceneElement): void;
 
@@ -39,7 +35,9 @@ export interface SceneElement {
 
     disableLayouts(): Promise<void>;
 
-    draw(): Promise<void>;
+    draw(): Promise<boolean>; // draw updated dimensions
+
+    drawParent(): Promise<void>;
 
     clicked(meshId: string): Promise<void>;
 

@@ -5,7 +5,8 @@ import {
   Element, 
   Prop, 
   Event, 
-  EventEmitter
+  EventEmitter,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -46,6 +47,62 @@ export class VrImage {
   private _image: VRImage;
 
   private _modalDialog: HTMLVrModalElement;
+
+  @Watch('src')
+  private updateSrc(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._image) {
+        this._image.src = newValue;
+  
+        const dimensionsUpdated = await this._image.draw();
+        if (dimensionsUpdated) await this._image.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('width')
+  private updateWidth(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._image) {
+        this._image.width = newValue;
+  
+        const dimensionsUpdated = await this._image.draw();
+        if (dimensionsUpdated) await this._image.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('height')
+  private updateHeight(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._image) {
+        this._image.height = newValue;
+  
+        const dimensionsUpdated = await this._image.draw();
+        if (dimensionsUpdated) await this._image.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('borderRadius')
+  private updateBorderRadius(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._image) {
+        this._image.borderRadius = newValue;
+  
+        const dimensionsUpdated = await this._image.draw();
+        if (dimensionsUpdated) await this._image.drawParent();
+      }
+
+      resolve();
+    });
+  }
 
   componentWillLoad() {
     this._image = new VRImage(this.parent, this.src, { 

@@ -11,6 +11,7 @@ import {
 } from 'three';
 
 import { Dimensions } from "../../geometry/Dimensions";
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
@@ -38,7 +39,11 @@ export class VR360Video implements SceneElement {
     private _mesh?: Mesh = null;
 
     private _content: Object3D = new Object3D();
+    
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onClick?: Function = null;
 
@@ -67,6 +72,10 @@ export class VR360Video implements SceneElement {
     public get width(): number {
         if (this._setVideoRadius !== null) return this._setVideoRadius;
         else return this._videoRadius;
+    }
+
+    public get visible(): boolean {
+        return this._content.visible;
     }
     
     public getPlacementLocation(): SceneElementPlacement {
@@ -99,10 +108,6 @@ export class VR360Video implements SceneElement {
             resolve(this._content.position);
         });
     }
-
-    public getVisible(): boolean {
-        return this._content.visible;
-    }
     
     public getChildSceneElements(): SceneElement[] {
         return [];
@@ -126,7 +131,7 @@ export class VR360Video implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -147,12 +152,8 @@ export class VR360Video implements SceneElement {
         this._setVideoRadius = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -201,15 +202,45 @@ export class VR360Video implements SceneElement {
 
     // --- Rendering Methods
 
-    public draw(): Promise<void> {
+    public draw(): Promise<boolean> {
         this._initialized = true;
         
         return new Promise(async (resolve) => {
-            if (this._setVideoRadius !== null) await this.generateContent(this._setVideoRadius);
-            else await this.generateContent(this._videoRadius);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
+                
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-            resolve();
+                if (this._setVideoRadius !== null) await this.generateContent(this._setVideoRadius);
+                else await this.generateContent(this._videoRadius);
+                
+                this._drawing = false;
+                        
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
     
     public clicked(meshId: string): Promise<void> {

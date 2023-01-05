@@ -72,7 +72,7 @@ export class VrModal {
   @Method()
   public async show(): Promise<void> {
     return new Promise((resolve) => {
-      this._modal.setVisible();
+      this._modal.visible = true;
 
       resolve();
     });
@@ -81,7 +81,7 @@ export class VrModal {
   @Method()
   public async hide(): Promise<void> {
     return new Promise((resolve) => {
-      this._modal.setHidden();
+      this._modal.visible = false;
 
       resolve();
     });

@@ -93,33 +93,33 @@ export class MainScene {
         let selectModalElement = null;
 
         for (let i=0; i<this._modalElements.length; i++) {
-            this._modalElements[i].setHidden();
+            this._modalElements[i].visible = false;
 
-            if (this._modalElements[i].getID() == id) selectModalElement = this._modalElements[i];
+            if (this._modalElements[i].id == id) selectModalElement = this._modalElements[i];
         }
         
         if (selectModalElement &&
             (!selectModalElement.isPartOfLayout() ||
-            selectModalElement.isLayoutChild(this.getCurrentLayout()))) selectModalElement.setVisible();
+            selectModalElement.isLayoutChild(this.getCurrentLayout()))) selectModalElement.visible = true;
     }
 
     public showModalDialogByUUID(uuid: string) {
         let selectModalElement = null;
 
         for (let i=0; i<this._modalElements.length; i++) {
-            this._modalElements[i].setHidden();
+            this._modalElements[i].visible = false;
 
             if (this._modalElements[i].uuid == uuid) selectModalElement = this._modalElements[i];
         }
 
         if (selectModalElement &&
             (!selectModalElement.isPartOfLayout() ||
-            selectModalElement.isLayoutChild(this.getCurrentLayout()))) selectModalElement.setVisible();
+            selectModalElement.isLayoutChild(this.getCurrentLayout()))) selectModalElement.visible = true;
     }
 
     public hideModalDialog() {
         for (let i=0; i<this._modalElements.length; i++) {
-            this._modalElements[i].setHidden();
+            this._modalElements[i].visible = false;
         }
     }
 
@@ -155,8 +155,8 @@ export class MainScene {
 
             if (!(childElement instanceof VRLayout)) {
                 if (childElement.isPartOfLayout()) {
-                    if (childElement.getVisible() && childElement.isLayoutChild(currentLayout)) childElement.setVisible();
-                    else childElement.setHidden();
+                    if (childElement.visible && childElement.isLayoutChild(currentLayout)) childElement.visible = true;
+                    else childElement.visible = false;;
                 }
             }
             

@@ -5,6 +5,7 @@ import {
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 import { MeshUtils } from "../../geometry/MeshUtils";
 import { MainScene } from '../../scene/MainScene';
@@ -19,7 +20,11 @@ export class VRLayout implements SceneElement {
     private _uuid: string;
 
     private _content?: Group = new Group();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
 
@@ -35,6 +40,10 @@ export class VRLayout implements SceneElement {
     }
 
     ////////// Getters
+
+    public get id() {
+        return this._id;
+    }
     
     public get uuid(): string {
         return this._uuid;
@@ -46,9 +55,8 @@ export class VRLayout implements SceneElement {
         return (contentBox.max.x - contentBox.min.x);
     }
 
-
-    public getId() {
-        return this._id;
+    public get visible(): boolean {
+        return (this._content == null) || this._content.visible;
     }
 
     public getPlacementLocation(): SceneElementPlacement {
@@ -100,10 +108,6 @@ export class VRLayout implements SceneElement {
         }
     }
 
-    public getVisible(): boolean {
-        return (this._content == null) || this._content.visible;
-    }
-
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
             if (!this._initialized) await this.draw();
@@ -126,7 +130,7 @@ export class VRLayout implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -153,18 +157,14 @@ export class VRLayout implements SceneElement {
         }
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
         return new Promise(async (resolve) => {
-            if (this._id == layoutId) this.setVisible();
-            else this.setHidden();
+            if (this._id == layoutId) this.visible = true;
+            else this.visible = false;
     
             let keys = Array.from(this._childElements.keys());
     
@@ -172,7 +172,7 @@ export class VRLayout implements SceneElement {
                 await this._childElements.get(keys[i]).enableLayout(layoutId);
             }
     
-            await this._parent.draw();
+            await this.drawParent();
 
             resolve();
         });
@@ -180,15 +180,15 @@ export class VRLayout implements SceneElement {
 
     public disableLayouts(): Promise<void> {
         return new Promise(async (resolve) => {
-            this.setHidden();
+            this.visible = false;;
 
             let keys = Array.from(this._childElements.keys());
 
             for (let i=0; i< keys.length; i++) {
                 await this._childElements.get(keys[i]).disableLayouts();
             }
-        
-            await this._parent.draw();
+            
+            await this.drawParent();
 
             resolve();
         });
@@ -204,25 +204,55 @@ export class VRLayout implements SceneElement {
     
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         this._initialized = true;
 
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
 
-            let keys = Array.from(this._childElements.keys());
-            keys.sort(function(a, b){return a-b});
-            
-            for (let i=0; i< keys.length; i++) {
-                const childElement = this._childElements.get(keys[i]);
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                if (childElement.getVisible()) this._content.add(await childElement.getContent());
+                for (let i=(this._content.children.length-1); i>=0; i--) {
+                    this._content.remove(this._content.children[i]);
+                }
+
+                let keys = Array.from(this._childElements.keys());
+                keys.sort(function(a, b){return a-b});
+                
+                for (let i=0; i< keys.length; i++) {
+                    const childElement = this._childElements.get(keys[i]);
+
+                    if (childElement.visible) this._content.add(await childElement.getContent());
+                }
+                
+                this._drawing = false;
+                    
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
             }
-            
-            resolve();
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {

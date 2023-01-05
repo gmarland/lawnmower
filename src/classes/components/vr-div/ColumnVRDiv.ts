@@ -100,7 +100,7 @@ export class ColumnVRDiv extends VRDiv {
                 for (let i=0; i< keys.length; i++) {
                     const childElement = this.getChildElements().get(keys[i]);
 
-                    if (childElement.getVisible()) {
+                    if (childElement.visible) {
                         const dimensions = childElement.getDimensions(); 
 
                         if (!dimensions.width) {
@@ -162,7 +162,7 @@ export class ColumnVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
                 
-                if (childElement.getVisible()) {
+                if (childElement.visible) {
                     const childLayout = await childElement.getContent(); 
 
                     const container = new Group();

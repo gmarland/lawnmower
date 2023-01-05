@@ -26,7 +26,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
-    "@stencil/core": "^2.13.0",
+    "@stencil/core": "^2.21.0",
     "@stencil/sass": "^2.0.0",
     "resize-observer-polyfill": "^1.5.1",
     "three": "^0.146.0"

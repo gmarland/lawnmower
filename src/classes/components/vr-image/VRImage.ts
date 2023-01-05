@@ -6,10 +6,12 @@ import {
     LinearFilter,
     TextureLoader,
     ClampToEdgeWrapping,
-    RepeatWrapping
+    RepeatWrapping,
+    Box3
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
@@ -30,16 +32,22 @@ export class VRImage implements SceneElement {
     private _initialWidth?: number = null; 
     private _initialHeight?: number = null;
     
-    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    // Set through the API, typically through a parent div
+    private _setWidth?: number = null; 
     private _setHeight?: number = null;
+
+    private _calculatedWidth?: number = null;
+    private _calculatedHeight?: number = null;
 
     private _borderRadius: number;
 
-    private _calculatedHeight?: number = null;
-
     private _mesh?: Mesh;
     private _content: Object3D = new Object3D();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onClick?: Function = null;
 
@@ -66,12 +74,12 @@ export class VRImage implements SceneElement {
         return this._uuid;
     }
 
-    public get width() {
+    public get width(): number {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth;
     }
 
-    public get height() {
+    public get height(): number {
         if (this._calculatedHeight !== null) return this._calculatedHeight;
         else if (this._setHeight !== null) return this._setHeight;
         else return this._initialHeight;
@@ -81,16 +89,42 @@ export class VRImage implements SceneElement {
         return this._src;
     }
     
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Main;
+    public get borderRadius(): number {
+        return this._borderRadius;
     }
 
-    public async getContent(): Promise<Object3D> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
+    public get visible(): boolean {
+        return this._content.visible;
+    }
 
-            resolve(this._content);
-        });
+    ////////// Setters
+
+    public set src(value: string) {
+        this._src = value;
+    }
+
+    public set width(value: number) {
+        this._setWidth = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
+    }
+
+    public set borderRadius(value: number) {
+        this._borderRadius = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
+    }
+
+    ////////// Public Methods
+
+    // --- Data Methods
+    
+    public getPlacementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Main;
     }
 
     public getDimensions(): Dimensions {
@@ -108,8 +142,7 @@ export class VRImage implements SceneElement {
         });
     }
 
-    public getVisible(): boolean {
-        return this._content.visible;
+    public addChildElement(position: number, childElement: SceneElement): void {
     }
     
     public getChildSceneElements(): SceneElement[] {
@@ -134,7 +167,7 @@ export class VRImage implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -149,26 +182,55 @@ export class VRImage implements SceneElement {
         }
     }
 
-    ////////// Setters
+    // --- Rendering Methods
 
-    public set src(value: string) {
-        this._src = value;
+    public async getContent(): Promise<Object3D> {
+        return new Promise(async (resolve) => {
+            if (!this._initialized) await this.draw();
+
+            resolve(this._content);
+        });
     }
 
-    public set width(value: number) {
-        this._setWidth = value;
+    public async draw(): Promise<boolean> {
+        this._initialized = true;
+
+        return new Promise(async (resolve) => {
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
+
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
+
+                if (this._setWidth !== null) await this.generateContent(this._setWidth);
+                else await this.generateContent(this._initialWidth);
+                    
+                this._drawing = false;
+                    
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
+        });
     }
 
-    public set height(value: number) {
-        this._setHeight = value;
-    }
-
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -179,26 +241,6 @@ export class VRImage implements SceneElement {
 
     public disableLayouts(): Promise<void> {
         return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
-    }
-
-    // --- Rendering Methods
-
-    public async draw(): Promise<void> {
-        this._initialized = true;
-
-        return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._initialWidth);
-
             resolve();
         });
     }
@@ -260,7 +302,11 @@ export class VRImage implements SceneElement {
                 }
 
                 if (this._calculatedHeight > width) {
-                    let repeatX = width * tex.image.height / (this._calculatedHeight * tex.image.width);
+                    const heightRatio = tex.image.height/this._calculatedHeight;
+
+                    this._calculatedWidth = width/heightRatio;
+
+                    let repeatX = this._calculatedWidth * tex.image.height / (this._calculatedHeight * tex.image.width);
                     let repeatY = 1;
                     
                     tex.repeat.set(repeatX, repeatY);
@@ -268,8 +314,10 @@ export class VRImage implements SceneElement {
                     tex.offset.x = (repeatX - 1) / 2 * -1;
                 }
                 else {
+                    this._calculatedWidth = width;
+
                     let repeatX = 1;
-                    let repeatY = this._calculatedHeight * tex.image.width / (width * tex.image.height);
+                    let repeatY = this._calculatedHeight * tex.image.width / (this._calculatedWidth * tex.image.height);
                     
                     tex.repeat.set(repeatX, repeatY);
                     
@@ -285,15 +333,9 @@ export class VRImage implements SceneElement {
 
     private async buildMesh(width: number): Promise<Mesh> {
         return new Promise(async (resolve) => {
-            let buildWidth = 0;
-            if (width) buildWidth = width;
-
-            const imageTexture = await this.buildTexture(buildWidth);
+            const imageTexture = await this.buildTexture(width ? width : 0);
             
-            let buildHeight = 0;
-            if (this._calculatedHeight) buildHeight = this._calculatedHeight;
-            
-            const geometry = PlaneUtils.getPlane(buildWidth, buildHeight, this._borderRadius);
+            const geometry = PlaneUtils.getPlane(this._calculatedWidth, this._calculatedHeight, this._borderRadius);
             
             const material = MaterialUtils.getBasicMaterial({
                 map: imageTexture,

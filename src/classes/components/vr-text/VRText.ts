@@ -7,6 +7,7 @@ import {
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
@@ -48,7 +49,11 @@ export class VRText implements SceneElement {
 
     private _mesh?: Mesh = null;
     private _content?: Group = new Group();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onClick?: Function = null;
 
@@ -92,6 +97,10 @@ export class VRText implements SceneElement {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth;
     }
+
+    public get visible(): boolean {
+        return this._content.visible;
+    }
     
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.Main;
@@ -127,10 +136,6 @@ export class VRText implements SceneElement {
     public getIsChildElement(uuid: string): boolean {
         return uuid === this._uuid;
     }
-
-    public getVisible(): boolean {
-        return this._content.visible;
-    }
     
     public isPartOfLayout(): boolean {
         if (this._parent) {
@@ -146,7 +151,7 @@ export class VRText implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -167,12 +172,8 @@ export class VRText implements SceneElement {
         this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -196,15 +197,45 @@ export class VRText implements SceneElement {
     
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         this._initialized = true;
 
         return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._initialWidth);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
 
-            resolve();
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
+
+                if (this._setWidth !== null) await this.generateContent(this._setWidth);
+                else await this.generateContent(this._initialWidth);
+                    
+                this._drawing = false;
+                    
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {

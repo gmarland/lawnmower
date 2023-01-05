@@ -54,7 +54,11 @@ export class VRModal implements SceneElement {
     private _closeButtonMesh?: Mesh = null;
 
     private _content?: Object3D = new Object3D();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     private  _childElement: SceneElement = null;
 
@@ -91,7 +95,7 @@ export class VRModal implements SceneElement {
 
     ////////// Getters
     
-    public getID(): string {
+    public get id(): string {
         return this._id;
     }
     
@@ -102,6 +106,10 @@ export class VRModal implements SceneElement {
     public get width() {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth;
+    }
+
+    public get visible(): boolean {
+        return this._content.visible;
     }
 
     public getPlacementLocation(): SceneElementPlacement {
@@ -138,10 +146,6 @@ export class VRModal implements SceneElement {
     public getIsChildElement(uuid: string): boolean {
         return uuid === this._uuid;
     }
-
-    public getVisible(): boolean {
-        return this._content.visible;
-    }
     
     public isPartOfLayout(): boolean {
         if (this._parent) {
@@ -157,7 +161,7 @@ export class VRModal implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -178,12 +182,8 @@ export class VRModal implements SceneElement {
         this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -208,15 +208,40 @@ export class VRModal implements SceneElement {
 
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         this. _initialized = true;
         
         return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._initialWidth);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
 
-            resolve();
+                if (this._setWidth !== null) await this.generateContent(this._setWidth);
+                else await this.generateContent(this._initialWidth);
+                    
+                this._drawing = false;
+                    
+                if (this._redraw) {
+                    await this.draw();
+                    
+                resolve(false);
+                }
+                else {
+                    resolve(false);
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
+
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -241,16 +266,18 @@ export class VRModal implements SceneElement {
             }
 
             if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
+                if (this._mesh.geometry) this._mesh.geometry.dispose();
+                if (this._mesh.material) this._mesh.material.dispose();
                 this._mesh = null;
             }
             
             if (this._closeButtonMesh) {
                 for (let i=(this._closeButtonMesh.children.length-1); i>=0; i--) {
-                    this._closeButtonMesh.children[i].geometry.dispose();
-                    this._closeButtonMesh.children[i].material.dispose();
-                    this._closeButtonMesh.children[i] = null
+                    if (this._closeButtonMesh.children[i]) {
+                        if (this._closeButtonMesh.children[i].geometry) this._closeButtonMesh.children[i].geometry.dispose();
+                        if (this._closeButtonMesh.children[i].material) this._closeButtonMesh.children[i].material.dispose();
+                        this._closeButtonMesh.children[i] = null
+                    }
                 }
             }
             

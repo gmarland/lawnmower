@@ -55,7 +55,7 @@
               ergergergergre
             </vr-text>
           </vr-layout>
-          <vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>
+          <!--<vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>-->
           <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
             Halloween
 
@@ -85,7 +85,8 @@
           </vr-div>
           <vr-div width="100" height="90" color="#ff00ff"></vr-div>
           <vr-div width="500" color="#00d000" margin="10" padding="10"> 
-            <vr-image border-radius="20" 
+            <vr-image id="demo-image"
+                      border-radius="20" 
                       modal="true" 
                       src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/catherine-zeta-jones-jenna-ortgea-luis-guzman-isaac-ordonez-wednesday-1660718014.jpg?crop=1.00xw:0.446xh;0,0.0999xh&resize=768:*"></vr-image>
             <vr-text border-radius="10" font-color="#ffffff" background-color="#222222" padding="10" text-decoration="italic">
@@ -116,12 +117,16 @@
         await customElements.whenDefined('vr-document');
         const main = document.getElementById('main');
 
-
         //await main.showModal("image-modal");
         
         setTimeout(() => {
           main.setLayout("doom");
           
+          const demoImage = document.getElementById('demo-image');
+          demoImage.src = "https://media.istockphoto.com/id/90976521/photo/hastings-in-east-sussex-england.jpg?s=1024x1024&w=is&k=20&c=AFi1FWZLyTDpeY_6_pchKUzmluTqsTx-nkUcauXXMk8=";
+          demoImage.borderRadius = 6;
+          demoImage.height=1000
+
           setTimeout(() => {
             main.setLayout("boom");
           }, 3000);
