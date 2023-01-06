@@ -109,7 +109,7 @@ export class VRDiv implements SceneElement {
 
     public get width() {
         if (this._setWidth !== null) return this._setWidth;
-        else return this._initialWidth;
+        else return this._initialWidth ? this._initialHeight : 0;
     }
 
     public get visible(): boolean {
@@ -418,10 +418,13 @@ export class VRDiv implements SceneElement {
         let childYSize = ((childBox.max.y-childBox.min.y)+(this._padding*2));
         if (isNaN(childYSize) || !isFinite(childYSize)) childYSize = (this._padding*2);
 
-        if ((childXSize !== bodyXSize) || 
+        var buildWidth = this.width;
+        if ((!buildWidth) || (childXSize > buildWidth)) buildWidth = childXSize;
+
+        if ((buildWidth !== bodyXSize) || 
             (childYSize !== bodyYSize)) {
             mesh.geometry.dispose();
-            mesh.geometry = PlaneUtils.getPlane(childXSize, childYSize, this._borderRadius)
+            mesh.geometry = PlaneUtils.getPlane(buildWidth, childYSize, this._borderRadius)
             mesh.geometry.computeBoundingBox();
             mesh.geometry.computeBoundingSphere();
 
