@@ -304,7 +304,7 @@ export class VRDiv implements SceneElement {
 
                 if (this._setWidth !== null) await this.updateContent(this._setWidth);
                 else await this.updateContent(this._initialWidth);   
-
+                
                 this._drawing = false;
                 
                 if (this._redraw) {

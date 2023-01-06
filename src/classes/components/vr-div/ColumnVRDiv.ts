@@ -50,6 +50,8 @@ export class ColumnVRDiv extends VRDiv {
     }
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {
+        this.resetChildPositions(childLayoutContainer);
+        
         let currentSize = 0;
             
         for (let i=0; i<childLayoutContainer.children.length; i++) {
@@ -186,8 +188,6 @@ export class ColumnVRDiv extends VRDiv {
             const meshBox = new Box3().setFromObject(body);
             
             if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
-                this.resetChildPositions(childLayoutContainer);
-                
                 this.layoutChildrenItems(childLayoutContainer);
                 
                 this.centerContentBox(childLayoutContainer);

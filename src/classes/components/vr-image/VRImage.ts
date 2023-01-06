@@ -57,12 +57,10 @@ export class VRImage implements SceneElement {
         
         this._src = src;
 
-        if (config) {
-            if (config.width) this._initialWidth = config.width;
-            if (config.height) this._initialHeight = config.height;
+        if (config.width) this._initialWidth = config.width;
+        if (config.height) this._initialHeight = config.height;
 
-            this._borderRadius = config.borderRadius;
-        }
+        this._borderRadius = config.borderRadius;
         
         this._content.translateZ(0.5);
     }

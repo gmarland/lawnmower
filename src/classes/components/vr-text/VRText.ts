@@ -70,20 +70,18 @@ export class VRText implements SceneElement {
         this._italic = config.italic;
         this._bold = config.bold;
 
-        if (config) {
-            this._initialWidth = config.width;
-            this._initialHeight = config.height;
+        this._initialWidth = config.width;
+        this._initialHeight = config.height;
 
-            this._borderRadius = config.borderRadius;
-            
-            if (config.backgroundColor) this._backgroundColor = config.backgroundColor;
-            else this._backgroundColor = "#ffffff";
-            
-            if (config.fontColor) this._fontColor = config.fontColor;
-            else this._fontColor = "#000000";
+        this._borderRadius = config.borderRadius;
+        
+        if (config.backgroundColor) this._backgroundColor = config.backgroundColor;
+        else this._backgroundColor = "#ffffff";
+        
+        if (config.fontColor) this._fontColor = config.fontColor;
+        else this._fontColor = "#000000";
 
-            if (config.padding) this._padding = config.padding;
-        }
+        if (config.padding) this._padding = config.padding;
         
         this._content.name = "text"
         this._content.translateZ(0.5);
