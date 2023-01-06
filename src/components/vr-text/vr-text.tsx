@@ -70,6 +70,20 @@ export class VrText {
     });
   }
 
+  @Watch('height')
+  private updateHeight(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._textblock) {
+        this._textblock.height = newValue;
+  
+        const dimensionsUpdated = await this._textblock.draw();
+        if (dimensionsUpdated) await this._textblock.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('text')
   private updateText(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {

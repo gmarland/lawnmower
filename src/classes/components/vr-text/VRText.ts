@@ -36,7 +36,9 @@ export class VRText implements SceneElement {
     
     private _calculatedWidth?: number = null; // Calculated through drawing the text
     
-    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    // Set through the API, typically through a parent div
+    private _setWidth?: number = null;
+    private _setHeight?: number = null; 
 
     private _borderRadius: number;
 
@@ -104,6 +106,7 @@ export class VRText implements SceneElement {
 
     public get height(): number {
         if (this._calculatedHeight !== null) return this._calculatedHeight;
+        else if (this._setHeight !== null) return this._setHeight;
         else return this._initialHeight ? this._initialHeight : 0;
     }
 
@@ -215,6 +218,10 @@ export class VRText implements SceneElement {
 
     public set width(value: number) {
         this._setWidth = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
     }
 
     public set text(value: string) {
@@ -484,7 +491,8 @@ export class VRText implements SceneElement {
         textContainer.style.width = this._calculatedWidth + "px"
         textContainer.width = this._calculatedWidth;
         
-        if (this._initialHeight) this._calculatedHeight = this._initialHeight;
+        if (this._setHeight) this._calculatedHeight = this._setHeight;
+        else if (this._initialHeight) this._calculatedHeight = this._initialHeight;
         else this._calculatedHeight = (lineHeight*lines.length) + (this._padding*2);
 
         textContainer.style.height = this._calculatedHeight + "px"
