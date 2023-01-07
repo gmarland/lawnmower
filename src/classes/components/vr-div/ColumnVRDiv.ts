@@ -51,7 +51,7 @@ export class ColumnVRDiv extends VRDiv {
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {
         this.resetChildPositions(childLayoutContainer);
-        
+            
         let currentSize = 0;
             
         for (let i=0; i<childLayoutContainer.children.length; i++) {
@@ -102,16 +102,12 @@ export class ColumnVRDiv extends VRDiv {
                 for (let i=0; i< keys.length; i++) {
                     const childElement = this.getChildElements().get(keys[i]);
 
-                    if (childElement.visible) {
-                        const dimensions = childElement.getDimensions(); 
-
-                        if (!dimensions.width) {
-                            const actualDimensions = new Box3().setFromObject(await childElement.getContent())
-                            const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
-                            
-                            totalSpace += actualWidth;
-                            dynamicWidths.push(childElement);
-                        }
+                    if ((childElement.visible) && (childElement.dynamicWidth)) {
+                        const actualDimensions = new Box3().setFromObject(await childElement.getContent())
+                        const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
+                        
+                        totalSpace += actualWidth;
+                        dynamicWidths.push(childElement);
                     }
                 }
 
@@ -159,7 +155,6 @@ export class ColumnVRDiv extends VRDiv {
 
             let keys = Array.from(this.getChildElements().keys());
             keys.sort(function(a, b){return a-b});
-    
 
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
@@ -186,7 +181,7 @@ export class ColumnVRDiv extends VRDiv {
             this.repositionContainer(body, childLayoutContainer);
 
             const meshBox = new Box3().setFromObject(body);
-            
+
             if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
                 this.layoutChildrenItems(childLayoutContainer);
                 

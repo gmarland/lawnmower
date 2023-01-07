@@ -72,7 +72,7 @@ export class VRImage implements SceneElement {
     }
 
     public get dynamicWidth(): boolean {
-        return (this._initialWidth != null);
+        return (this._initialWidth == null);
     }
 
     public get width(): number {
@@ -305,9 +305,7 @@ export class VRImage implements SceneElement {
                     
                     tex.repeat.set(repeatX, repeatY);
                     
-                    tex.offset.y = (repeatY - 1) / 2 * -1;
-                
-                    console.log(width, tex.image.width, widthRatio, this._calculatedWidth, this._calculatedHeight)
+                    tex.offset.y = (repeatY - 1) / (2 * -1);
                 }
                 else if (this.height !== null) {
                     this._calculatedHeight = height;
@@ -321,9 +319,7 @@ export class VRImage implements SceneElement {
                     
                     tex.repeat.set(repeatX, repeatY);
                     
-                    tex.offset.x = (repeatX - 1) / 2 * -1;
-                
-                    console.log(this._calculatedWidth, this._calculatedHeight)
+                    tex.offset.x = (repeatX - 1) / (2 * -1);
                 }
                 else {
                     this._calculatedWidth = 0;

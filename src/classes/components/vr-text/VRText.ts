@@ -96,7 +96,7 @@ export class VRText implements SceneElement {
     }
 
     public get dynamicWidth(): boolean {
-        return (this._initialWidth != null);
+        return (this._initialWidth == null);
     }
 
     public get width(): number {

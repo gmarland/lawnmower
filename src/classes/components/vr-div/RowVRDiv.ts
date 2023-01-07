@@ -106,19 +106,15 @@ export class RowVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
 
-                if (childElement.visible) {
-                    const dimensions = childElement.getDimensions(); 
+                if ((childElement.visible) && (childElement.dynamicWidth)) {
+                    const actualDimensions = new Box3().setFromObject(await childElement.getContent())
+                    const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
+                    
+                    if (actualWidth != spareSpace) {
+                        childElement.width = spareSpace;
+                        await childElement.draw();
 
-                    if (!dimensions.width) {
-                        const actualDimensions = new Box3().setFromObject(await childElement.getContent())
-                        const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
-                        
-                        if (actualWidth != spareSpace) {
-                            childElement.width = spareSpace;
-                            await childElement.draw();
-
-                            widthsUpdated = true;
-                        }
+                        widthsUpdated = true;
                     }
                 }
             }
