@@ -38,7 +38,8 @@ export class VRVideo implements SceneElement {
     private _setWidth?: number = null;
     private _setHeight?: number = null;
 
-    private _calculatedHeight: number;
+    private _calculatedWidth?: number = null;
+    private _calculatedHeight?: number = null;
 
     private _video: HTMLVideoElement;
     private _videoStarted: boolean = false;
@@ -71,8 +72,8 @@ export class VRVideo implements SceneElement {
 
         this._playInline = config.playInline;
 
-        this._initialWidth = config.width;
-        this._initialHeight = config.height;
+        if (config.width) this._initialWidth = config.width;
+        if (config.height) this._initialHeight = config.height;
 
         this._placeholderTimestamp = config.placeholderTimestamp;
         
@@ -98,7 +99,8 @@ export class VRVideo implements SceneElement {
     }
 
     public get width(): number {
-        if (this._setWidth !== null) return this._setWidth;
+        if (this._calculatedWidth !== null) return this._calculatedWidth;
+        else if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth ? this._initialWidth : 0;
     }
 
@@ -250,7 +252,7 @@ export class VRVideo implements SceneElement {
 
     public reset() {
         this._video.pause();
-        
+
         this._videoStarted = false;
         this._video.currentTime = 0;
     }
@@ -267,7 +269,12 @@ export class VRVideo implements SceneElement {
 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                await this.generateContent(this.width);
+                let contentWidth = this._initialWidth;
+                if (this._setWidth !== null) contentWidth = this._setWidth;
+
+                let contentHeight = this._initialHeight;
+                if (this._setHeight !== null) contentHeight = this._setHeight;
+                await this.generateContent(contentWidth, contentHeight);
                 
                 this._drawing = false;
                         
@@ -321,7 +328,7 @@ export class VRVideo implements SceneElement {
     
     ////////// Private Methods
 
-    private async generateContent(width: number): Promise<void> {
+    private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
             for (let i=(this._content.children.length-1); i>=0; i--) {
                 this._content.remove(this._content.children[i]);
@@ -339,7 +346,7 @@ export class VRVideo implements SceneElement {
                 this._playButton = null;
             }
 
-            this._mesh = await this.buildMesh(width);
+            this._mesh = await this.buildMesh(width, height);
             this._playButton = this.buildPlayButton();
 
             this._content.add(this._mesh);
@@ -349,14 +356,14 @@ export class VRVideo implements SceneElement {
         });
     }
 
-    private async buildTexture(width: number): Promise<CanvasTexture> {
+    private async buildTexture(width: number, height: number): Promise<CanvasTexture> {
         var that = this;
 
         return new Promise(async (resolve) => {
             this._calculatedHeight;
             
-            if (this._setHeight !== null) this._calculatedHeight = this._setHeight;
-            else this._calculatedHeight = this._initialHeight;
+            this._calculatedHeight = height;
+            this._calculatedWidth = width;
 
             this._video = document.createElement("video");
             this._video.setAttribute("loop", "");
@@ -366,19 +373,23 @@ export class VRVideo implements SceneElement {
             this._video.addEventListener( "loadedmetadata", function (e) {
                 const videoTexture = new VideoTexture(that._video);
     
-                if (that._setHeight) {
-                    that._calculatedHeight = that._setHeight;
-                }
-                else if (that._initialHeight) {
-                    that._calculatedHeight = that._initialHeight;
-                }
-                else if (width) {
+                if ((width !== null) && (width > height)) {
+                    that._calculatedWidth = width;
+
                     const widthRatio = videoTexture.image.videoWidth/width;
     
                     that._calculatedHeight = videoTexture.image.videoHeight/widthRatio;
                 }
+                else if (that.height !== null) {
+                    that._calculatedHeight = height;
+
+                    const heightRatio = videoTexture.image.videoHeight/height;
+
+                    that._calculatedWidth = videoTexture.image.videoWidth/heightRatio;
+                }
                 else {
-                    that._calculatedHeight = 0;
+                    that._calculatedWidth = 0;
+                    that._calculatedWidth = 0;
                 }
     
                 resolve(videoTexture);
@@ -391,11 +402,11 @@ export class VRVideo implements SceneElement {
         });
     }
 
-    private async buildMesh(width: number): Promise<Mesh> {
+    private async buildMesh(width: number, height: number): Promise<Mesh> {
         return new Promise(async (resolve) => {
-            const imageTexture = await this.buildTexture(width);
+            const imageTexture = await this.buildTexture(width, height);
 
-            const geometry = new PlaneGeometry(width, this._calculatedHeight);
+            const geometry = new PlaneGeometry(this._calculatedWidth, this._calculatedHeight);
             const material = new MeshBasicMaterial({
                 map: imageTexture,
                 transparent: false,

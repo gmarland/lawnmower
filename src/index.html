@@ -223,11 +223,17 @@
         // ****** Testing video
 
         // ----- Testing changing video src
-        setTimeout(() => {
+        /*setTimeout(() => {
           document.getElementById('demo-video-1').src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
           document.getElementById('demo-video-1').play360 = true;
+        }, 3000);*/
+        
+        // ----- Testing changing video properties
+        setTimeout(() => {
+          const demoVideo1 = document.getElementById('demo-video-1');
+          //demoVideo1.width = 1000;
+          demoVideo1.height = 1000;
         }, 3000);
-
       })();
 
       const foxElement = document.getElementById("fox-asset");
