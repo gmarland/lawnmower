@@ -52,7 +52,7 @@ export class VrText {
 
   @Prop() public visible: boolean = true;
 
-  @Event() public onClick: EventEmitter;
+  @Event() public click: EventEmitter;
 
   private _textblock: VRText;
 
@@ -251,7 +251,7 @@ export class VrText {
     });
 
     this._textblock.onClick = () => {
-      this.onClick.emit();
+      this.click.emit();
     };
   }
 

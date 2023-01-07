@@ -3,5 +3,5 @@ export interface VR360VideoConfig {
     
     videoWidthSegments: number;
 
-    videoHieghtSegments: number;
+    videoHeightSegments: number;
 }

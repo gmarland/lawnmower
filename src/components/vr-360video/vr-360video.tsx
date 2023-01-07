@@ -6,7 +6,8 @@ import {
   Element,
   Event,
   EventEmitter,
-  Method
+  Method,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -34,9 +35,9 @@ export class Vr360Video {
 
   @Prop() public videoRadius: number = 600;
   @Prop() public videoWidthSegments: number = 60;
-  @Prop() public videoHieghtSegments: number = 40;
+  @Prop() public videoHeightSegments: number = 40;
 
-  @Event() public onClick: EventEmitter;
+  @Event() public click: EventEmitter;
 
   @Event() public addToRoot: EventEmitter<SceneElement>;
 
@@ -70,11 +71,98 @@ export class Vr360Video {
     });
   }
 
+  @Method()
+  public async reset(): Promise<void> {
+    return new Promise((resolve) => {
+      this._video.reset();
+
+      resolve();
+    });
+  }
+
+  @Method() 
+  public async close(): Promise<void> {
+    return new Promise((resolve) => {
+      this.hideVideo();
+
+      resolve();
+    });
+  }
+
+  @Watch('src')
+  private updateSrc(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this.hideVideo();
+
+        this._video.src = newValue;
+  
+        await this._video.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('videoRadius')
+  private updateVideoRadius(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this.hideVideo();
+
+        this._video.width = newValue;
+  
+        await this._video.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('videoWidthSegments')
+  private updateWidthSegments(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this.hideVideo();
+
+        this._video.widthSegments = newValue;
+  
+        await this._video.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('videoHeightSegments')
+  private updateHeightSegments(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this.hideVideo();
+
+        this._video.heightSegments = newValue;
+  
+        await this._video.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  private hideVideo(): void {
+    this._video.reset();
+
+    this._controls.hide();
+    this._video.visible = false;
+    
+    this.showCurrentLayout.emit();
+  }
+
   componentWillLoad() {
     this._video = new VR360Video(this.parent, this.src, { 
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,
-      videoHieghtSegments: this.videoHieghtSegments
+      videoHeightSegments: this.videoHeightSegments
     });
 
     this._video.onClick = () => {
@@ -83,7 +171,7 @@ export class Vr360Video {
         else this._controls.show(this._video.getIsPlaying());
       });
 
-      this.onClick.emit();
+      this.click.emit();
     };
   }
 
@@ -97,12 +185,7 @@ export class Vr360Video {
     }
 
     this._controls.onClose = () => {
-      this._video.reset();
-
-      this._controls.hide();
-      this._video.visible = false;
-      
-      this.showCurrentLayout.emit();
+      this.hideVideo();
     }
 
     this.addToRoot.emit(this._video);

@@ -49,7 +49,7 @@ export class VrModal {
 
   @Prop() public closeButtonWidth: number = 50;
 
-  @Event() public onClick: EventEmitter;
+  @Event() public click: EventEmitter;
 
   @Event() public addToRoot: EventEmitter<SceneElement>;
 

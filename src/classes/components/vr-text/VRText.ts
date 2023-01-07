@@ -96,7 +96,7 @@ export class VRText implements SceneElement {
     }
 
     public get dynamicWidth(): boolean {
-        return (this._initialWidth != null);
+        return (this._initialWidth == null);
     }
 
     public get width(): number {
@@ -295,8 +295,13 @@ export class VRText implements SceneElement {
 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                if (this._setWidth !== null) await this.generateContent(this._setWidth);
-                else await this.generateContent(this._initialWidth);
+                let contentWidth = this._initialWidth;
+                if (this._setWidth !== null) contentWidth = this._setWidth;
+
+                let contentHeight = this._initialHeight;
+                if (this._setHeight !== null) contentHeight = this._setHeight;
+
+                await this.generateContent(contentWidth, contentHeight);
                     
                 this._drawing = false;
                     
@@ -340,7 +345,7 @@ export class VRText implements SceneElement {
 
     ////////// Private Methods
 
-    private async generateContent(width: number): Promise<void> {
+    private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
             for (let i=(this._content.children.length-1); i>=0; i--) {
                 this._content.remove(this._content.children[i]);
@@ -352,7 +357,7 @@ export class VRText implements SceneElement {
                 this._mesh = null;
             }
             
-            this._mesh = this.buildMesh(width);
+            this._mesh = this.buildMesh(width, height);
 
             this._content.add(this._mesh);
 
@@ -360,8 +365,8 @@ export class VRText implements SceneElement {
         });
     }
 
-    private buildMesh(width: number): Mesh {
-        const textTexture = this.buildTexture(width);
+    private buildMesh(width: number, height: number): Mesh {
+        const textTexture = this.buildTexture(width, height);
 
         let buildWidth = 0;
         if (this._calculatedWidth) buildWidth = this._calculatedWidth;
@@ -383,7 +388,7 @@ export class VRText implements SceneElement {
         return mesh;
     }
 
-    private buildTexture(width: number): CanvasTexture {
+    private buildTexture(width: number, height: number): CanvasTexture {
         let textDecoration = "";
 
         if (this._bold) textDecoration += "bold ";
@@ -491,8 +496,7 @@ export class VRText implements SceneElement {
         textContainer.style.width = this._calculatedWidth + "px"
         textContainer.width = this._calculatedWidth;
         
-        if (this._setHeight) this._calculatedHeight = this._setHeight;
-        else if (this._initialHeight) this._calculatedHeight = this._initialHeight;
+        if (height) this._calculatedHeight = height;
         else this._calculatedHeight = (lineHeight*lines.length) + (this._padding*2);
 
         textContainer.style.height = this._calculatedHeight + "px"

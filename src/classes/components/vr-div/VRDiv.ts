@@ -479,6 +479,8 @@ export class VRDiv implements SceneElement {
             }
 
             if (body && child) {
+                this.resizePanelBody(body, child);
+
                 await this.generateContent(body, child);
 
                 this.resizePanelBody(body, child);

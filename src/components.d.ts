@@ -8,13 +8,15 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SceneElement } from "./classes/components/SceneElement";
 export namespace Components {
     interface Vr360video {
+        "close": () => Promise<void>;
         "depth": number;
         "parent": SceneElement;
         "pause": () => Promise<void>;
         "play": () => Promise<void>;
         "position": number;
+        "reset": () => Promise<void>;
         "src": string;
-        "videoHieghtSegments": number;
+        "videoHeightSegments": number;
         "videoRadius": number;
         "videoWidthSegments": number;
     }
@@ -124,6 +126,7 @@ export namespace Components {
         "play360": boolean;
         "position": number;
         "src": string;
+        "visible": boolean;
         "width": number;
     }
     interface VrVideoControls {
@@ -250,21 +253,21 @@ declare namespace LocalJSX {
     interface Vr360video {
         "depth"?: number;
         "onAddToRoot"?: (event: Vr360videoCustomEvent<SceneElement>) => void;
+        "onClick"?: (event: Vr360videoCustomEvent<any>) => void;
         "onHideCurrentLayout"?: (event: Vr360videoCustomEvent<any>) => void;
-        "onOnClick"?: (event: Vr360videoCustomEvent<any>) => void;
         "onShowCurrentLayout"?: (event: Vr360videoCustomEvent<any>) => void;
         "onViewCurrentLayout"?: (event: Vr360videoCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "src"?: string;
-        "videoHieghtSegments"?: number;
+        "videoHeightSegments"?: number;
         "videoRadius"?: number;
         "videoWidthSegments"?: number;
     }
     interface VrAsset {
         "activeAnimation"?: string;
         "depth"?: number;
-        "onOnClick"?: (event: VrAssetCustomEvent<any>) => void;
+        "onClick"?: (event: VrAssetCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "radius"?: number;
@@ -304,7 +307,7 @@ declare namespace LocalJSX {
         "depth"?: number;
         "height"?: number;
         "modal"?: boolean;
-        "onOnClick"?: (event: VrImageCustomEvent<any>) => void;
+        "onClick"?: (event: VrImageCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: VrImageCustomEvent<string>) => void;
         "parent"?: SceneElement;
         "position"?: number;
@@ -328,7 +331,7 @@ declare namespace LocalJSX {
         "id"?: string;
         "offset"?: number;
         "onAddToRoot"?: (event: VrModalCustomEvent<SceneElement>) => void;
-        "onOnClick"?: (event: VrModalCustomEvent<any>) => void;
+        "onClick"?: (event: VrModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
         "src"?: string;
@@ -342,7 +345,7 @@ declare namespace LocalJSX {
         "fontFamily"?: string;
         "fontSize"?: number;
         "height"?: number;
-        "onOnClick"?: (event: VrTextCustomEvent<any>) => void;
+        "onClick"?: (event: VrTextCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
         "position"?: number;
@@ -354,12 +357,13 @@ declare namespace LocalJSX {
     interface VrVideo {
         "depth"?: number;
         "height"?: number;
-        "onOnClick"?: (event: VrVideoCustomEvent<any>) => void;
+        "onClick"?: (event: VrVideoCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "placeholder"?: number;
         "play360"?: boolean;
         "position"?: number;
         "src"?: string;
+        "visible"?: boolean;
         "width"?: number;
     }
     interface VrVideoControls {

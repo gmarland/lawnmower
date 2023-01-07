@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Stencil Component Starter</title>
+    <title>LawnmowerJS</title>
 
     <script type="module" src="/build/lawnmower.esm.js"></script>
     <script nomodule src="/build/lawnmower.js"></script>
@@ -31,11 +31,12 @@
     </style>
   </head>
   <body>
-    <vr-document id="main" starting-distance="800">
+    <vr-document id="main" starting-distance="1500">
       <vr-modal id="image-modal" border-radius="10">
         <vr-image border-radius="20" 
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
       </vr-modal>
+      <vr-360video id="demo-video-360" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"></vr-360video>
       <vr-div margin="10" color="#ff2211">
         <vr-div width="700" height="70" color="#00ffff" margin="30" layout="Column" item-vertical-align="Top" padding="10">
           <vr-div width="1000" color="#fffff1" margin="10"padding="10">
@@ -54,12 +55,6 @@
 
               reher
 
-              erher
-
-
-              erherherherher
-
-
               erherherherherhh erherherherher
 
 
@@ -77,19 +72,6 @@
               reher
 
               erher
-
-
-              erherherherher
-
-
-              erherherherherhh erherherherher
-
-
-              erherherherher
-              ererg
-
-
-              herehe
             </vr-text>  
           </vr-div>
           <vr-layout id="doom">
@@ -101,7 +83,10 @@
               ergergergergre
             </vr-text>
           </vr-layout>
-          <!--<vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>-->
+          <vr-video id="demo-video-1"
+                    width="400" 
+                    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                    placeholder="10"></vr-video>
           <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
             Halloween
 
@@ -110,10 +95,8 @@
         </vr-div>
         <vr-div color="#602202" height="100" margin="20" layout="Column" padding="20">
           <vr-div margin="20" color="#222222" padding="20">
-            <vr-text border-radius="10" height="400" font-color="#222222" background-color="#ffffff" padding="15">
-              This is but a test
-
-              This is just a trial run
+            <vr-text id="360-video-button" border-radius="10" height="400" font-color="#222222" background-color="#ffffff" padding="15">
+              Play 360 Video
             </vr-text>
             <vr-text background-color="#ff00ff" padding="15" border-radius="10">
               You can just push reset
@@ -129,7 +112,6 @@
                 src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"></vr-asset>
             </vr-layout>
           </vr-div>
-          <vr-div width="100" height="90" color="#ff00ff"></vr-div>
           <vr-div width="500" color="#00d000" margin="10" padding="10"> 
             <vr-image id="demo-image"
                       border-radius="20" 
@@ -165,7 +147,8 @@
 
         //await main.showModal("image-modal");
         
-        // ----- Testing activating different layouts
+        // ****** Testing layouts
+
         /*setTimeout(() => {
           main.setLayout("doom");
           
@@ -174,14 +157,15 @@
           }, 3000);
         }, 3000);*/
 
-        // ----- Testing images
+        // ****** Testing images
 
         // ----- Testing changing image properties
         /*setTimeout(() => {
           const demoImage = document.getElementById('demo-image');
           demoImage.src = "https://media.istockphoto.com/id/90976521/photo/hastings-in-east-sussex-england.jpg?s=1024x1024&w=is&k=20&c=AFi1FWZLyTDpeY_6_pchKUzmluTqsTx-nkUcauXXMk8=";
           demoImage.borderRadius = 6;
-          demoImage.height=1000;
+          demoImage.width=1000;
+          //demoImage.height=1000;
         }, 3000);*/
 
         // ----- Testing changing image visibility
@@ -193,7 +177,7 @@
           }, 3000);
         }, 3000);*/
 
-        // ----- Testing text
+        // ****** Testing text
 
         // ----- Testing changing text properties
         /*setTimeout(() => {
@@ -234,11 +218,52 @@
             document.getElementById('demo-text-2').visible = true;
           }, 3000);
         }, 3000);*/
+        
+        // ****** Testing video
+
+        // ----- Testing changing video src
+        /*setTimeout(() => {
+          document.getElementById('demo-video-1').src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
+          document.getElementById('demo-video-1').play360 = true;
+        }, 3000);*/
+        
+        // ----- Testing changing video properties
+        /*setTimeout(() => {
+          const demoVideo1 = document.getElementById('demo-video-1');
+          demoVideo1.placeholder = 20;
+          //demoVideo1.width = 1000;
+          //demoVideo1.height = 1000;
+        }, 3000);*/
+
+        // ----- Testing changing video visibility
+        /*setTimeout(() => {
+          document.getElementById('demo-video-1').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('demo-video-1').visible = true;
+          }, 3000);
+        }, 3000);*/
+        
+        // ****** Testing 360 video
+        /*setTimeout(() => {n
+            document.getElemetById('demo-video-360').play();
+        }, 3000);*/
       })();
+
+      document.getElementById("360-video-button").addEventListener("click", async () => {
+        const demoVideo = document.getElementById("demo-video-360");
+        await demoVideo.play();
+
+        /*setTimeout(async () => {
+          demoVideo.videoRadius = 0;
+          await demoVideo.play();
+        }, 10000);*/
+      });
+        
 
       const foxElement = document.getElementById("fox-asset");
 
-      foxElement.addEventListener("onClick", async () => {
+      foxElement.addEventListener("click", async () => {
         const animationNames = await foxElement.getAnimationNames();
 
         if (animationNames.length > 0) {

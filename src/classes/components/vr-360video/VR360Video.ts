@@ -28,7 +28,7 @@ export class VR360Video implements SceneElement {
 
     private _videoRadius: number;
     private _videoWidthSegments: number;
-    private _videoHieghtSegments: number;
+    private _videoHeightSegments: number;
 
     private _setVideoRadius?: number = null;
 
@@ -36,7 +36,7 @@ export class VR360Video implements SceneElement {
     private _videoStarted: boolean = false;
     private _isVideoPlaying: boolean = false;
 
-    private _mesh?: Mesh = null;
+    private _mesh?: Object3D = null;
 
     private _content: Object3D = new Object3D();
     
@@ -54,7 +54,7 @@ export class VR360Video implements SceneElement {
 
         this._videoRadius = config.videoRadius;
         this._videoWidthSegments = config.videoWidthSegments;
-        this._videoHieghtSegments = config.videoHieghtSegments;
+        this._videoHeightSegments = config.videoHeightSegments;
 
         this._parent = parent;
         
@@ -69,6 +69,10 @@ export class VR360Video implements SceneElement {
         return this._uuid;
     }
 
+    public get src(): string {
+        return this._src;
+    }
+
     public get dynamicWidth(): boolean {
         return false;
     }
@@ -76,6 +80,14 @@ export class VR360Video implements SceneElement {
     public get width(): number {
         if (this._setVideoRadius !== null) return this._setVideoRadius;
         else return this._videoRadius;
+    }
+
+    public get widthSegments(): number {
+        return this._videoWidthSegments;
+    }
+
+    public get heightSegments(): number {
+        return this._videoHeightSegments;
     }
 
     public get visible(): boolean {
@@ -152,12 +164,31 @@ export class VR360Video implements SceneElement {
 
     ////////// Setters
 
+    public set src(value: string) {
+        this._src = value;
+    }
+
     public set width(value: number) {
         this._setVideoRadius = value;
     }
 
+    public set widthSegments(value: number) {
+        this._videoWidthSegments = value;
+    }
+
+    public set heightSegments(value: number) {
+        this._videoHeightSegments = value;
+    }
+
     public set visible(value: boolean) {
         this._content.visible = value;
+    }
+
+    ////////// Public Methods
+
+    // --- Data Methods
+
+    public addChildElement(position: number, childElement: SceneElement): void {
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -170,13 +201,6 @@ export class VR360Video implements SceneElement {
         return new Promise((resolve) => {
             resolve();
         });
-    }
-
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
     }
 
     public play(): void {
@@ -269,8 +293,18 @@ export class VR360Video implements SceneElement {
             }
 
             if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
+                if (this._mesh) {
+                    if (this._mesh.children[0]) {
+                        if (this._mesh.children[0].geometry) this._mesh.children[0].geometry.dispose();
+                        if (this._mesh.children[0].material) this._mesh.children[0].material.dispose();
+                    }
+                    if (this._mesh.children[1]) {
+                        if (this._mesh.children[1].geometry) this._mesh.children[1].geometry.dispose();
+                        if (this._mesh.children[1].material) this._mesh.children[1].material.dispose();
+                    }
+                }
+                if (this._mesh.geometry) this._mesh.geometry.dispose();
+                if (this._mesh.material) this._mesh.material.dispose();
                 this._mesh = null;
             }
             
@@ -313,7 +347,7 @@ export class VR360Video implements SceneElement {
 
             // left
 
-            const geometry1 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHieghtSegments);
+            const geometry1 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHeightSegments);
 
             // invert the geometry on the x-axis so that all of the faces point inward
             geometry1.scale( - 1, 1, 1 );
@@ -337,7 +371,7 @@ export class VR360Video implements SceneElement {
 
             // right
 
-            const geometry2 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHieghtSegments);
+            const geometry2 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHeightSegments);
             geometry2.scale( - 1, 1, 1 );
 
             const uvs2 = geometry2.attributes.uv.array;
