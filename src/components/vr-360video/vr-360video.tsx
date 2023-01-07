@@ -70,6 +70,33 @@ export class Vr360Video {
     });
   }
 
+  @Method()
+  public async reset(): Promise<void> {
+    return new Promise((resolve) => {
+      this._video.reset();
+
+      resolve();
+    });
+  }
+
+  @Method() 
+  public async close(): Promise<void> {
+    return new Promise((resolve) => {
+      this.hideVideo();
+
+      resolve();
+    });
+  }
+
+  private hideVideo(): void {
+    this._video.reset();
+
+    this._controls.hide();
+    this._video.visible = false;
+    
+    this.showCurrentLayout.emit();
+  }
+
   componentWillLoad() {
     this._video = new VR360Video(this.parent, this.src, { 
       videoRadius: this.videoRadius,
@@ -97,12 +124,7 @@ export class Vr360Video {
     }
 
     this._controls.onClose = () => {
-      this._video.reset();
-
-      this._controls.hide();
-      this._video.visible = false;
-      
-      this.showCurrentLayout.emit();
+      this.hideVideo();
     }
 
     this.addToRoot.emit(this._video);

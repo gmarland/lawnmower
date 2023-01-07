@@ -69,6 +69,10 @@ export class VR360Video implements SceneElement {
         return this._uuid;
     }
 
+    public get src(): string {
+        return this._src;
+    }
+
     public get dynamicWidth(): boolean {
         return false;
     }
@@ -152,12 +156,23 @@ export class VR360Video implements SceneElement {
 
     ////////// Setters
 
+    public set src(value: string) {
+        this._src = value;
+    }
+
     public set width(value: number) {
         this._setVideoRadius = value;
     }
 
     public set visible(value: boolean) {
         this._content.visible = value;
+    }
+
+    ////////// Public Methods
+
+    // --- Data Methods
+
+    public addChildElement(position: number, childElement: SceneElement): void {
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -170,13 +185,6 @@ export class VR360Video implements SceneElement {
         return new Promise((resolve) => {
             resolve();
         });
-    }
-
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
     }
 
     public play(): void {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Stencil Component Starter</title>
+    <title>LawnmowerJS</title>
 
     <script type="module" src="/build/lawnmower.esm.js"></script>
     <script nomodule src="/build/lawnmower.js"></script>
@@ -54,12 +54,6 @@
 
               reher
 
-              erher
-
-
-              erherherherher
-
-
               erherherherherhh erherherherher
 
 
@@ -77,19 +71,6 @@
               reher
 
               erher
-
-
-              erherherherher
-
-
-              erherherherherhh erherherherher
-
-
-              erherherherher
-              ererg
-
-
-              herehe
             </vr-text>  
           </vr-div>
           <vr-layout id="doom">
@@ -101,7 +82,10 @@
               ergergergergre
             </vr-text>
           </vr-layout>
-          <!--<vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>-->
+          <vr-video id="demo-video-1"
+                    width="400" 
+                    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                    placeholder="10"></vr-video>
           <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
             Halloween
 
@@ -165,7 +149,8 @@
 
         //await main.showModal("image-modal");
         
-        // ----- Testing activating different layouts
+        // ****** Testing layouts
+
         /*setTimeout(() => {
           main.setLayout("doom");
           
@@ -174,7 +159,7 @@
           }, 3000);
         }, 3000);*/
 
-        // ----- Testing images
+        // ****** Testing images
 
         // ----- Testing changing image properties
         /*setTimeout(() => {
@@ -193,7 +178,7 @@
           }, 3000);
         }, 3000);*/
 
-        // ----- Testing text
+        // ****** Testing text
 
         // ----- Testing changing text properties
         /*setTimeout(() => {
@@ -234,6 +219,15 @@
             document.getElementById('demo-text-2').visible = true;
           }, 3000);
         }, 3000);*/
+        
+        // ****** Testing video
+
+        // ----- Testing changing video src
+        setTimeout(() => {
+          //document.getElementById('demo-video-1').src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
+          document.getElementById('demo-video-1').play360 = true;
+        }, 3000);
+
       })();
 
       const foxElement = document.getElementById("fox-asset");

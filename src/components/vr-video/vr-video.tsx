@@ -5,8 +5,10 @@ import {
   Prop,
   Element,
   Event,
-  EventEmitter
+  EventEmitter,
+  Watch
 } from '@stencil/core';
+
 import { SceneElement } from '../../classes/components/SceneElement';
 import { VRVideo } from '../../classes/components/vr-video/VRVideo';
 
@@ -36,13 +38,106 @@ export class VrVideo {
 
   @Prop() public placeholder: number = 0.1;
 
-  @Prop() public play360: boolean = true;
+  @Prop() public play360: boolean = false;
 
   @Event() public onClick: EventEmitter;
 
   private _video: VRVideo;
 
   private _video360Element: HTMLVr360videoElement;
+
+  @Watch('src')
+  private updateSrc(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video360Element) {
+        await this._video360Element.close();
+
+        this._video360Element.src = newValue;
+      }
+
+      if (this._video) {
+        this._video.reset();
+        this._video.src = newValue;
+  
+        const dimensionsUpdated = await this._video.draw();
+        if (dimensionsUpdated) await this._video.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('width')
+  private updateWidth(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.width = newValue;
+  
+        const dimensionsUpdated = await this._video.draw();
+        if (dimensionsUpdated) await this._video.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('height')
+  private updateHeight(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.height = newValue;
+  
+        const dimensionsUpdated = await this._video.draw();
+        if (dimensionsUpdated) await this._video.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('placeholder')
+  private updatePlaceholder(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.placeholderTimestamp = newValue;
+  
+        const dimensionsUpdated = await this._video.draw();
+        if (dimensionsUpdated) await this._video.drawParent();
+      }
+
+      resolve();
+    });
+  }
+  
+  @Watch('play360')
+  private updatePlay360(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video360Element) await this._video360Element.close();
+
+      if (this._video) {
+        this._video.reset();
+        this._video.playInline = !this.play360;
+  
+        const dimensionsUpdated = await this._video.draw();
+        if (dimensionsUpdated) await this._video.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('visible')
+  private updateVisible(newValue: boolean): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.visible = newValue;
+  
+        await this._video.drawParent();
+      }
+
+      resolve();
+    });
+  }
 
   componentWillLoad() {
     this._video = new VRVideo(this.depth, this.parent, this.src, { 
@@ -53,7 +148,7 @@ export class VrVideo {
     });
 
     this._video.onClick = () => {
-      this._video360Element.play();
+      if (this.play360) this._video360Element.play();
 
       this.onClick.emit();
     };
@@ -76,13 +171,9 @@ export class VrVideo {
   render() {
     return (
       <Host>
-        {
-          this.play360 
-          ? <vr-360video ref={(el) => this._video360Element = el as HTMLVr360videoElement}
-                          src={ this.src }
-                          parent={ this._video }></vr-360video>
-          : null
-        }
+        <vr-360video ref={(el) => this._video360Element = el as HTMLVr360videoElement}
+                        src={ this.src }
+                        parent={ this._video }></vr-360video>
       </Host>
     );
   }

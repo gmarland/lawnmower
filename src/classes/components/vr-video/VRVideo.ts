@@ -34,7 +34,9 @@ export class VRVideo implements SceneElement {
     private _initialWidth?: number = null; //Defined width from the HTML tag
     private _initialHeight?: number = null;
 
-    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    // Set through the API, typically through a parent div
+    private _setWidth?: number = null;
+    private _setHeight?: number = null;
 
     private _calculatedHeight: number;
 
@@ -83,13 +85,31 @@ export class VRVideo implements SceneElement {
         return this._uuid;
     }
 
+    public get src(): string {
+        return this._src;
+    }
+
+    public get playInline(): boolean {
+        return this._playInline;
+    }
+
     public get dynamicWidth(): boolean {
         return false;
     }
 
-    public get width() {
+    public get width(): number {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get height(): number {
+        if (this._calculatedHeight !== null) return this._calculatedHeight;
+        else if (this._setHeight !== null) return this._setHeight;
+        else return this._initialHeight ? this._initialHeight : 0;
+    }
+
+    public get placeholderTimestamp(): number {
+        return this._placeholderTimestamp;
     }
 
     public get visible(): boolean {
@@ -115,7 +135,7 @@ export class VRVideo implements SceneElement {
     public getDimensions(): Dimensions {
         return {
             width: this.width,
-            height: this._calculatedHeight
+            height: this.height
         };
     }
     
@@ -166,8 +186,24 @@ export class VRVideo implements SceneElement {
 
     ////////// Setters
 
+    public set src(value: string) {
+        this._src = value;
+    }
+
+    public set playInline(value: boolean) {
+        this._playInline = value;
+    }
+
     public set width(value: number) {
         this._setWidth = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
+    }
+
+    public set placeholderTimestamp(value: number) {
+        this._placeholderTimestamp = value;
     }
 
     public set visible(value: boolean) {
@@ -191,6 +227,32 @@ export class VRVideo implements SceneElement {
     // --- Data Methods
 
     public addChildElement(position: number, childElement: SceneElement): void {
+    }
+
+    public play(): void {
+        if (!this._videoStarted) {
+            this._video.currentTime = 0;
+            this._videoStarted = true;
+        }
+        
+        this._video.play();
+        this._isVideoPlaying = true;
+
+        this._playButton.visible = false;
+    }
+
+    public pause(): void {
+        this._video.pause();
+        this._isVideoPlaying = false;
+
+        this._playButton.visible = true;
+    }
+
+    public reset() {
+        this._video.pause();
+        
+        this._videoStarted = false;
+        this._video.currentTime = 0;
     }
 
     // --- Rendering Methods
@@ -240,21 +302,10 @@ export class VRVideo implements SceneElement {
             if (this._mesh && (this._mesh.uuid === meshId)) {
                 if (this._playInline) {
                     if (!this._isVideoPlaying) {
-                        if (!this._videoStarted) {
-                            this._video.currentTime = 0;
-                            this._videoStarted = true;
-                        }
-                        
-                        this._video.play();
-                        this._isVideoPlaying = true;
-
-                        this._playButton.visible = false;
+                        this.play();
                     }
                     else {
-                        this._video.pause();
-                        this._isVideoPlaying = false;
-
-                        this._playButton.visible = true;
+                        this.pause();
                     }
                 }
 
@@ -302,7 +353,10 @@ export class VRVideo implements SceneElement {
         var that = this;
 
         return new Promise(async (resolve) => {
-            this._calculatedHeight = this._initialHeight;
+            this._calculatedHeight;
+            
+            if (this._setHeight !== null) this._calculatedHeight = this._setHeight;
+            else this._calculatedHeight = this._initialHeight;
 
             this._video = document.createElement("video");
             this._video.setAttribute("loop", "");
@@ -312,7 +366,10 @@ export class VRVideo implements SceneElement {
             this._video.addEventListener( "loadedmetadata", function (e) {
                 const videoTexture = new VideoTexture(that._video);
     
-                if (that._initialHeight) {
+                if (that._setHeight) {
+                    that._calculatedHeight = that._setHeight;
+                }
+                else if (that._initialHeight) {
                     that._calculatedHeight = that._initialHeight;
                 }
                 else if (width) {

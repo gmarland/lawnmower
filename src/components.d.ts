@@ -8,11 +8,13 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SceneElement } from "./classes/components/SceneElement";
 export namespace Components {
     interface Vr360video {
+        "close": () => Promise<void>;
         "depth": number;
         "parent": SceneElement;
         "pause": () => Promise<void>;
         "play": () => Promise<void>;
         "position": number;
+        "reset": () => Promise<void>;
         "src": string;
         "videoHieghtSegments": number;
         "videoRadius": number;
