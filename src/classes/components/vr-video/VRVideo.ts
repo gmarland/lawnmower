@@ -117,21 +117,42 @@ export class VRVideo implements SceneElement {
     public get visible(): boolean {
         return (this._content == null) || this._content.visible;
     }
+
+    ////////// Setters
+
+    public set src(value: string) {
+        this._src = value;
+    }
+
+    public set playInline(value: boolean) {
+        this._playInline = value;
+    }
+
+    public set width(value: number) {
+        this._setWidth = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
+    }
+
+    public set placeholderTimestamp(value: number) {
+        this._placeholderTimestamp = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
+    }
+
+    ////////// Public Methods
+
+    // --- Data Methods
     
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.Main;
     }
 
-    public async getContent(): Promise<Group> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
-            
-            resolve(this._content);
-        });
-    }
-
-    public getIsPlaying(): boolean {
-        return this._isVideoPlaying;
+    public addChildElement(position: number, childElement: SceneElement): void {
     }
 
     public getDimensions(): Dimensions {
@@ -186,49 +207,10 @@ export class VRVideo implements SceneElement {
         }
     }
 
-    ////////// Setters
+    // ----- Video control methods
 
-    public set src(value: string) {
-        this._src = value;
-    }
-
-    public set playInline(value: boolean) {
-        this._playInline = value;
-    }
-
-    public set width(value: number) {
-        this._setWidth = value;
-    }
-
-    public set height(value: number) {
-        this._setHeight = value;
-    }
-
-    public set placeholderTimestamp(value: number) {
-        this._placeholderTimestamp = value;
-    }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
+    public getIsPlaying(): boolean {
+        return this._isVideoPlaying;
     }
 
     public play(): void {
@@ -258,6 +240,14 @@ export class VRVideo implements SceneElement {
     }
 
     // --- Rendering Methods
+
+    public async getContent(): Promise<Group> {
+        return new Promise(async (resolve) => {
+            if (!this._initialized) await this.draw();
+            
+            resolve(this._content);
+        });
+    }
 
     public async draw(): Promise<boolean> {
         this._initialized = true;
@@ -320,6 +310,18 @@ export class VRVideo implements SceneElement {
                 if (this.onClick) this.onClick();
             }
 
+            resolve();
+        });
+    }
+
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
             resolve();
         });
     }
