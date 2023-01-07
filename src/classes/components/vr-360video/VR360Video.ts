@@ -28,7 +28,7 @@ export class VR360Video implements SceneElement {
 
     private _videoRadius: number;
     private _videoWidthSegments: number;
-    private _videoHieghtSegments: number;
+    private _videoHeightSegments: number;
 
     private _setVideoRadius?: number = null;
 
@@ -54,7 +54,7 @@ export class VR360Video implements SceneElement {
 
         this._videoRadius = config.videoRadius;
         this._videoWidthSegments = config.videoWidthSegments;
-        this._videoHieghtSegments = config.videoHieghtSegments;
+        this._videoHeightSegments = config.videoHeightSegments;
 
         this._parent = parent;
         
@@ -80,6 +80,14 @@ export class VR360Video implements SceneElement {
     public get width(): number {
         if (this._setVideoRadius !== null) return this._setVideoRadius;
         else return this._videoRadius;
+    }
+
+    public get widthSegments(): number {
+        return this._videoWidthSegments;
+    }
+
+    public get heightSegments(): number {
+        return this._videoHeightSegments;
     }
 
     public get visible(): boolean {
@@ -162,6 +170,14 @@ export class VR360Video implements SceneElement {
 
     public set width(value: number) {
         this._setVideoRadius = value;
+    }
+
+    public set widthSegments(value: number) {
+        this._videoWidthSegments = value;
+    }
+
+    public set heightSegments(value: number) {
+        this._videoHeightSegments = value;
     }
 
     public set visible(value: boolean) {
@@ -331,7 +347,7 @@ export class VR360Video implements SceneElement {
 
             // left
 
-            const geometry1 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHieghtSegments);
+            const geometry1 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHeightSegments);
 
             // invert the geometry on the x-axis so that all of the faces point inward
             geometry1.scale( - 1, 1, 1 );
@@ -355,7 +371,7 @@ export class VR360Video implements SceneElement {
 
             // right
 
-            const geometry2 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHieghtSegments);
+            const geometry2 = new SphereGeometry(videoRadius, this._videoWidthSegments, this._videoHeightSegments);
             geometry2.scale( - 1, 1, 1 );
 
             const uvs2 = geometry2.attributes.uv.array;

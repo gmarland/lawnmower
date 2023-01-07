@@ -36,6 +36,7 @@
         <vr-image border-radius="20" 
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
       </vr-modal>
+      <vr-360video id="demo-video-360" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></vr-360video>
       <vr-div margin="10" color="#ff2211">
         <vr-div width="700" height="70" color="#00ffff" margin="30" layout="Column" item-vertical-align="Top" padding="10">
           <vr-div width="1000" color="#fffff1" margin="10"padding="10">
@@ -94,10 +95,8 @@
         </vr-div>
         <vr-div color="#602202" height="100" margin="20" layout="Column" padding="20">
           <vr-div margin="20" color="#222222" padding="20">
-            <vr-text border-radius="10" height="400" font-color="#222222" background-color="#ffffff" padding="15">
-              This is but a test
-
-              This is just a trial run
+            <vr-text id="360-video-button" border-radius="10" height="400" font-color="#222222" background-color="#ffffff" padding="15">
+              Play 360 Video
             </vr-text>
             <vr-text background-color="#ff00ff" padding="15" border-radius="10">
               You can just push reset
@@ -237,19 +236,34 @@
         }, 3000);*/
 
         // ----- Testing changing video visibility
-        setTimeout(() => {
-          console.log(document.getElementById('demo-video-1'))
+        /*setTimeout(() => {
           document.getElementById('demo-video-1').visible = false;
           
           setTimeout(() => {
             document.getElementById('demo-video-1').visible = true;
           }, 3000);
-        }, 3000);
+        }, 3000);*/
+        
+        // ****** Testing 360 video
+        /*setTimeout(() => {n
+            document.getElemetById('demo-video-360').play();
+        }, 3000);*/
       })();
+
+      document.getElementById("360-video-button").addEventListener("click", async () => {
+        const demoVideo = document.getElementById("demo-video-360");
+        await demoVideo.play();
+
+        /*setTimeout(async () => {
+          demoVideo.videoRadius = 0;
+          await demoVideo.play();
+        }, 10000);*/
+      });
+        
 
       const foxElement = document.getElementById("fox-asset");
 
-      foxElement.addEventListener("onClick", async () => {
+      foxElement.addEventListener("click", async () => {
         const animationNames = await foxElement.getAnimationNames();
 
         if (animationNames.length > 0) {

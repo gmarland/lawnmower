@@ -42,7 +42,7 @@ export class VrImage {
 
   @Prop() public modal: boolean = false;
 
-  @Event() public onClick: EventEmitter;
+  @Event() public click: EventEmitter;
 
   @Event() public showModalDialog: EventEmitter<string>;
 
@@ -131,7 +131,7 @@ export class VrImage {
         this.showModalDialog.emit(await this._modalDialog.getUUID());
       }
 
-      this.onClick.emit();
+      this.click.emit();
     };
   }
 

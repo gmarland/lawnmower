@@ -141,6 +141,7 @@ export class MainScene {
 
     public async addChildElement(position: number, childElement: SceneElement): Promise<void> {
         return new Promise(async (resolve) => {
+            childElement
             this._childElements.push(childElement);
             
             if (this._isInitialized) await this.attachToScene(childElement);

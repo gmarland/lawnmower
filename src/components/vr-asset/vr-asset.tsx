@@ -48,7 +48,7 @@ export class VrAsset {
   
   @Prop() public zRotationSpeed: number = 0;
 
-  @Event() public onClick: EventEmitter;
+  @Event() public click: EventEmitter;
 
   private _asset: VRAsset;
 
@@ -120,7 +120,7 @@ export class VrAsset {
     });
 
     this._asset.onClick = () => {
-      this.onClick.emit();
+      this.click.emit();
     };
   }
 

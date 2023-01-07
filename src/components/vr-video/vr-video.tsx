@@ -42,7 +42,7 @@ export class VrVideo {
 
   @Prop() public visible: boolean = true;
 
-  @Event() public onClick: EventEmitter;
+  @Event() public click: EventEmitter;
 
   private _video: VRVideo;
 
@@ -131,7 +131,6 @@ export class VrVideo {
   @Watch('visible')
   private updateVisible(newValue: boolean): Promise<void> {
     return new Promise(async (resolve) => {
-      console.log(newValue)
       if (this._video) {
         this._video.visible = newValue;
   
@@ -153,7 +152,7 @@ export class VrVideo {
     this._video.onClick = () => {
       if (this.play360) this._video360Element.play();
 
-      this.onClick.emit();
+      this.click.emit();
     };
     
     let position = 1;
