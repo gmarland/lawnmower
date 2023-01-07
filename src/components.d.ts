@@ -126,6 +126,7 @@ export namespace Components {
         "play360": boolean;
         "position": number;
         "src": string;
+        "visible": boolean;
         "width": number;
     }
     interface VrVideoControls {
@@ -362,6 +363,7 @@ declare namespace LocalJSX {
         "play360"?: boolean;
         "position"?: number;
         "src"?: string;
+        "visible"?: boolean;
         "width"?: number;
     }
     interface VrVideoControls {

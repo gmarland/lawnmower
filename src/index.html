@@ -150,13 +150,13 @@
         
         // ****** Testing layouts
 
-        setTimeout(() => {
+        /*setTimeout(() => {
           main.setLayout("doom");
           
-          /*setTimeout(() => {
+          setTimeout(() => {
             main.setLayout("boom");
-          }, 3000);*/
-        }, 3000);
+          }, 3000);
+        }, 3000);*/
 
         // ****** Testing images
 
@@ -231,9 +231,20 @@
         // ----- Testing changing video properties
         /*setTimeout(() => {
           const demoVideo1 = document.getElementById('demo-video-1');
+          demoVideo1.placeholder = 20;
           //demoVideo1.width = 1000;
-          demoVideo1.height = 1000;
+          //demoVideo1.height = 1000;
         }, 3000);*/
+
+        // ----- Testing changing video visibility
+        setTimeout(() => {
+          console.log(document.getElementById('demo-video-1'))
+          document.getElementById('demo-video-1').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('demo-video-1').visible = true;
+          }, 3000);
+        }, 3000);
       })();
 
       const foxElement = document.getElementById("fox-asset");
