@@ -157,7 +157,10 @@ export class VRLayout implements SceneElement {
         keys.sort(function(a, b){return a-b});
         
         for (let i=0; i< keys.length; i++) {
-            this._childElements.get(keys[i]).width = value;
+            const childElement = this._childElements.get(keys[i]);
+
+            childElement.width = value;
+            childElement.draw();
         }
     }
 
