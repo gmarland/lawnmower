@@ -274,6 +274,7 @@ export class VRVideo implements SceneElement {
 
                 let contentHeight = this._initialHeight;
                 if (this._setHeight !== null) contentHeight = this._setHeight;
+
                 await this.generateContent(contentWidth, contentHeight);
                 
                 this._drawing = false;

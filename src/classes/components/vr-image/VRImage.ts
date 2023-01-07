@@ -203,8 +203,13 @@ export class VRImage implements SceneElement {
 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                if (this._setWidth !== null) await this.generateContent(this._setWidth);
-                else await this.generateContent(this._initialWidth);
+                let contentWidth = this._initialWidth;
+                if (this._setWidth !== null) contentWidth = this._setWidth;
+
+                let contentHeight = this._initialHeight;
+                if (this._setHeight !== null) contentHeight = this._setHeight;
+
+                await this.generateContent(contentWidth, contentHeight);
                     
                 this._drawing = false;
                     
@@ -261,7 +266,7 @@ export class VRImage implements SceneElement {
 
     ////////// Private Methods
 
-    private async generateContent(width: number): Promise<void> {
+    private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
             for (let i=(this._content.children.length-1); i>=0; i--) {
                 this._content.remove(this._content.children[i]);
@@ -273,7 +278,7 @@ export class VRImage implements SceneElement {
                 this._mesh = null;
             }
 
-            this._mesh = await this.buildMesh(width);
+            this._mesh = await this.buildMesh(width, height);
 
             this._content.add(this._mesh);
 
@@ -281,31 +286,35 @@ export class VRImage implements SceneElement {
         });
     }
 
-    private async buildTexture(width: number): Promise<CanvasTexture> {
+    private async buildTexture(width: number, height: number): Promise<CanvasTexture> {
         return new Promise(async (resolve) => {
             const textTexture = await new TextureLoader().load(this._src, (tex) => {
                 tex.wrapS = ClampToEdgeWrapping;
                 tex.wrapT = RepeatWrapping;
 
-                if (this._setHeight) {
-                    this._calculatedHeight = this._setHeight;
-                }
-                else if (this._initialHeight) {
-                    this._calculatedHeight = this._initialHeight;
-                }
-                else if (width) {
+    
+                if ((width !== null) && (width > height)) {
+                    this._calculatedWidth = width;
+
                     const widthRatio = tex.image.width/width;
-
+    
                     this._calculatedHeight = tex.image.height/widthRatio;
-                }
-                else {
-                    this._calculatedHeight = 0;
-                }
 
-                if (this._calculatedHeight > width) {
-                    const heightRatio = tex.image.height/this._calculatedHeight;
+                    let repeatX = 1;
+                    let repeatY = (this._calculatedHeight * tex.image.width) / (this._calculatedWidth * tex.image.height);
+                    
+                    tex.repeat.set(repeatX, repeatY);
+                    
+                    tex.offset.y = (repeatY - 1) / 2 * -1;
+                
+                    console.log(width, tex.image.width, widthRatio, this._calculatedWidth, this._calculatedHeight)
+                }
+                else if (this.height !== null) {
+                    this._calculatedHeight = height;
 
-                    this._calculatedWidth = width/heightRatio;
+                    const heightRatio = tex.image.height/height;
+
+                    this._calculatedWidth = tex.image.width/heightRatio;
 
                     let repeatX = this._calculatedWidth * tex.image.height / (this._calculatedHeight * tex.image.width);
                     let repeatY = 1;
@@ -313,16 +322,12 @@ export class VRImage implements SceneElement {
                     tex.repeat.set(repeatX, repeatY);
                     
                     tex.offset.x = (repeatX - 1) / 2 * -1;
+                
+                    console.log(this._calculatedWidth, this._calculatedHeight)
                 }
                 else {
-                    this._calculatedWidth = width;
-
-                    let repeatX = 1;
-                    let repeatY = this._calculatedHeight * tex.image.width / (this._calculatedWidth * tex.image.height);
-                    
-                    tex.repeat.set(repeatX, repeatY);
-                    
-                    tex.offset.y = (repeatY - 1) / 2 * -1;
+                    this._calculatedWidth = 0;
+                    this._calculatedHeight = 0;
                 }
                 
                 textTexture.needsUpdate = true;
@@ -332,9 +337,9 @@ export class VRImage implements SceneElement {
         });
     }
 
-    private async buildMesh(width: number): Promise<Mesh> {
+    private async buildMesh(width: number, height: number): Promise<Mesh> {
         return new Promise(async (resolve) => {
-            const imageTexture = await this.buildTexture(width ? width : 0);
+            const imageTexture = await this.buildTexture(width, height);
             
             const geometry = PlaneUtils.getPlane(this._calculatedWidth, this._calculatedHeight, this._borderRadius);
             
