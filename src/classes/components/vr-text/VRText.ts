@@ -7,6 +7,7 @@ import {
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
@@ -30,16 +31,18 @@ export class VRText implements SceneElement {
 
     private _text: string;
 
-    private _initialWidth: number = 0; //Defined width from the HTML tag
-    private _initialHeight: number = 0;
+    private _initialWidth?: number = null; //Defined width from the HTML tag
+    private _initialHeight?: number = null;
     
     private _calculatedWidth?: number = null; // Calculated through drawing the text
     
-    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    // Set through the API, typically through a parent div
+    private _setWidth?: number = null;
+    private _setHeight?: number = null; 
 
     private _borderRadius: number;
 
-    private _calculatedHeight: number;
+    private _calculatedHeight?: number = null;
 
     private _backgroundColor: string = "";
     private _fontColor: string = "";
@@ -48,7 +51,11 @@ export class VRText implements SceneElement {
 
     private _mesh?: Mesh = null;
     private _content?: Group = new Group();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onClick?: Function = null;
 
@@ -57,13 +64,13 @@ export class VRText implements SceneElement {
 
         this._uuid = MeshUtils.generateId();
         
+        this._text = text;
+        
         this._fontFamily = config.fontFamily;
         this._fontSize = config.fontSize;
 
         this._italic = config.italic;
         this._bold = config.bold;
-        
-        this._text = text;
 
         this._initialWidth = config.width;
         this._initialHeight = config.height;
@@ -84,8 +91,63 @@ export class VRText implements SceneElement {
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+
+    public get dynamicWidth(): boolean {
+        return (this._initialWidth != null);
+    }
+
+    public get width(): number {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get height(): number {
+        if (this._calculatedHeight !== null) return this._calculatedHeight;
+        else if (this._setHeight !== null) return this._setHeight;
+        else return this._initialHeight ? this._initialHeight : 0;
+    }
+
+    public get text(): string {
+        return this._text;
+    }
+    
+    public get borderRadius(): number {
+        return this._borderRadius;
+    }
+
+    public get fontFamily(): string {
+        return this._fontFamily;
+    }
+
+    public get italic(): boolean {
+        return this._italic;
+    }
+    
+    public get bold(): boolean {
+        return this._bold;
+    }
+    
+    public get fontSize(): number {
+        return this._fontSize;
+    }
+    
+    public get fontColor(): string {
+        return this._fontColor;
+    }
+
+    public get backgroundColor(): string {
+        return this._backgroundColor;
+    }
+
+    public get padding(): number {
+        return this._padding;
+    }
+
+    public get visible(): boolean {
+        return this._content.visible;
     }
     
     public getPlacementLocation(): SceneElementPlacement {
@@ -102,8 +164,8 @@ export class VRText implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
-            height: this._calculatedHeight
+            width: this.width,
+            height: this.height
         }
     }
     
@@ -122,10 +184,6 @@ export class VRText implements SceneElement {
     public getIsChildElement(uuid: string): boolean {
         return uuid === this._uuid;
     }
-
-    public getVisible(): boolean {
-        return this._content.visible;
-    }
     
     public isPartOfLayout(): boolean {
         if (this._parent) {
@@ -141,7 +199,7 @@ export class VRText implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -158,18 +216,52 @@ export class VRText implements SceneElement {
 
     ////////// Setters
 
-    public async setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
+    public set height(value: number) {
+        this._setHeight = value;
+    }
+
+    public set text(value: string) {
+        this._text = value;
     }
     
-    public setVisible(): void {
-        this._content.visible = true;
+    public set borderRadius(value: number) {
+        this._borderRadius = value;
+    }
+
+    public set fontFamily(value: string) {
+        this._fontFamily = value;
+    }
+
+    public set italic(value: boolean) {
+        this._italic = value;
+    }
+    
+    public set bold(value: boolean) {
+        this._bold = value;
+    }
+    
+    public set fontSize(value: number) {
+        this._fontSize = value;
+    }
+    
+    public set fontColor(value: string) {
+        this._fontColor = value;
+    }
+
+    public set backgroundColor(value: string) {
+        this._backgroundColor = value;
+    }
+
+    public set padding(value: number) {
+        this._padding = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -193,15 +285,45 @@ export class VRText implements SceneElement {
     
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         this._initialized = true;
 
         return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._initialWidth);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
 
-            resolve();
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
+
+                if (this._setWidth !== null) await this.generateContent(this._setWidth);
+                else await this.generateContent(this._initialWidth);
+                    
+                this._drawing = false;
+                    
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -366,12 +488,11 @@ export class VRText implements SceneElement {
 
         const lineHeight = textDimensions.fontBoundingBoxAscent + textDimensions.fontBoundingBoxDescent;
 
-        this._calculatedHeight;
-
         textContainer.style.width = this._calculatedWidth + "px"
         textContainer.width = this._calculatedWidth;
         
-        if (this._initialHeight) this._calculatedHeight = this._initialHeight;
+        if (this._setHeight) this._calculatedHeight = this._setHeight;
+        else if (this._initialHeight) this._calculatedHeight = this._initialHeight;
         else this._calculatedHeight = (lineHeight*lines.length) + (this._padding*2);
 
         textContainer.style.height = this._calculatedHeight + "px"

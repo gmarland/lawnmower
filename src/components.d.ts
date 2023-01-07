@@ -39,12 +39,6 @@ export namespace Components {
         "zRotation": number;
         "zRotationSpeed": number;
     }
-    interface VrBody {
-        "hideModal": () => Promise<void>;
-        "setLayout": (layoutId: string) => Promise<void>;
-        "showModal": (id: string) => Promise<void>;
-        "startingDistance": number;
-    }
     interface VrDiv {
         "borderRadius": number;
         "color": string;
@@ -65,6 +59,12 @@ export namespace Components {
         "yRotation": number;
         "zRotation": number;
     }
+    interface VrDocument {
+        "hideModal": () => Promise<void>;
+        "setLayout": (layoutId: string) => Promise<void>;
+        "showModal": (id: string) => Promise<void>;
+        "startingDistance": number;
+    }
     interface VrImage {
         "borderRadius": number;
         "depth": number;
@@ -73,6 +73,7 @@ export namespace Components {
         "parent": SceneElement;
         "position": number;
         "src": string;
+        "visible": boolean;
         "width": number;
     }
     interface VrLayout {
@@ -106,12 +107,14 @@ export namespace Components {
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
-        "height": number;
+        "height"?: number;
         "padding"?: number;
         "parent": SceneElement;
         "position": number;
+        "text": string;
         "textDecoration": string;
-        "width": number;
+        "visible": boolean;
+        "width"?: number;
     }
     interface VrVideo {
         "depth": number;
@@ -182,17 +185,17 @@ declare global {
         prototype: HTMLVrAssetElement;
         new (): HTMLVrAssetElement;
     };
-    interface HTMLVrBodyElement extends Components.VrBody, HTMLStencilElement {
-    }
-    var HTMLVrBodyElement: {
-        prototype: HTMLVrBodyElement;
-        new (): HTMLVrBodyElement;
-    };
     interface HTMLVrDivElement extends Components.VrDiv, HTMLStencilElement {
     }
     var HTMLVrDivElement: {
         prototype: HTMLVrDivElement;
         new (): HTMLVrDivElement;
+    };
+    interface HTMLVrDocumentElement extends Components.VrDocument, HTMLStencilElement {
+    }
+    var HTMLVrDocumentElement: {
+        prototype: HTMLVrDocumentElement;
+        new (): HTMLVrDocumentElement;
     };
     interface HTMLVrImageElement extends Components.VrImage, HTMLStencilElement {
     }
@@ -233,8 +236,8 @@ declare global {
     interface HTMLElementTagNameMap {
         "vr-360video": HTMLVr360videoElement;
         "vr-asset": HTMLVrAssetElement;
-        "vr-body": HTMLVrBodyElement;
         "vr-div": HTMLVrDivElement;
+        "vr-document": HTMLVrDocumentElement;
         "vr-image": HTMLVrImageElement;
         "vr-layout": HTMLVrLayoutElement;
         "vr-modal": HTMLVrModalElement;
@@ -273,9 +276,6 @@ declare namespace LocalJSX {
         "zRotation"?: number;
         "zRotationSpeed"?: number;
     }
-    interface VrBody {
-        "startingDistance"?: number;
-    }
     interface VrDiv {
         "borderRadius"?: number;
         "color"?: string;
@@ -296,6 +296,9 @@ declare namespace LocalJSX {
         "yRotation"?: number;
         "zRotation"?: number;
     }
+    interface VrDocument {
+        "startingDistance"?: number;
+    }
     interface VrImage {
         "borderRadius"?: number;
         "depth"?: number;
@@ -306,6 +309,7 @@ declare namespace LocalJSX {
         "parent"?: SceneElement;
         "position"?: number;
         "src"?: string;
+        "visible"?: boolean;
         "width"?: number;
     }
     interface VrLayout {
@@ -342,7 +346,9 @@ declare namespace LocalJSX {
         "padding"?: number;
         "parent"?: SceneElement;
         "position"?: number;
+        "text"?: string;
         "textDecoration"?: string;
+        "visible"?: boolean;
         "width"?: number;
     }
     interface VrVideo {
@@ -374,8 +380,8 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "vr-360video": Vr360video;
         "vr-asset": VrAsset;
-        "vr-body": VrBody;
         "vr-div": VrDiv;
+        "vr-document": VrDocument;
         "vr-image": VrImage;
         "vr-layout": VrLayout;
         "vr-modal": VrModal;
@@ -390,8 +396,8 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "vr-360video": LocalJSX.Vr360video & JSXBase.HTMLAttributes<HTMLVr360videoElement>;
             "vr-asset": LocalJSX.VrAsset & JSXBase.HTMLAttributes<HTMLVrAssetElement>;
-            "vr-body": LocalJSX.VrBody & JSXBase.HTMLAttributes<HTMLVrBodyElement>;
             "vr-div": LocalJSX.VrDiv & JSXBase.HTMLAttributes<HTMLVrDivElement>;
+            "vr-document": LocalJSX.VrDocument & JSXBase.HTMLAttributes<HTMLVrDocumentElement>;
             "vr-image": LocalJSX.VrImage & JSXBase.HTMLAttributes<HTMLVrImageElement>;
             "vr-layout": LocalJSX.VrLayout & JSXBase.HTMLAttributes<HTMLVrLayoutElement>;
             "vr-modal": LocalJSX.VrModal & JSXBase.HTMLAttributes<HTMLVrModalElement>;

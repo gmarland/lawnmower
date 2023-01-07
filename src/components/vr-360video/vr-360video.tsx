@@ -100,7 +100,7 @@ export class Vr360Video {
       this._video.reset();
 
       this._controls.hide();
-      this._video.setHidden();
+      this._video.visible = false;
       
       this.showCurrentLayout.emit();
     }

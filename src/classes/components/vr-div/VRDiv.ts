@@ -22,6 +22,7 @@ import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { VRLayout } from '../vr-layout/VRLayout';
 import { MainScene } from '../../scene/MainScene';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class VRDiv implements SceneElement {
     private _depth: number;
@@ -54,12 +55,13 @@ export class VRDiv implements SceneElement {
     private _zRotation: number;
 
     private _content: Group = new Group();
+    
     private _initialized: boolean = false;
-
-    private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
     
     private _drawing: boolean = false;
     private _redraw: boolean = false;
+
+    private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
 
     public onClick?: Function = null;
 
@@ -97,8 +99,21 @@ export class VRDiv implements SceneElement {
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+
+    public get dynamicWidth(): boolean {
+        return true;
+    }
+
+    public get width() {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth ? this._initialHeight : 0;
+    }
+
+    public get visible(): boolean {
+        return this._content.visible;
     }
     
     public getPlacementLocation(): SceneElementPlacement {
@@ -181,10 +196,6 @@ export class VRDiv implements SceneElement {
         });
     }
 
-    public getVisible(): boolean {
-        return this._content.visible;
-    }
-
     public getDepth(): number {
         return this._depth;
     }
@@ -220,7 +231,7 @@ export class VRDiv implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -237,18 +248,12 @@ export class VRDiv implements SceneElement {
 
     ////////// Setters
 
-    public async setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public setInitialized(initialized: boolean): void {
@@ -289,32 +294,43 @@ export class VRDiv implements SceneElement {
 
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         return new Promise(async (resolve) => {
             if (!this._drawing) {
                 this._drawing = true;
                 this._redraw = false;
 
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
+
                 if (this._setWidth !== null) await this.updateContent(this._setWidth);
-                else await this.updateContent(this._initialWidth);
+                else await this.updateContent(this._initialWidth);   
                 
                 this._drawing = false;
                 
                 if (this._redraw) {
                     await this.draw();
                     
-                    resolve();
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    resolve();
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
             }
             else {
                 this._redraw = true;
 
-                resolve();
+                resolve(false);
             }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
     
     public clicked(meshId: string): Promise<void> {
@@ -386,7 +402,7 @@ export class VRDiv implements SceneElement {
         return main;
     }
 
-    public resizePanelBody(mesh: Mesh, childLayoutContainer: Object3D): boolean {
+    public resizePanelBody(mesh: Mesh, childLayoutContainer: Object3D): void {
         const meshBox = new Box3().setFromObject(mesh);
         const childBox = new Box3().setFromObject(childLayoutContainer);
 
@@ -402,10 +418,13 @@ export class VRDiv implements SceneElement {
         let childYSize = ((childBox.max.y-childBox.min.y)+(this._padding*2));
         if (isNaN(childYSize) || !isFinite(childYSize)) childYSize = (this._padding*2);
 
-        if ((childXSize !== bodyXSize) || 
+        var buildWidth = this.width;
+        if ((!buildWidth) || (childXSize > buildWidth)) buildWidth = childXSize;
+
+        if ((buildWidth !== bodyXSize) || 
             (childYSize !== bodyYSize)) {
             mesh.geometry.dispose();
-            mesh.geometry = PlaneUtils.getPlane(childXSize, childYSize, this._borderRadius)
+            mesh.geometry = PlaneUtils.getPlane(buildWidth, childYSize, this._borderRadius)
             mesh.geometry.computeBoundingBox();
             mesh.geometry.computeBoundingSphere();
 
@@ -416,11 +435,6 @@ export class VRDiv implements SceneElement {
             
             if (this._horizontalAlign == HorizontalAlign.Left) mesh.position.x += scaledMeshBox.max.x-meshBox.max.x;
             else if (this._horizontalAlign == HorizontalAlign.Right) mesh.position.x -= scaledMeshBox.max.x-meshBox.max.x;
-            
-            return true;
-        }
-        else {
-            return false;
         }
     }
 
@@ -467,10 +481,9 @@ export class VRDiv implements SceneElement {
             if (body && child) {
                 await this.generateContent(body, child);
 
-                const bodyResized = this.resizePanelBody(body, child);
-                if (bodyResized) this._parent.draw();
+                this.resizePanelBody(body, child);
             }
-
+            
             resolve();
         });
     }

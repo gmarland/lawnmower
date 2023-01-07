@@ -50,7 +50,11 @@ export class VRVideoControls implements SceneElement {
     private _z: number;
 
     private _content: Group = new Group();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onPlay?: Function = null;
     public onPause?: Function = null;
@@ -77,8 +81,21 @@ export class VRVideoControls implements SceneElement {
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+
+    public get dynamicWidth(): boolean {
+        return (this._initialWidth != null);
+    }
+
+    public get width() {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get visible(): boolean {
+        return (this._content == null) || this._content.visible;
     }
 
     public getPlacementLocation(): SceneElementPlacement {
@@ -95,13 +112,9 @@ export class VRVideoControls implements SceneElement {
     
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
+            width: this.width,
             height: this._initialHeight
         }
-    }
-
-    public getVisible() {
-        return (this._content == null) || this._content.visible;
     }
     
     public async getPosition(): Promise<Vector3> {
@@ -126,7 +139,7 @@ export class VRVideoControls implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -151,18 +164,12 @@ export class VRVideoControls implements SceneElement {
 
     ////////// Setters
 
-    public setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -186,15 +193,45 @@ export class VRVideoControls implements SceneElement {
 
     // --- Rendering Methods
 
-    public draw(): Promise<void> {
+    public draw(): Promise<boolean> {
         this._initialized = true;
         
         return new Promise(async (resolve) => {
-            if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
-            else await this.generateContent(this._setWidth);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
+                
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-            resolve();
+                if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
+                else await this.generateContent(this._setWidth);
+                    
+                this._drawing = false;
+                        
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -231,7 +268,7 @@ export class VRVideoControls implements SceneElement {
             this._pauseMesh.visible = false;
         }
 
-        this.setVisible();
+        this.visible = true;
     }
 
     public update(delta: number): void {

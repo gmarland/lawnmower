@@ -24,26 +24,72 @@
       select {
         font-family: 'Roboto', sans-serif;
       }
+      @font-face {
+        font-family: 'Roboto';
+        src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+      }
     </style>
   </head>
   <body>
-    <vr-body id="main" starting-distance="800">
+    <vr-document id="main" starting-distance="800">
       <vr-modal id="image-modal" border-radius="10">
         <vr-image border-radius="20" 
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></vr-image>
       </vr-modal>
       <vr-div margin="10" color="#ff2211">
-        <vr-div width="700" height="70" color="#ffffff" margin="30" layout="Column" item-vertical-align="Top" padding="10">
-          <vr-div width="500" color="#ffffff" margin="10">
-            <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+        <vr-div width="700" height="70" color="#00ffff" margin="30" layout="Column" item-vertical-align="Top" padding="10">
+          <vr-div width="1000" color="#fffff1" margin="10"padding="10">
+            <vr-text id="demo-text-1" font-color="#222222" background-color="#0f00f1" padding="15" text-decoration="bold">
               Jumping
 
-              here the and everywhere
+              erverv
+
+
+              erverv
             </vr-text>
-            <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
+            <vr-text id="demo-text-2" font-color="#222222" background-color="#ff00f2" padding="15" text-decoration="bold">
               Hello Sarah
 
               How are you?
+
+              reher
+
+              erher
+
+
+              erherherherher
+
+
+              erherherherherhh erherherherher
+
+
+              erherherherher
+              ererg
+
+
+              herehe
+            </vr-text>  
+            <vr-text id="demo-text-3" font-color="#222222" background-color="#ff00f3" padding="15" text-decoration="bold">
+              Hello Sarah
+
+              How are you?
+
+              reher
+
+              erher
+
+
+              erherherherher
+
+
+              erherherherherhh erherherherher
+
+
+              erherherherher
+              ererg
+
+
+              herehe
             </vr-text>  
           </vr-div>
           <vr-layout id="doom">
@@ -55,7 +101,7 @@
               ergergergergre
             </vr-text>
           </vr-layout>
-          <vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>
+          <!--<vr-video width="400" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" placeholder="10"></vr-video>-->
           <vr-text font-color="#222222" background-color="#ff00ff" padding="15" text-decoration="bold">
             Halloween
 
@@ -85,7 +131,8 @@
           </vr-div>
           <vr-div width="100" height="90" color="#ff00ff"></vr-div>
           <vr-div width="500" color="#00d000" margin="10" padding="10"> 
-            <vr-image border-radius="20" 
+            <vr-image id="demo-image"
+                      border-radius="20" 
                       modal="true" 
                       src="https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/catherine-zeta-jones-jenna-ortgea-luis-guzman-isaac-ordonez-wednesday-1660718014.jpg?crop=1.00xw:0.446xh;0,0.0999xh&resize=768:*"></vr-image>
             <vr-text border-radius="10" font-color="#ffffff" background-color="#222222" padding="10" text-decoration="italic">
@@ -113,17 +160,80 @@
     </vr-body>
     <script>
       (async () => {
-        await customElements.whenDefined('vr-body');
+        await customElements.whenDefined('vr-document');
         const main = document.getElementById('main');
+
         //await main.showModal("image-modal");
         
-        setTimeout(() => {
+        // ----- Testing activating different layouts
+        /*setTimeout(() => {
           main.setLayout("doom");
           
           setTimeout(() => {
             main.setLayout("boom");
           }, 3000);
-        }, 3000);
+        }, 3000);*/
+
+        // ----- Testing images
+
+        // ----- Testing changing image properties
+        /*setTimeout(() => {
+          const demoImage = document.getElementById('demo-image');
+          demoImage.src = "https://media.istockphoto.com/id/90976521/photo/hastings-in-east-sussex-england.jpg?s=1024x1024&w=is&k=20&c=AFi1FWZLyTDpeY_6_pchKUzmluTqsTx-nkUcauXXMk8=";
+          demoImage.borderRadius = 6;
+          demoImage.height=1000;
+        }, 3000);*/
+
+        // ----- Testing changing image visibility
+        /*setTimeout(() => {
+          document.getElementById('demo-image').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('demo-image').visible = true;
+          }, 3000);
+        }, 3000);*/
+
+        // ----- Testing text
+
+        // ----- Testing changing text properties
+        /*setTimeout(() => {
+          document.getElementById('demo-text-2').text = "now now now new text\n\r rever\n\r boom";
+
+          setTimeout(() => {
+            document.getElementById('demo-text-1').text = "why why why new text";
+          }, 3000);
+        }, 3000);*/
+
+        // ----- Testing changing text properties
+        /*setTimeout(() => {
+          const demoText2 = document.getElementById('demo-text-2');
+          demoText2.borderRadius = 20;
+          demoText2.fontSize = 30;
+          demoText2.fontColor = "#ffffff";
+          demoText2.textDecoration = "italic";
+          
+          const demoText3 = document.getElementById('demo-text-3');
+          demoText3.textDecoration = "italic";
+          demoText3.backgroundColor = "#e2e321";
+          demoText3.padding = 30;
+
+          setTimeout(() => {
+            demoText2.fontFamily = "Roboto";
+            demoText2.textDecoration = "bold italic";
+            demoText2.width = 200;
+
+            demoText3.height = 1000;
+          }, 3000);
+        }, 3000);*/
+
+        // ----- Testing changing text visibility
+        /*setTimeout(() => {
+          document.getElementById('demo-text-2').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('demo-text-2').visible = true;
+          }, 3000);
+        }, 3000);*/
       })();
 
       const foxElement = document.getElementById("fox-asset");

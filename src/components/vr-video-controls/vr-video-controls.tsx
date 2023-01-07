@@ -53,7 +53,7 @@ export class VrVideoControls {
   @Method()
   public async getVisible(): Promise<boolean> {
     return new Promise((resolve) => {
-      if (this._videoControls) resolve(this._videoControls.getVisible());
+      if (this._videoControls) resolve(this._videoControls.visible);
       else resolve(false);
     });
   }
@@ -70,7 +70,7 @@ export class VrVideoControls {
   @Method()
   public async hide(): Promise<void> {
     return new Promise((resolve) => {
-      if (this._videoControls) this._videoControls.setHidden();
+      if (this._videoControls) this._videoControls.visible = false;
 
       resolve();
     });

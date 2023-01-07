@@ -30,7 +30,7 @@ export class VRModal implements SceneElement {
 
     private _baseImagePath: string;
 
-    private _width: number; //Defined width from the HTML tag
+    private _initialWidth: number; //Defined width from the HTML tag
     private _height: number;
 
     private _setWidth?: number = null; // Set through the API, typically through a parent div
@@ -54,7 +54,11 @@ export class VRModal implements SceneElement {
     private _closeButtonMesh?: Mesh = null;
 
     private _content?: Object3D = new Object3D();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     private  _childElement: SceneElement = null;
 
@@ -69,7 +73,7 @@ export class VRModal implements SceneElement {
         
         this._baseImagePath = config.baseImagePath;
 
-        this._width = config.width;
+        this._initialWidth = config.width;
         this._height = config.height;
 
         this._closeButtonWidth = config.closeButtonWidth;
@@ -91,12 +95,25 @@ export class VRModal implements SceneElement {
 
     ////////// Getters
     
-    public getID(): string {
+    public get id(): string {
         return this._id;
     }
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+
+    public get dynamicWidth(): boolean {
+        return (this._initialWidth != null);
+    }
+
+    public get width() {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get visible(): boolean {
+        return this._content.visible;
     }
 
     public getPlacementLocation(): SceneElementPlacement {
@@ -113,7 +130,7 @@ export class VRModal implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._width,
+            width: this._initialWidth,
             height: this._calculatedHeight
         };
     }
@@ -133,10 +150,6 @@ export class VRModal implements SceneElement {
     public getIsChildElement(uuid: string): boolean {
         return uuid === this._uuid;
     }
-
-    public getVisible(): boolean {
-        return this._content.visible;
-    }
     
     public isPartOfLayout(): boolean {
         if (this._parent) {
@@ -152,7 +165,7 @@ export class VRModal implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -169,18 +182,12 @@ export class VRModal implements SceneElement {
 
     ////////// Setters
 
-    public async setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -205,15 +212,40 @@ export class VRModal implements SceneElement {
 
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         this. _initialized = true;
         
         return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._width);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
 
-            resolve();
+                if (this._setWidth !== null) await this.generateContent(this._setWidth);
+                else await this.generateContent(this._initialWidth);
+                    
+                this._drawing = false;
+                    
+                if (this._redraw) {
+                    await this.draw();
+                    
+                resolve(false);
+                }
+                else {
+                    resolve(false);
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
+
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -238,24 +270,27 @@ export class VRModal implements SceneElement {
             }
 
             if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
+                if (this._mesh.geometry) this._mesh.geometry.dispose();
+                if (this._mesh.material) this._mesh.material.dispose();
                 this._mesh = null;
             }
             
             if (this._closeButtonMesh) {
                 for (let i=(this._closeButtonMesh.children.length-1); i>=0; i--) {
-                    this._closeButtonMesh.children[i].geometry.dispose();
-                    this._closeButtonMesh.children[i].material.dispose();
-                    this._closeButtonMesh.children[i] = null
+                    if (this._closeButtonMesh.children[i]) {
+                        if (this._closeButtonMesh.children[i].geometry) this._closeButtonMesh.children[i].geometry.dispose();
+                        if (this._closeButtonMesh.children[i].material) this._closeButtonMesh.children[i].material.dispose();
+                        this._closeButtonMesh.children[i] = null
+                    }
                 }
             }
             
-            let dialogWidth = this._width;
+            let dialogWidth = width;
             let dialogHeight = this._height ? this._height : 0;
 
             if (this._childElement) {
-                await this._childElement.setWidth(this._width-(this._padding*2));
+                this._childElement.width = (this._initialWidth-(this._padding*2));
+                await this._childElement.draw();
 
                 const childContent = await this._childElement.getContent();
                 

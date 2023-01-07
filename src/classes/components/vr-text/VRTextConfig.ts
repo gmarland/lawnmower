@@ -1,7 +1,7 @@
 export interface VRTextConfig {
-    width: number;
+    width?: number;
     
-    height: number;
+    height?: number;
 
     borderRadius: number;
 

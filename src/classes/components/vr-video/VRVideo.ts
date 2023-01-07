@@ -13,6 +13,7 @@ import {
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
@@ -30,8 +31,8 @@ export class VRVideo implements SceneElement {
 
     private _src: string;
 
-    private _initialWidth: number; //Defined width from the HTML tag
-    private _initialHeight: number;
+    private _initialWidth?: number = null; //Defined width from the HTML tag
+    private _initialHeight?: number = null;
 
     private _setWidth?: number = null; // Set through the API, typically through a parent div
 
@@ -49,7 +50,11 @@ export class VRVideo implements SceneElement {
     private _playButton?: Mesh = null;
 
     private _content?: Group = new Group();
+
     private _initialized: boolean = false;
+    
+    private _drawing: boolean = false;
+    private _redraw: boolean = false;
 
     public onClick?: Function = null;
 
@@ -74,8 +79,21 @@ export class VRVideo implements SceneElement {
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+
+    public get dynamicWidth(): boolean {
+        return false;
+    }
+
+    public get width() {
+        if (this._setWidth !== null) return this._setWidth;
+        else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get visible(): boolean {
+        return (this._content == null) || this._content.visible;
     }
     
     public getPlacementLocation(): SceneElementPlacement {
@@ -96,7 +114,7 @@ export class VRVideo implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
+            width: this.width,
             height: this._calculatedHeight
         };
     }
@@ -109,10 +127,6 @@ export class VRVideo implements SceneElement {
         });
     }
 
-    public getVisible(): boolean {
-        return (this._content == null) || this._content.visible;
-    }
-    
     public getChildSceneElements(): SceneElement[] {
         return [];
     }
@@ -135,7 +149,7 @@ export class VRVideo implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -152,18 +166,12 @@ export class VRVideo implements SceneElement {
 
     ////////// Setters
 
-    public async setWidth(width: number): Promise<void> {
-        this._setWidth = width;
-
-        return this.draw();
+    public set width(value: number) {
+        this._setWidth = value;
     }
 
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -187,15 +195,44 @@ export class VRVideo implements SceneElement {
 
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         this._initialized = true;
         
         return new Promise(async (resolve) => {
-            if (this._setWidth !== null) await this.generateContent(this._setWidth);
-            else await this.generateContent(this._initialWidth);
+            if (!this._drawing) {
+                this._drawing = true;
+                this._redraw = false;
 
-            resolve();
+                const currentDimensions = GeometryUtils.getDimensions(this._content);
+
+                await this.generateContent(this.width);
+                
+                this._drawing = false;
+                        
+                if (this._redraw) {
+                    await this.draw();
+                    
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+                else {
+                    const newDimensions = GeometryUtils.getDimensions(this._content);
+
+                    resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
+                }
+            }
+            else {
+                this._redraw = true;
+
+                resolve(false);
+            }
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {

@@ -50,6 +50,8 @@ export class ColumnVRDiv extends VRDiv {
     }
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {
+        this.resetChildPositions(childLayoutContainer);
+        
         let currentSize = 0;
             
         for (let i=0; i<childLayoutContainer.children.length; i++) {
@@ -100,7 +102,7 @@ export class ColumnVRDiv extends VRDiv {
                 for (let i=0; i< keys.length; i++) {
                     const childElement = this.getChildElements().get(keys[i]);
 
-                    if (childElement.getVisible()) {
+                    if (childElement.visible) {
                         const dimensions = childElement.getDimensions(); 
 
                         if (!dimensions.width) {
@@ -128,7 +130,8 @@ export class ColumnVRDiv extends VRDiv {
                 
                 if (dynamicWidths.length > 0) {
                     for (let i=0; i< dynamicWidths.length; i++) {
-                        await dynamicWidths[i].setWidth(seperateSpace);
+                        dynamicWidths[i].width = seperateSpace;
+                        await dynamicWidths[i].draw();
                     }
                 }
             }
@@ -161,7 +164,7 @@ export class ColumnVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
                 
-                if (childElement.getVisible()) {
+                if (childElement.visible) {
                     const childLayout = await childElement.getContent(); 
 
                     const container = new Group();
@@ -185,8 +188,6 @@ export class ColumnVRDiv extends VRDiv {
             const meshBox = new Box3().setFromObject(body);
             
             if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
-                this.resetChildPositions(childLayoutContainer);
-                
                 this.layoutChildrenItems(childLayoutContainer);
                 
                 this.centerContentBox(childLayoutContainer);

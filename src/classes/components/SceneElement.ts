@@ -7,7 +7,13 @@ import { Dimensions } from '../geometry/Dimensions';
 import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 
 export interface SceneElement {
-    getUUID(): string;
+    uuid: string;
+
+    dynamicWidth: boolean;
+
+    width: number;
+
+    visible: boolean;
 
     getPlacementLocation(): SceneElementPlacement;
 
@@ -20,16 +26,6 @@ export interface SceneElement {
     getChildSceneElements(): Array<SceneElement>;
 
     getIsChildElement(uuid: string): boolean;
-    
-    getVisible(): boolean;
-
-    setWidth(width: number): void;
-
-    setWidth(width: number): Promise<void>;
-
-    setHidden(): void;
-    
-    setVisible(): void;
 
     addChildElement(position: number, childElement: SceneElement): void;
 
@@ -41,7 +37,9 @@ export interface SceneElement {
 
     disableLayouts(): Promise<void>;
 
-    draw(): Promise<void>;
+    draw(): Promise<boolean>; // draw updated dimensions
+
+    drawParent(): Promise<void>;
 
     clicked(meshId: string): Promise<void>;
 

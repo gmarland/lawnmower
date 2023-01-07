@@ -50,8 +50,10 @@ export class RowVRDiv extends VRDiv {
     }
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {
-        let currentSize = 0;
+        this.resetChildPositions(childLayoutContainer);
 
+        let currentSize = 0;
+        
         for (let i=0; i<childLayoutContainer.children.length; i++) {
             if (childLayoutContainer.children[i].visible) {
                 const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
@@ -104,7 +106,7 @@ export class RowVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childElement = this.getChildElements().get(keys[i]);
 
-                if (childElement.getVisible()) {
+                if (childElement.visible) {
                     const dimensions = childElement.getDimensions(); 
 
                     if (!dimensions.width) {
@@ -112,7 +114,8 @@ export class RowVRDiv extends VRDiv {
                         const actualWidth = actualDimensions.max.x-actualDimensions.min.x;
                         
                         if (actualWidth != spareSpace) {
-                            await childElement.setWidth(spareSpace);
+                            childElement.width = spareSpace;
+                            await childElement.draw();
 
                             widthsUpdated = true;
                         }
@@ -146,7 +149,7 @@ export class RowVRDiv extends VRDiv {
             for (let i=0; i< keys.length; i++) {
                 const childContent = await this.getChildElements().get(keys[i]);
 
-                if (childContent.getVisible()) {
+                if (childContent.visible) {
                     const childLayout = await childContent.getContent(); 
 
                     const container = new Group();
@@ -165,8 +168,6 @@ export class RowVRDiv extends VRDiv {
             const meshBox = new Box3().setFromObject(body);
 
             if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
-                this.resetChildPositions(childLayoutContainer);
-
                 this.layoutChildrenItems(childLayoutContainer);
                 
                 this.centerContentBox(childLayoutContainer);

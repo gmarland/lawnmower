@@ -1,6 +1,10 @@
 import { 
-    Mesh
+    Mesh,
+    Object3D,
+    Box3
 } from 'three';
+
+import { Dimensions } from './Dimensions';
 
 export class GeometryUtils {
     public static degToRad(degrees: number): number {
@@ -21,6 +25,15 @@ export class GeometryUtils {
         if (normalizedRotation < 0) normalizedRotation = 360 + normalizedRotation;
         
         return GeometryUtils.degToRad(normalizedRotation);
+    }
+
+    public static getDimensions(obj: Object3D): Dimensions {
+        const dimensions = new Box3().setFromObject(obj);
+        
+        return {
+            width: (dimensions.max.x-dimensions.min.x),
+            height: (dimensions.max.y-dimensions.min.y)
+        }
     }
 
     public static getClosestObject(selectedObjects: Array<any>): Mesh {

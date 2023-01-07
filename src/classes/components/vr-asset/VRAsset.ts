@@ -73,8 +73,21 @@ export class VRAsset implements SceneElement {
 
     ////////// Getters
     
-    public getUUID(): string {
+    public get uuid(): string {
         return this._uuid;
+    }
+
+    public get dynamicWidth(): boolean {
+        return false;
+    }
+    
+    public get width(): number {
+        if (this._setRadius !== null) return this._setRadius;
+        else return this._radius;
+    }
+
+    public get visible(): boolean {
+        return this._content.visible;
     }
     
     public getPlacementLocation(): SceneElementPlacement {
@@ -144,10 +157,6 @@ export class VRAsset implements SceneElement {
         });
     }
 
-    public getVisible(): boolean {
-        return (this._content == null) || this._content.visible;
-    }
-
     public getChildSceneElements(): SceneElement[] {
         return [];
     }
@@ -170,7 +179,7 @@ export class VRAsset implements SceneElement {
     public isLayoutChild(layoutId: string): boolean {
         if (this._parent) {
             if ((this._parent instanceof VRLayout) && 
-                ((this._parent as VRLayout).getId() == layoutId)) {
+                ((this._parent as VRLayout).id == layoutId)) {
                     return true;
             }
             else if (this._parent instanceof MainScene) {
@@ -186,6 +195,14 @@ export class VRAsset implements SceneElement {
     }
 
     ////////// Setters
+
+    public set width(value: number) {
+        this._setRadius = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
+    }
 
     public setActiveAnimation(animationName: string): void {
         this._activeAnimation = animationName;
@@ -209,22 +226,6 @@ export class VRAsset implements SceneElement {
 
     public setZRotationSpeed(rotationSpeed: number): void {
         this._zRotationSpeed = rotationSpeed;
-    }
-
-    public setWidth(width: number): Promise<void> {
-        this._setRadius = width;
-
-        return new Promise((resolve) => {
-            resolve();
-        })
-    }
-
-    public setHidden(): void {
-        this._content.visible = false;
-    }
-    
-    public setVisible(): void {
-        this._content.visible = true;
     }
 
     public enableLayout(layoutId: string): Promise<void> {
@@ -259,10 +260,15 @@ export class VRAsset implements SceneElement {
 
     // --- Rendering Methods
 
-    public async draw(): Promise<void> {
+    public async draw(): Promise<boolean> {
         return new Promise(async (resolve) => {
-            resolve();
+            resolve(false);
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this._parent.draw();
+        if (updatedDimensions) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
