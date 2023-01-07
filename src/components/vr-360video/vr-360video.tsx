@@ -6,7 +6,8 @@ import {
   Element,
   Event,
   EventEmitter,
-  Method
+  Method,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -83,6 +84,20 @@ export class Vr360Video {
   public async close(): Promise<void> {
     return new Promise((resolve) => {
       this.hideVideo();
+
+      resolve();
+    });
+  }
+
+  @Watch('src')
+  private updateSrc(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this.hideVideo();
+        this._video.src = newValue;
+  
+        await this._video.draw();
+      }
 
       resolve();
     });

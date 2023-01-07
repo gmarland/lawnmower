@@ -36,7 +36,7 @@ export class VR360Video implements SceneElement {
     private _videoStarted: boolean = false;
     private _isVideoPlaying: boolean = false;
 
-    private _mesh?: Mesh = null;
+    private _mesh?: Object3D = null;
 
     private _content: Object3D = new Object3D();
     
@@ -277,8 +277,18 @@ export class VR360Video implements SceneElement {
             }
 
             if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
+                if (this._mesh) {
+                    if (this._mesh.children[0]) {
+                        if (this._mesh.children[0].geometry) this._mesh.children[0].geometry.dispose();
+                        if (this._mesh.children[0].material) this._mesh.children[0].material.dispose();
+                    }
+                    if (this._mesh.children[1]) {
+                        if (this._mesh.children[1].geometry) this._mesh.children[1].geometry.dispose();
+                        if (this._mesh.children[1].material) this._mesh.children[1].material.dispose();
+                    }
+                }
+                if (this._mesh.geometry) this._mesh.geometry.dispose();
+                if (this._mesh.material) this._mesh.material.dispose();
                 this._mesh = null;
             }
             
