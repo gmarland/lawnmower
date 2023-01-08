@@ -62,7 +62,7 @@ export namespace Components {
         "zRotation": number;
     }
     interface VrDocument {
-        "hideModal": () => Promise<void>;
+        "closeModal": () => Promise<void>;
         "setLayout": (layoutId: string) => Promise<void>;
         "showModal": (id: string) => Promise<void>;
         "startingDistance": number;
@@ -99,7 +99,6 @@ export namespace Components {
         "padding": number;
         "parent": SceneElement;
         "show": () => Promise<void>;
-        "src": string;
         "width": number;
     }
     interface VrText {
@@ -334,7 +333,6 @@ declare namespace LocalJSX {
         "onClick"?: (event: VrModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
-        "src"?: string;
         "width"?: number;
     }
     interface VrText {

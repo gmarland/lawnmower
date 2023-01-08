@@ -51,7 +51,7 @@ export class VrDocument {
   }
 
   @Method()
-  public async hideModal(): Promise<void> {
+  public async closeModal(): Promise<void> {
     return new Promise((resolve) => {
       this._mainScene.hideModalDialog();
 

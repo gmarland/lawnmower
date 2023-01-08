@@ -7,7 +7,8 @@ import {
   Event,
   EventEmitter,
   getAssetPath,
-  Method
+  Method,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -28,8 +29,6 @@ export class VrModal {
   @Element() el: HTMLElement
 
   @Prop() public id: string = "";
-
-  @Prop() public src: string;
 
   @Prop() public borderRadius: number = 0;
   
@@ -82,6 +81,90 @@ export class VrModal {
   public async hide(): Promise<void> {
     return new Promise((resolve) => {
       this._modal.visible = false;
+
+      resolve();
+    });
+  }
+
+  @Watch('borderRadius')
+  private updateBorderRadius(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.borderRadius = newValue;
+  
+        const dimensionsUpdated = await this._modal.draw();
+        if (dimensionsUpdated) await this._modal.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('borderColor')
+  private updateBorderColo(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.borderColor = newValue;
+  
+        const dimensionsUpdated = await this._modal.draw();
+        if (dimensionsUpdated) await this._modal.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('borderWidth')
+  private updateBorderWidth(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.borderWidth = newValue;
+  
+        const dimensionsUpdated = await this._modal.draw();
+        if (dimensionsUpdated) await this._modal.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('backgroundColor')
+  private updateBackgroundColor(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.backgroundColor = newValue;
+  
+        const dimensionsUpdated = await this._modal.draw();
+        if (dimensionsUpdated) await this._modal.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('padding')
+  private updatePadding(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.padding = newValue;
+  
+        const dimensionsUpdated = await this._modal.draw();
+        if (dimensionsUpdated) await this._modal.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('closeButtonWidth')
+  private updateCloseButtonWidth(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.closeButtonWidth = newValue;
+  
+        const dimensionsUpdated = await this._modal.draw();
+        if (dimensionsUpdated) await this._modal.drawParent();
+      }
 
       resolve();
     });

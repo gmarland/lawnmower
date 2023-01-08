@@ -107,14 +107,76 @@ export class VRModal implements SceneElement {
         return (this._initialWidth == null);
     }
 
-    public get width() {
+    public get width(): number {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get borderRadius(): number {
+        return this._borderRadius;
+    }
+
+    public get borderColor(): string {
+        return this._borderColor;
+    }
+
+    public get borderWidth(): number {
+        return this._borderWidth;
+    }
+
+    public get backgroundColor(): string {
+        return this._backgroundColor;
+    }
+
+    public get padding(): number {
+        return this._padding;
+    }
+
+    public get closeButtonWidth(): number {
+        return this._closeButtonWidth;
     }
 
     public get visible(): boolean {
         return this._content.visible;
     }
+
+    ////////// Setters
+
+    public set width(value: number) {
+        this._setWidth = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
+    }
+
+    public set borderRadius(value: number) {
+        this._borderRadius = value;
+    }
+
+    public set borderColor(value: string) {
+        this._borderColor = value;
+    }
+
+    public set borderWidth(value: number) {
+        this._borderWidth = value;
+    }
+
+    public set backgroundColor(value: string) {
+        this._backgroundColor = value;
+    }
+
+    public set padding(value: number) {
+        this._padding = value;
+    }
+
+    public set closeButtonWidth(value: number) {
+        this._closeButtonWidth = value;
+    }
+
+    ////////// Public Methods
+
+    // --- Data Methods
 
     public getPlacementLocation(): SceneElementPlacement {
         return SceneElementPlacement.Modal;
@@ -141,6 +203,10 @@ export class VRModal implements SceneElement {
     
             resolve(new Vector3(0,0,this._offset));
         });
+    }
+
+    public addChildElement(position: number, childElement: SceneElement): void {
+        this._childElement  = childElement;
     }
 
     public getChildSceneElements(): SceneElement[] {
@@ -178,36 +244,6 @@ export class VRModal implements SceneElement {
         else {
             return false;
         }
-    }
-
-    ////////// Setters
-
-    public set width(value: number) {
-        this._setWidth = value;
-    }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
-        this._childElement  = childElement;
     }
 
     // --- Rendering Methods
@@ -259,6 +295,18 @@ export class VRModal implements SceneElement {
     }
     
     public update(delta: number): void {
+    }
+
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     ////////// Private Methods

@@ -145,7 +145,23 @@
         await customElements.whenDefined('vr-document');
         const main = document.getElementById('main');
 
-        //await main.showModal("image-modal");
+        // ****** Testing modal-dialog
+
+        /*await main.showModal("image-modal");
+
+        setTimeout(() => {
+          const imageModal = document.getElementById('image-modal');
+          imageModal.borderRadius = 30;
+          imageModal.borderColor = "#ff0000";
+          imageModal.borderWidth = 10;
+          imageModal.backgroundColor = "#00ffff";
+          imageModal.padding = 20;
+          imageModal.closeButtonWidth = 100;
+          
+          setTimeout(async () => {
+            await main.closeModal("image-modal");
+          }, 3000);
+        }, 3000);*/
         
         // ****** Testing layouts
 
