@@ -25,8 +25,8 @@ export class ColumnVRDiv extends VRDiv {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this.getInitialized()) {
-                this.setInitialized(true);
+            if (!this.initialized) {
+                this.initialized = true;
                 
                 // Build out the child content
 
@@ -37,15 +37,15 @@ export class ColumnVRDiv extends VRDiv {
 
                 const body = this.buildPanelMesh();
 
-                this.getContentObject().add(body);
-                this.getContentObject().add(childLayoutContainer);
+                this.contentObject.add(body);
+                this.contentObject.add(childLayoutContainer);
                 
                 await this.generateContent(body, childLayoutContainer);
 
                 this.resizePanelBody(body, childLayoutContainer);
             }
 
-            resolve(this.getContentObject());
+            resolve(this.contentObject);
         });
     }
 
@@ -60,7 +60,7 @@ export class ColumnVRDiv extends VRDiv {
 
                 childLayoutContainer.children[i].translateX(currentSize);
 
-                currentSize += (childLayoutBox.max.x - childLayoutBox.min.x) + this.getMargin();
+                currentSize += (childLayoutBox.max.x - childLayoutBox.min.x) + this.margin;
             }
         }
 
@@ -72,10 +72,10 @@ export class ColumnVRDiv extends VRDiv {
 
                 let yDiff = 0;
 
-                if (this.getItemVerticalAlign() == ItemVerticalAlign.Top) {
+                if (this.itemVerticalAlign == ItemVerticalAlign.Top) {
                     yDiff = childLayoutContainerBox.max.y - childLayoutBox.max.y;
                 }
-                else if (this.getItemVerticalAlign() == ItemVerticalAlign.Bottom) {
+                else if (this.itemVerticalAlign == ItemVerticalAlign.Bottom) {
                     yDiff = childLayoutContainerBox.min.y - childLayoutBox.min.y;
                 }
 
@@ -87,7 +87,7 @@ export class ColumnVRDiv extends VRDiv {
     public async resizeFullWidthPanels(width: number, childLayoutContainer: Object3D): Promise<boolean> {
         return new Promise(async (resolve) => {
             const totalBox = new Box3().setFromObject(childLayoutContainer);
-            const spareSpace = (width-(this.getPadding()*2))-(totalBox.max.x-totalBox.min.x);
+            const spareSpace = (width-(this.padding*2))-(totalBox.max.x-totalBox.min.x);
 
             const widthUpdated = (spareSpace > 0);
             
@@ -96,11 +96,11 @@ export class ColumnVRDiv extends VRDiv {
 
                 let dynamicWidths = [];
                 
-                let keys = Array.from(this.getChildElements().keys());
+                let keys = Array.from(this.childElements.keys());
                 keys.sort(function(a, b){return a-b});
 
                 for (let i=0; i< keys.length; i++) {
-                    const childElement = this.getChildElements().get(keys[i]);
+                    const childElement = this.childElements.get(keys[i]);
 
                     if ((childElement.visible) && (childElement.dynamicWidth)) {
                         const actualDimensions = new Box3().setFromObject(await childElement.getContent())
@@ -153,11 +153,11 @@ export class ColumnVRDiv extends VRDiv {
                 childLayoutContainer.remove(childLayoutContainer.children[i]);
             }
 
-            let keys = Array.from(this.getChildElements().keys());
+            let keys = Array.from(this.childElements.keys());
             keys.sort(function(a, b){return a-b});
 
             for (let i=0; i< keys.length; i++) {
-                const childElement = this.getChildElements().get(keys[i]);
+                const childElement = this.childElements.get(keys[i]);
                 
                 if (childElement.visible) {
                     const childLayout = await childElement.getContent(); 
@@ -190,13 +190,13 @@ export class ColumnVRDiv extends VRDiv {
                 this.repositionContainer(body, childLayoutContainer);
             }
 
-            this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation(),), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
+            this.contentObject.rotation.set(GeometryUtils.degToRad(this.xRotation,), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
             
-            if ((this.getXRotation()) || (this.getYRotation()) || (this.getZRotation())) {
-                this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation()), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
+            if ((this.xRotation) || (this.yRotation) || (this.zRotation)) {
+                this.contentObject.rotation.set(GeometryUtils.degToRad(this.xRotation), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
                 
-                const rotatedElement = new Box3().setFromObject(this.getContentObject());
-                this.getContentObject().position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
+                const rotatedElement = new Box3().setFromObject(this.contentObject);
+                this.contentObject.position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
             }
 
             resolve();

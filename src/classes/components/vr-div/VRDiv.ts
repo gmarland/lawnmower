@@ -112,79 +112,55 @@ export class VRDiv implements SceneElement {
         else return this._initialWidth ? this._initialHeight : 0;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
-    }
-    
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Main;
+    public get borderRadius(): number {
+        return this._borderRadius;
     }
 
-    public getChildElements(): Map<number, SceneElement> {
+    public get childElements(): Map<number, SceneElement> {
         return this._childElements;
     }
 
-    public getColor(): string {
+    public get color(): string {
         return this._color;
     }
 
-    public getPadding(): number {
+    public get padding(): number {
         return this._padding;
     }
 
-    public getMargin(): number {
+    public get margin(): number {
         return this._margin;
     }
 
-    public getItemHorizontalAlign(): ItemHorizontalAlign {
+    public get visible(): boolean {
+        return this._content.visible;
+    }
+
+    public get itemHorizontalAlign(): ItemHorizontalAlign {
         return this._itemHorizontalAlign;
     }
 
-    public getItemVerticalAlign(): ItemVerticalAlign {
+    public get itemVerticalAlign(): ItemVerticalAlign {
         return this._itemVerticalAlign;
     }
 
-    public getDimensions(): Dimensions {
-        return {
-            width: this._initialWidth,
-            height: this._initialHeight
-        }
-    }
-    
-    public getChildSceneElements(): SceneElement[] {
-        let keys = Array.from(this._childElements.keys());
-        keys.sort(function(a, b){return a-b});
-
-        const elements = [];
-        
-        for (let i=0; i< keys.length; i++) {
-            elements.push(this._childElements.get(keys[i])); 
-        }
-
-        return elements;
-    }
-
-    public getContentObject(): Object3D {
+    public get contentObject(): Object3D {
         return this._content;
     }
 
-    public getXRotation(): number {
+    public get xRotation(): number {
         return this._xRotation;
     }
     
-    public getYRotation(): number {
+    public get yRotation(): number {
         return this._yRotation;
     }
     
-    public getZRotation(): number {
+    public get zRotation(): number {
         return this._zRotation;
     }
 
-    public getContent(): Object3D {
-        return null;
-    }
-
-    public getInitialized(): boolean {
+    public get initialized(): boolean {
         return this._initialized;
     }
      
@@ -198,6 +174,64 @@ export class VRDiv implements SceneElement {
 
     public getDepth(): number {
         return this._depth;
+    }
+
+    ////////// Setters
+
+    public set width(value: number) {
+        this._setWidth = value;
+    }
+
+    public set borderRadius(value: number) {
+        this._borderRadius = value;
+    }
+
+    public set color(value: string) {
+        this._color = value;
+    }
+
+    public set padding(value: number) {
+        this._padding = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
+    }
+
+    public set initialized(initialized: boolean) {
+        this._initialized = initialized;
+    }
+
+    ////////// Public Methods
+
+    // --- Data Methods
+
+    public getDimensions(): Dimensions {
+        return {
+            width: this._initialWidth,
+            height: this._initialHeight
+        }
+    }
+    
+    public getPlacementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Main;
+    }
+
+    public addChildElement(position: number, childElement: SceneElement): void {
+        this._childElements.set(position, childElement);
+    }
+    
+    public getChildSceneElements(): SceneElement[] {
+        let keys = Array.from(this._childElements.keys());
+        keys.sort(function(a, b){return a-b});
+
+        const elements = [];
+        
+        for (let i=0; i< keys.length; i++) {
+            elements.push(this._childElements.get(keys[i])); 
+        }
+
+        return elements;
     }
 
     public getIsChildElement(uuid: string): boolean {
@@ -246,53 +280,11 @@ export class VRDiv implements SceneElement {
         }
     }
 
-    ////////// Setters
-
-    public set width(value: number) {
-        this._setWidth = value;
-    }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
-    public setInitialized(initialized: boolean): void {
-        this._initialized = initialized;
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise(async (resolve) => {
-            const childElements = this.getChildSceneElements();
-    
-            for (let i=0; i<childElements.length; i++) {
-                await childElements[i].enableLayout(layoutId);
-            }
-            
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise(async (resolve) => {
-            const childElements = this.getChildSceneElements();
-    
-            for (let i=0; i<childElements.length; i++) {
-                await childElements[i].disableLayouts();
-            }
-
-            resolve();
-        });
-    }
-
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
-        this._childElements.set(position, childElement);
-    }
-
     // --- Rendering Methods
+
+    public getContent(): Object3D {
+        return null;
+    }
 
     public async draw(): Promise<boolean> {
         return new Promise(async (resolve) => {
@@ -328,6 +320,28 @@ export class VRDiv implements SceneElement {
         });
     }
 
+    public async updateContent(width: number): Promise<void> {
+        return new Promise(async (resolve) => {
+            let body = null;
+            let child = null;
+
+            for (let i=0; i<this._content.children.length; i++) {
+                if (this._content.children[i].name == "body") body = this._content.children[i];
+                else if (this._content.children[i].name == "child") child = this._content.children[i];
+            }
+
+            if (body && child) {
+                this.resizePanelBody(body, child);
+
+                await this.generateContent(body, child);
+
+                this.resizePanelBody(body, child);
+            }
+            
+            resolve();
+        });
+    }
+
     public async drawParent(): Promise<void> {
         const updatedDimensions = await this._parent.draw();
         if (updatedDimensions) await this._parent.drawParent();
@@ -335,10 +349,10 @@ export class VRDiv implements SceneElement {
     
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
-            let keys = Array.from(this.getChildElements().keys());
+            let keys = Array.from(this.childElements.keys());
 
             for (let i=0; i< keys.length; i++) {
-                const childElement = this.getChildElements().get(keys[i]);
+                const childElement = this.childElements.get(keys[i]);
                 childElement.clicked(meshId);
             }
             
@@ -466,29 +480,31 @@ export class VRDiv implements SceneElement {
         }
     }
 
-    ////////// Virtual Methods
-
-    public async updateContent(width: number): Promise<void> {
+    public enableLayout(layoutId: string): Promise<void> {
         return new Promise(async (resolve) => {
-            let body = null;
-            let child = null;
-
-            for (let i=0; i<this._content.children.length; i++) {
-                if (this._content.children[i].name == "body") body = this._content.children[i];
-                else if (this._content.children[i].name == "child") child = this._content.children[i];
-            }
-
-            if (body && child) {
-                this.resizePanelBody(body, child);
-
-                await this.generateContent(body, child);
-
-                this.resizePanelBody(body, child);
+            const childElements = this.getChildSceneElements();
+    
+            for (let i=0; i<childElements.length; i++) {
+                await childElements[i].enableLayout(layoutId);
             }
             
             resolve();
         });
     }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise(async (resolve) => {
+            const childElements = this.getChildSceneElements();
+    
+            for (let i=0; i<childElements.length; i++) {
+                await childElements[i].disableLayouts();
+            }
+
+            resolve();
+        });
+    }
+
+    ////////// Virtual Methods
 
     protected generateContent(body: Mesh, childLayoutContainer: Object3D): any {};
 

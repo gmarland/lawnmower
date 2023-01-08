@@ -3,7 +3,8 @@ import {
   Host, 
   h ,
   Prop,
-  Element
+  Element,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -63,6 +64,34 @@ export class VrDiv {
   @Prop() public zRotation: number = 0;
 
   private _div: VRDiv;
+
+  @Watch('borderRadius')
+  private updateBorderRadius(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.borderRadius = newValue;
+  
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('padding')
+  private updatePadding(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.padding = newValue;
+  
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
 
   componentWillLoad() {
     const config = {

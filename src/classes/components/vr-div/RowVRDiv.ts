@@ -19,8 +19,8 @@ export class RowVRDiv extends VRDiv {
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this.getInitialized()) {
-                this.setInitialized(true);
+            if (!this.initialized) {
+                this.initialized = true;
                 
                 // Build out the child content
         
@@ -31,15 +31,15 @@ export class RowVRDiv extends VRDiv {
         
                 const body = this.buildPanelMesh();
         
-                this.getContentObject().add(body);
-                this.getContentObject().add(childLayoutContainer);
+                this.contentObject.add(body);
+                this.contentObject.add(childLayoutContainer);
         
                 await this.generateContent(body, childLayoutContainer);
 
                 this.resizePanelBody(body, childLayoutContainer);
             }
             
-            resolve(this.getContentObject());
+            resolve(this.contentObject);
         });
     }
 
@@ -60,7 +60,7 @@ export class RowVRDiv extends VRDiv {
                 
                 childLayoutContainer.children[i].translateY(currentSize*-1);
 
-                currentSize += (childLayoutBox.max.y - childLayoutBox.min.y) + this.getMargin();
+                currentSize += (childLayoutBox.max.y - childLayoutBox.min.y) + this.margin;
             }
         }
 
@@ -72,10 +72,10 @@ export class RowVRDiv extends VRDiv {
         
                 let xDiff = 0;
 
-                if (this.getItemHorizontalAlign() == ItemHorizontalAlign.Left) {
+                if (this.itemHorizontalAlign == ItemHorizontalAlign.Left) {
                     xDiff = childLayoutContainerBox.min.x - childLayoutBox.min.x;
                 }
-                else if (this.getItemHorizontalAlign() == ItemHorizontalAlign.Right) {
+                else if (this.itemHorizontalAlign == ItemHorizontalAlign.Right) {
                     xDiff = childLayoutContainerBox.max.x - childLayoutBox.max.x;
                 }
 
@@ -91,8 +91,8 @@ export class RowVRDiv extends VRDiv {
 
             let spareSpace;
             
-            if (width && (((width - this.getPadding())*2) > childWidth)) {
-                spareSpace = (width - this.getPadding());
+            if (width && (((width - this.padding)*2) > childWidth)) {
+                spareSpace = (width - this.padding);
             } 
             else {
                 spareSpace = childWidth;
@@ -100,11 +100,11 @@ export class RowVRDiv extends VRDiv {
 
             let widthsUpdated = false;
 
-            let keys = Array.from(this.getChildElements().keys());
+            let keys = Array.from(this.childElements.keys());
             keys.sort(function(a, b){return a-b});
 
             for (let i=0; i< keys.length; i++) {
-                const childElement = this.getChildElements().get(keys[i]);
+                const childElement = this.childElements.get(keys[i]);
 
                 if ((childElement.visible) && (childElement.dynamicWidth)) {
                     const actualDimensions = new Box3().setFromObject(await childElement.getContent())
@@ -139,11 +139,11 @@ export class RowVRDiv extends VRDiv {
                 childLayoutContainer.remove(childLayoutContainer.children[i]);
             }
 
-            let keys = Array.from(this.getChildElements().keys());
+            let keys = Array.from(this.childElements.keys());
             keys.sort(function(a, b){return a-b});
     
             for (let i=0; i< keys.length; i++) {
-                const childContent = await this.getChildElements().get(keys[i]);
+                const childContent = await this.childElements.get(keys[i]);
 
                 if (childContent.visible) {
                     const childLayout = await childContent.getContent(); 
@@ -171,11 +171,11 @@ export class RowVRDiv extends VRDiv {
                 this.repositionContainer(body, childLayoutContainer);
             }
             
-            if ((this.getXRotation()) || (this.getYRotation()) || (this.getZRotation())) {
-                this.getContentObject().rotation.set(GeometryUtils.degToRad(this.getXRotation(),), GeometryUtils.degToRad(this.getYRotation()), GeometryUtils.degToRad(this.getZRotation()));
+            if (this.xRotation || this.yRotation || this.zRotation) {
+                this.contentObject.rotation.set(GeometryUtils.degToRad(this.xRotation), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
                 
-                const rotatedElement = new Box3().setFromObject(this.getContentObject());
-                this.getContentObject().position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
+                const rotatedElement = new Box3().setFromObject(this.contentObject);
+                this.contentObject.position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
             }
 
             resolve();
