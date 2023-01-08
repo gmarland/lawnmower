@@ -71,7 +71,7 @@ export class ColumnVRDiv extends VRDiv {
                 const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
 
                 let yDiff = 0;
-
+                
                 if (this.itemVerticalAlign == ItemVerticalAlign.Top) {
                     yDiff = childLayoutContainerBox.max.y - childLayoutBox.max.y;
                 }

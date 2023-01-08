@@ -163,7 +163,7 @@ export class RowVRDiv extends VRDiv {
             
             const meshBox = new Box3().setFromObject(body);
 
-            if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
+            if (await this.resizeFullWidthPanels(((meshBox.max.x-meshBox.min.x)-(this.padding*2)), childLayoutContainer)) {
                 this.layoutChildrenItems(childLayoutContainer);
                 
                 this.centerContentBox(childLayoutContainer);

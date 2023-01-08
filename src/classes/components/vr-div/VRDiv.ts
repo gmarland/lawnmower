@@ -35,7 +35,8 @@ export class VRDiv implements SceneElement {
     private _initialHeight?: number;
     private _borderRadius: number;
 
-    private _setWidth?: number = null
+    private _setWidth?: number = null;
+    private _setHeight?: number = null;
 
     private _backgroundColor: string = "";
     
@@ -98,6 +99,10 @@ export class VRDiv implements SceneElement {
     }
 
     ////////// Getters
+
+    public get initialized(): boolean {
+        return this._initialized;
+    }
     
     public get uuid(): string {
         return this._uuid;
@@ -109,7 +114,12 @@ export class VRDiv implements SceneElement {
 
     public get width() {
         if (this._setWidth !== null) return this._setWidth;
-        else return this._initialWidth ? this._initialHeight : 0;
+        else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get height() {
+        if (this._setHeight !== null) return this._setHeight;
+        else return this._initialHeight ? this._initialHeight : 0;
     }
 
     public get borderRadius(): number {
@@ -132,8 +142,12 @@ export class VRDiv implements SceneElement {
         return this._margin;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
+    public get verticalAlign(): VerticalAlign {
+        return this._verticalAlign;
+    }
+
+    public get horizontalAlign(): HorizontalAlign {
+        return this._horizontalAlign;
     }
 
     public get itemHorizontalAlign(): ItemHorizontalAlign {
@@ -160,8 +174,8 @@ export class VRDiv implements SceneElement {
         return this._zRotation;
     }
 
-    public get initialized(): boolean {
-        return this._initialized;
+    public get visible(): boolean {
+        return this._content.visible;
     }
      
     public async getPosition(): Promise<Vector3> {
@@ -178,8 +192,16 @@ export class VRDiv implements SceneElement {
 
     ////////// Setters
 
+    public set initialized(initialized: boolean) {
+        this._initialized = initialized;
+    }
+
     public set width(value: number) {
         this._setWidth = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
     }
 
     public set borderRadius(value: number) {
@@ -188,18 +210,33 @@ export class VRDiv implements SceneElement {
 
     public set backgroundColor(value: string) {
         this._backgroundColor = value;
+
+        const body = this.getBodyContent();
+        if ((body != null) && (body.material)) body.material.color = new Color(this._backgroundColor);
     }
 
     public set padding(value: number) {
         this._padding = value;
     }
 
-    public set visible(value: boolean) {
-        this._content.visible = value;
+    public set verticalAlign(value: VerticalAlign) {
+        this._verticalAlign = value;
     }
 
-    public set initialized(initialized: boolean) {
-        this._initialized = initialized;
+    public set horizontalAlign(value: HorizontalAlign) {
+        this._horizontalAlign = value;
+    }
+
+    public set itemHorizontalAlign(value: ItemHorizontalAlign) {
+        this._itemHorizontalAlign = value;
+    }
+
+    public set itemVerticalAlign(value: ItemVerticalAlign) {
+        this._itemVerticalAlign = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
 
     ////////// Public Methods
@@ -208,8 +245,8 @@ export class VRDiv implements SceneElement {
 
     public getDimensions(): Dimensions {
         return {
-            width: this._initialWidth,
-            height: this._initialHeight
+            width: this.width,
+            height: this.height
         }
     }
     
@@ -356,14 +393,7 @@ export class VRDiv implements SceneElement {
                 childElement.clicked(meshId);
             }
             
-            let body;
-
-            for (let i=0; i<this._content.children.length; i++) {
-                if (this._content.children[i].name == "body") {
-                    body = this._content.children[i];
-                    break;
-                }
-            }
+            let body = this.getBodyContent();
 
             if (body && (body.uuid === meshId) && (this.onClick)) {
                 this.onClick();
@@ -376,12 +406,12 @@ export class VRDiv implements SceneElement {
     public buildPanelMesh(): Mesh {
         let height = 0;
 
-        if (this._initialHeight) height = this._initialHeight;
+        if (this.height) height = this.height;
         else height = this._padding;
 
         let width = 0;
 
-        if (this._initialWidth) width = this._initialWidth;
+        if (this.width) width = this.width;
         else width = this._padding;
 
         let materialOptions;
@@ -435,17 +465,20 @@ export class VRDiv implements SceneElement {
         var buildWidth = this.width;
         if ((!buildWidth) || (childXSize > buildWidth)) buildWidth = childXSize;
 
+        var buildHeight= this.height;
+        if ((!buildHeight) || (childYSize > buildHeight)) buildHeight = childYSize;
+
         if ((buildWidth !== bodyXSize) || 
-            (childYSize !== bodyYSize)) {
+            (buildHeight !== bodyYSize)) {
             mesh.geometry.dispose();
-            mesh.geometry = PlaneUtils.getPlane(buildWidth, childYSize, this._borderRadius)
+            mesh.geometry = PlaneUtils.getPlane(buildWidth, buildHeight, this._borderRadius)
             mesh.geometry.computeBoundingBox();
             mesh.geometry.computeBoundingSphere();
 
             let scaledMeshBox = new Box3().setFromObject(mesh);
-            
+
             if (this._verticalAlign == VerticalAlign.Top) mesh.position.y -= scaledMeshBox.max.y-meshBox.max.y;
-            if (this._verticalAlign == VerticalAlign.Bottom) mesh.position.y += scaledMeshBox.max.y-meshBox.max.y;
+            else if (this._verticalAlign == VerticalAlign.Bottom) mesh.position.y += scaledMeshBox.max.y-meshBox.max.y;
             
             if (this._horizontalAlign == HorizontalAlign.Left) mesh.position.x += scaledMeshBox.max.x-meshBox.max.x;
             else if (this._horizontalAlign == HorizontalAlign.Right) mesh.position.x -= scaledMeshBox.max.x-meshBox.max.x;
@@ -454,11 +487,13 @@ export class VRDiv implements SceneElement {
 
     public repositionContainer(mesh: Mesh, childLayoutContainer: Object3D): void {
         const meshBox = new Box3().setFromObject(mesh);
-
         const totalBox = new Box3().setFromObject(childLayoutContainer);
 
         if (this._verticalAlign == VerticalAlign.Top) {
             childLayoutContainer.position.y += meshBox.max.y - totalBox.max.y - this._padding;
+        }
+        else if (this._verticalAlign == VerticalAlign.Middle) {
+            childLayoutContainer.position.y += ((meshBox.max.y+meshBox.min.y)/2) - ((totalBox.max.y+totalBox.min.y)/2) - (this._padding/2);
         }
         else if (this._verticalAlign == VerticalAlign.Bottom) {
             childLayoutContainer.position.y += meshBox.min.y - totalBox.min.y + this._padding;
@@ -502,6 +537,19 @@ export class VRDiv implements SceneElement {
 
             resolve();
         });
+    }
+
+    private getBodyContent(): Mesh {
+        let body = null;
+
+        for (let i=0; i<this._content.children.length; i++) {
+            if (this._content.children[i].name == "body") {
+                body = this._content.children[i];
+                break;
+            }
+        }
+
+        return body;
     }
 
     ////////// Virtual Methods

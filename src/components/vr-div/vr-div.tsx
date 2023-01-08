@@ -65,15 +65,39 @@ export class VrDiv {
 
   private _div: VRDiv;
 
-  @Watch('backgroundColor')
-  private updateBackgroundColor(newValue: number): Promise<void> {
+  @Watch('width')
+  private updateWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
       if (this._div) {
-        this._div.borderRadius = newValue;
+        this._div.width = newValue;
   
         const dimensionsUpdated = await this._div.draw();
-        console.log(dimensionsUpdated)
         if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('height')
+  private updateheight(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.height = newValue;
+  
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('backgroundColor')
+  private updateBackgroundColor(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.backgroundColor = newValue;
       }
 
       resolve();
@@ -100,6 +124,62 @@ export class VrDiv {
       if (this._div) {
         this._div.padding = newValue;
   
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+  
+  @Watch('verticalAlign')
+  public updateVerticalAlign(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.verticalAlign = VerticalAlign[newValue];
+  
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('horizontalAlign')
+  public updateHorizontalAlign(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.horizontalAlign = HorizontalAlign[newValue];
+  
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('itemHorizontalAlign')
+  public updateItemHorizontalAlign(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.itemHorizontalAlign = ItemHorizontalAlign[newValue];
+  
+        const dimensionsUpdated = await this._div.draw();
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('itemVerticalAlign')
+  public updateItemVerticalAlign(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.itemVerticalAlign = ItemVerticalAlign[newValue];
+    
         const dimensionsUpdated = await this._div.draw();
         if (dimensionsUpdated) await this._div.drawParent();
       }
