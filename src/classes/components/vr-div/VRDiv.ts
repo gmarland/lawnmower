@@ -31,9 +31,9 @@ export class VRDiv implements SceneElement {
 
     private _uuid: string;
 
-    private _initialWidth?: number; 
-    private _initialHeight?: number;
-    private _borderRadius: number;
+    private _initialWidth?: number = null; 
+    private _initialHeight?: number = null;
+    private _borderRadius: number = 0;
 
     private _setWidth?: number = null;
     private _setHeight?: number = null;
