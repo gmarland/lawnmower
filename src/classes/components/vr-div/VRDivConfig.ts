@@ -18,7 +18,7 @@ export interface VRDivConfig {
 
     borderRadius: number;
 
-    color: string;
+    backgroundColor: string;
 
     opacity?: number;
 

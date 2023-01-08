@@ -37,7 +37,7 @@ export class VRDiv implements SceneElement {
 
     private _setWidth?: number = null
 
-    private _color: string = "";
+    private _backgroundColor: string = "";
     
     private _margin: number = 0;
     private _padding: number = 0;
@@ -83,7 +83,7 @@ export class VRDiv implements SceneElement {
 
         this._borderRadius = config.borderRadius;
         
-        this._color = config.color;
+        this._backgroundColor = config.backgroundColor;
 
         if (config.opacity) this._opacity = config.opacity;
         
@@ -120,8 +120,8 @@ export class VRDiv implements SceneElement {
         return this._childElements;
     }
 
-    public get color(): string {
-        return this._color;
+    public get backgroundColor(): string {
+        return this._backgroundColor;
     }
 
     public get padding(): number {
@@ -186,8 +186,8 @@ export class VRDiv implements SceneElement {
         this._borderRadius = value;
     }
 
-    public set color(value: string) {
-        this._color = value;
+    public set backgroundColor(value: string) {
+        this._backgroundColor = value;
     }
 
     public set padding(value: number) {
@@ -386,9 +386,9 @@ export class VRDiv implements SceneElement {
 
         let materialOptions;
 
-        if ((this._color) && (this._color.length > 0)) {
+        if ((this._backgroundColor) && (this._backgroundColor.length > 0)) {
             materialOptions = {
-                color: new Color(this._color),
+                color: new Color(this._backgroundColor),
                 side: DoubleSide
             };
 

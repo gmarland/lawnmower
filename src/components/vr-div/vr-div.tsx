@@ -49,7 +49,7 @@ export class VrDiv {
 
   @Prop() public borderRadius: number = 0;
 
-  @Prop() public color: string;
+  @Prop() public backgroundColor: string;
 
   @Prop() public opacity?: number;
 
@@ -64,6 +64,21 @@ export class VrDiv {
   @Prop() public zRotation: number = 0;
 
   private _div: VRDiv;
+
+  @Watch('backgroundColor')
+  private updateBackgroundColor(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.borderRadius = newValue;
+  
+        const dimensionsUpdated = await this._div.draw();
+        console.log(dimensionsUpdated)
+        if (dimensionsUpdated) await this._div.drawParent();
+      }
+
+      resolve();
+    });
+  }
 
   @Watch('borderRadius')
   private updateBorderRadius(newValue: number): Promise<void> {
@@ -101,7 +116,7 @@ export class VrDiv {
       itemHorizontalAlign: ItemHorizontalAlign[this.itemHorizontalAlign],
       height: this.height, 
       width: this.width, 
-      color: this.color,
+      backgroundColor: this.backgroundColor,
       padding: this.padding,
       margin: this.margin,
       borderRadius: this.borderRadius,

@@ -42,8 +42,8 @@ export namespace Components {
         "zRotationSpeed": number;
     }
     interface VrDiv {
+        "backgroundColor": string;
         "borderRadius": number;
-        "color": string;
         "depth": number;
         "height"?: number;
         "horizontalAlign": string;
@@ -279,8 +279,8 @@ declare namespace LocalJSX {
         "zRotationSpeed"?: number;
     }
     interface VrDiv {
+        "backgroundColor"?: string;
         "borderRadius"?: number;
-        "color"?: string;
         "depth"?: number;
         "height"?: number;
         "horizontalAlign"?: string;
