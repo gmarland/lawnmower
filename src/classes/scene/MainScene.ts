@@ -166,10 +166,7 @@ export class MainScene {
     
                 this._mainObjectContainer.add(await childElement.getContent());
 
-                const mainBox = new Box3().setFromObject(this._mainObjectContainer);
-                
-                this._mainObjectContainer.position.x = mainBox.max.x-(mainBox.max.x-mainBox.min.x)/2;
-                this._mainObjectContainer.position.y = (mainBox.max.y-mainBox.min.y)/2;    
+                const mainBox = new Box3().setFromObject(this._mainObjectContainer);   
             }
             else if (childElement.getPlacementLocation() == SceneElementPlacement.Modal) {
                 this._modalElements.push(childElement as VRModal);

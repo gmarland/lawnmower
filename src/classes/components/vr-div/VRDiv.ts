@@ -109,7 +109,7 @@ export class VRDiv implements SceneElement {
     }
 
     public get dynamicWidth(): boolean {
-        return true;
+        return this._initialWidth == null;
     }
 
     public get width() {
