@@ -117,7 +117,7 @@ export class ColumnVRDiv extends VRDiv {
         childLayoutContainer.position.x -= (GeometryUtils.getDimensions(childLayoutContainer).width/2);
     }
 
-    public async generateContent(body: Mesh, childLayoutContainer: Object3D): Promise<void> {
+    public async generateContent(childLayoutContainer: Object3D): Promise<void> {
         return new Promise(async (resolve) => {
             for (let i=(childLayoutContainer.children.length-1); i>=0; i--) {
                 childLayoutContainer.remove(childLayoutContainer.children[i]);
@@ -148,9 +148,7 @@ export class ColumnVRDiv extends VRDiv {
 
             this.centerContentBox(childLayoutContainer);
             
-            const meshBox = new Box3().setFromObject(body);
-
-            if (await this.resizeFullWidthPanels(meshBox.max.x-meshBox.min.x, childLayoutContainer)) {
+            if (await this.resizeFullWidthPanels(this.width, childLayoutContainer)) {
                 this.layoutChildrenItems(childLayoutContainer);
                 
                 this.centerContentBox(childLayoutContainer);

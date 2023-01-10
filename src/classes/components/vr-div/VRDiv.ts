@@ -336,7 +336,7 @@ export class VRDiv implements SceneElement {
                 this.contentObject.add(body);
                 this.contentObject.add(childLayoutContainer);
                 
-                await this.generateContent(body, childLayoutContainer);
+                await this.generateContent(childLayoutContainer);
 
                 this.resizePanelBody(body, childLayoutContainer);
 
@@ -392,9 +392,7 @@ export class VRDiv implements SceneElement {
             }
 
             if (body && child) {
-                this.resizePanelBody(body, child);
-
-                await this.generateContent(body, child);
+                await this.generateContent(child);
 
                 this.resizePanelBody(body, child);
 
@@ -550,7 +548,7 @@ export class VRDiv implements SceneElement {
 
     ////////// Virtual Methods
 
-    protected generateContent(body: Mesh, childLayoutContainer: Object3D): any {};
+    protected generateContent(childLayoutContainer: Object3D): any {};
 
     protected layoutChildrenItems(childLayoutContainer: Object3D): void {};
 
