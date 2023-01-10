@@ -30,14 +30,15 @@ export class LMVideoControls implements SceneElement {
     private _playMesh: Mesh;
     private _pauseMesh: Mesh;
    
-    private _color: string;
+    private _backgroundColor: string;
 
     private _baseImagePath: string;
     
     private _initialWidth?: number = null; 
     private _initialHeight?: number = null;
     
-    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    // Set through the API, typically through a parent div
+    private _setWidth?: number = null;
     private _setHeight?: number = null;
 
     private _borderRadius: number = 10;
@@ -68,7 +69,7 @@ export class LMVideoControls implements SceneElement {
 
         this._baseImagePath = config.baseImagePath;
 
-        this._color = config.color;
+        this._backgroundColor = config.backgroundColor;
 
         if (config.width) this._initialWidth = config.width;
         if (config.height) this._initialHeight = config.height;
@@ -90,14 +91,18 @@ export class LMVideoControls implements SceneElement {
         return (this._initialWidth == null);
     }
 
-    public get width() {
+    public get width(): number {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth ? this._initialWidth : 0;
     }
 
-    public get height() {
+    public get height(): number {
         if (this._setHeight !== null) return this._setHeight;
         else return this._initialHeight ? this._initialHeight : 0;
+    }
+
+    public get backgroundColor(): string {
+        return this._backgroundColor;
     }
 
     public get visible(): boolean {
@@ -108,6 +113,10 @@ export class LMVideoControls implements SceneElement {
 
     public set width(value: number) {
         this._setWidth = value;
+    }
+
+    public set backgroundColor(value: string) {
+        this._backgroundColor = value;
     }
 
     public set height(value: number) {
@@ -304,7 +313,7 @@ export class LMVideoControls implements SceneElement {
             const geometry = PlaneUtils.getPlane(width, height, this._borderRadius);
     
             const material = MaterialUtils.getBasicMaterial({
-                color: new Color(this._color),
+                color: new Color(this._backgroundColor),
                 side: DoubleSide
             });
             
@@ -331,13 +340,13 @@ export class LMVideoControls implements SceneElement {
             }));
             this._pauseMesh.visible = false;
 
-            this._closeMesh.translateX(((this._initialWidth/2)*-1) + (this._initialHeight/2));
+            this._closeMesh.translateX(((this.width/2)*-1) + (this.height/2));
             this._closeMesh.translateZ(-0.2);
 
-            this._playMesh.translateX((this._initialWidth/2) - (this._initialHeight/2));
+            this._playMesh.translateX((this.width/2) - (this.height/2));
             this._playMesh.translateZ(-0.2);
 
-            this._pauseMesh.translateX((this._initialWidth/2) - (this._initialHeight/2));
+            this._pauseMesh.translateX((this.width/2) - (this.height/2));
             this._pauseMesh.translateZ(-0.2);
 
             this._mesh.add(this._closeMesh);

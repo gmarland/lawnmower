@@ -129,7 +129,7 @@ export namespace Components {
         "width": number;
     }
     interface LmVideoControls {
-        "color": string;
+        "backgroundColor": string;
         "depth": number;
         "getVisible": () => Promise<boolean>;
         "height": number;
@@ -365,7 +365,7 @@ declare namespace LocalJSX {
         "width"?: number;
     }
     interface LmVideoControls {
-        "color"?: string;
+        "backgroundColor"?: string;
         "depth"?: number;
         "height"?: number;
         "onAddToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;

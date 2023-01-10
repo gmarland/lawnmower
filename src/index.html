@@ -32,6 +32,7 @@
   </head>
   <body>
     <lm-document id="main" starting-distance="1000">
+      <lm-video-controls id="demo-controls"></lm-video-controls>
       <lm-modal id="image-modal" border-radius="10">
         <lm-image border-radius="20" 
                   src="https://m.media-amazon.com/images/M/MV5BNDFkYTI5YzctZDBjZi00MmVkLTlmZmQtMjhmNjcxZmZkZjFlXkEyXkFqcGdeQVRoaXJkUGFydHlJbmdlc3Rpb25Xb3JrZmxvdw@@._V1_.jpg"></lm-image>
@@ -289,9 +290,20 @@
         }, 3000);*/
         
         // ****** Testing 360 video
-        /*setTimeout(() => {n
+
+        /*setTimeout(() => {
             document.getElemetById('demo-video-360').play();
         }, 3000);*/
+
+        // ****** Testing video controls
+
+        setTimeout(async () => {
+          const demoControls = document.getElementById("demo-controls");
+          await demoControls.show(false);
+          demoControls.backgroundColor = "#ff0000";
+          demoControls.width=300;
+          demoControls.height=50;
+        }, 3000)
       })();
 
       document.getElementById("360-video-button").addEventListener("click", async () => {
