@@ -319,8 +319,32 @@ export class VRDiv implements SceneElement {
 
     // --- Rendering Methods
 
-    public getContent(): Object3D {
-        return null;
+    public async getContent(): Promise<Group> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) {
+                this.initialized = true;
+                
+                // Build out the child content
+
+                const childLayoutContainer = new Object3D();
+                childLayoutContainer.name = "child";
+
+                // Build out the panel
+
+                const body = this.buildPanelMesh();
+
+                this.contentObject.add(body);
+                this.contentObject.add(childLayoutContainer);
+                
+                await this.generateContent(body, childLayoutContainer);
+
+                this.resizePanelBody(body, childLayoutContainer);
+
+                this.repositionContainer(body, childLayoutContainer);
+            }
+
+            resolve(this.contentObject);
+        });
     }
 
     public async draw(): Promise<boolean> {
@@ -373,6 +397,8 @@ export class VRDiv implements SceneElement {
                 await this.generateContent(body, child);
 
                 this.resizePanelBody(body, child);
+
+                this.repositionContainer(body, child);
             }
             
             resolve();
@@ -474,36 +500,6 @@ export class VRDiv implements SceneElement {
             mesh.geometry = PlaneUtils.getPlane(buildWidth, buildHeight, this._borderRadius)
             mesh.geometry.computeBoundingBox();
             mesh.geometry.computeBoundingSphere();
-
-            let scaledMeshBox = new Box3().setFromObject(mesh);
-
-            if (this._verticalAlign == VerticalAlign.Top) mesh.position.y -= scaledMeshBox.max.y-meshBox.max.y;
-            else if (this._verticalAlign == VerticalAlign.Bottom) mesh.position.y += scaledMeshBox.max.y-meshBox.max.y;
-            
-            if (this._horizontalAlign == HorizontalAlign.Left) mesh.position.x += scaledMeshBox.max.x-meshBox.max.x;
-            else if (this._horizontalAlign == HorizontalAlign.Right) mesh.position.x -= scaledMeshBox.max.x-meshBox.max.x;
-        }
-    }
-
-    public repositionContainer(mesh: Mesh, childLayoutContainer: Object3D): void {
-        const meshBox = new Box3().setFromObject(mesh);
-        const totalBox = new Box3().setFromObject(childLayoutContainer);
-
-        if (this._verticalAlign == VerticalAlign.Top) {
-            childLayoutContainer.position.y += meshBox.max.y - totalBox.max.y - this._padding;
-        }
-        else if (this._verticalAlign == VerticalAlign.Middle) {
-            childLayoutContainer.position.y += ((meshBox.max.y+meshBox.min.y)/2) - ((totalBox.max.y+totalBox.min.y)/2) - (this._padding/2);
-        }
-        else if (this._verticalAlign == VerticalAlign.Bottom) {
-            childLayoutContainer.position.y += meshBox.min.y - totalBox.min.y + this._padding;
-        }
-
-        if (this._horizontalAlign == HorizontalAlign.Left) {
-            childLayoutContainer.position.x += meshBox.min.x - totalBox.min.x + this._padding;
-        }
-        else if (this._horizontalAlign == HorizontalAlign.Right) {
-            childLayoutContainer.position.x += meshBox.max.x - totalBox.max.x - this._padding;
         }
     }
 
@@ -556,11 +552,11 @@ export class VRDiv implements SceneElement {
 
     protected generateContent(body: Mesh, childLayoutContainer: Object3D): any {};
 
-    protected centerContentBox(childLayoutContainer: Object3D): void {};
-
     protected layoutChildrenItems(childLayoutContainer: Object3D): void {};
 
     protected resizeFullWidthPanels(width: number, childLayoutContainer: Object3D): any {};
 
     protected resetChildPositions(childLayoutContainer: Object3D): void {};
+
+    protected repositionContainer(mesh: Mesh, childLayoutContainer: Object3D): void {};
 }

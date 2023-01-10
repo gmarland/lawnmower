@@ -11,42 +11,11 @@ import { SceneElement } from "../SceneElement";
 import { VRDivConfig } from './VRDivConfig';
 import { VRDiv } from './VRDiv';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
+import { VerticalAlign } from '../../geometry/VerticalAlign';
 
 export class RowVRDiv extends VRDiv {
     constructor(depth: number, parent: SceneElement, config: VRDivConfig) {
         super(depth, parent, config);
-    }
-
-    public async getContent(): Promise<Group> {
-        return new Promise(async (resolve) => {
-            if (!this.initialized) {
-                this.initialized = true;
-                
-                // Build out the child content
-        
-                const childLayoutContainer = new Object3D();
-                childLayoutContainer.name = "child";
-        
-                // Build out the panel
-        
-                const body = this.buildPanelMesh();
-        
-                this.contentObject.add(body);
-                this.contentObject.add(childLayoutContainer);
-        
-                await this.generateContent(body, childLayoutContainer);
-
-                this.resizePanelBody(body, childLayoutContainer);
-            }
-            
-            resolve(this.contentObject);
-        });
-    }
-
-    public centerContentBox(childLayoutContainer: Object3D): void {
-        let normalizingBox = new Box3().setFromObject(childLayoutContainer);
-        
-        childLayoutContainer.position.y += ((normalizingBox.max.y-normalizingBox.min.y)/2);
     }
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {
@@ -126,11 +95,16 @@ export class RowVRDiv extends VRDiv {
     public resetChildPositions(childLayoutContainer: Object3D): void {
         childLayoutContainer.position.x = 0;
         childLayoutContainer.position.y = 0;
-        
+
         for (let i=0; i<childLayoutContainer.children.length; i++) {
             const childLayoutBox = new Box3().setFromObject(childLayoutContainer.children[i]);
-            childLayoutContainer.children[i].translateY(childLayoutBox.max.y*-1);
+
+            childLayoutContainer.children[i].position.y = ((childLayoutBox.max.y-childLayoutBox.min.y)/2)*-1;
         }
+    }
+
+    public centerContentBox(childLayoutContainer: Object3D): void {
+        childLayoutContainer.translateY((GeometryUtils.getDimensions(childLayoutContainer).height/2));
     }
 
     public async generateContent(body: Mesh, childLayoutContainer: Object3D): Promise<void> {
@@ -158,8 +132,6 @@ export class RowVRDiv extends VRDiv {
             this.layoutChildrenItems(childLayoutContainer);
         
             this.centerContentBox(childLayoutContainer);
-
-            this.repositionContainer(body, childLayoutContainer);
             
             const meshBox = new Box3().setFromObject(body);
 
@@ -167,8 +139,6 @@ export class RowVRDiv extends VRDiv {
                 this.layoutChildrenItems(childLayoutContainer);
                 
                 this.centerContentBox(childLayoutContainer);
-                
-                this.repositionContainer(body, childLayoutContainer);
             }
             
             if (this.xRotation || this.yRotation || this.zRotation) {
@@ -180,5 +150,27 @@ export class RowVRDiv extends VRDiv {
 
             resolve();
         });
+    }
+
+    public repositionContainer(mesh: Mesh, childLayoutContainer: Object3D): void {
+        console.log("booo")
+        const meshBox = new Box3().setFromObject(mesh);
+        const totalBox = new Box3().setFromObject(childLayoutContainer);
+            
+        if (this.verticalAlign == VerticalAlign.Top) {
+            console.log(this.backgroundColor, GeometryUtils.getDimensions(mesh), GeometryUtils.getDimensions(childLayoutContainer), childLayoutContainer)
+
+            //childLayoutContainer.position.y += meshBox.max.y - totalBox.max.y - this.padding;
+        }
+        else if (this.verticalAlign == VerticalAlign.Bottom) {
+            //childLayoutContainer.position.y += meshBox.min.y - totalBox.min.y + this.padding;
+        }
+
+        /*if (this._horizontalAlign == HorizontalAlign.Left) {
+            childLayoutContainer.position.x += meshBox.min.x - totalBox.min.x + this._padding;
+        }
+        else if (this._horizontalAlign == HorizontalAlign.Right) {
+            childLayoutContainer.position.x += meshBox.max.x - totalBox.max.x - this._padding;
+        }*/
     }
 }

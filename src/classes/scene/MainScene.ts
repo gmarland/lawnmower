@@ -164,9 +164,7 @@ export class MainScene {
             if (childElement.getPlacementLocation() == SceneElementPlacement.Main) {
                 await childElement.enableLayout(currentLayout);
     
-                this._mainObjectContainer.add(await childElement.getContent());
-
-                const mainBox = new Box3().setFromObject(this._mainObjectContainer);   
+                this._mainObjectContainer.add(await childElement.getContent());  
             }
             else if (childElement.getPlacementLocation() == SceneElementPlacement.Modal) {
                 this._modalElements.push(childElement as VRModal);
