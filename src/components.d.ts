@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SceneElement } from "./classes/components/SceneElement";
 export namespace Components {
-    interface Vr360video {
+    interface Lm360video {
         "close": () => Promise<void>;
         "depth": number;
         "parent": SceneElement;
@@ -20,7 +20,7 @@ export namespace Components {
         "videoRadius": number;
         "videoWidthSegments": number;
     }
-    interface VrAsset {
+    interface LmAsset {
         "activeAnimation": string;
         "depth": number;
         "getActiveAnimationName": () => Promise<string>;
@@ -41,9 +41,9 @@ export namespace Components {
         "zRotation": number;
         "zRotationSpeed": number;
     }
-    interface VrDiv {
+    interface LmDiv {
+        "backgroundColor": string;
         "borderRadius": number;
-        "color": string;
         "depth": number;
         "height"?: number;
         "horizontalAlign": string;
@@ -61,13 +61,13 @@ export namespace Components {
         "yRotation": number;
         "zRotation": number;
     }
-    interface VrDocument {
+    interface LmDocument {
         "closeModal": () => Promise<void>;
         "setLayout": (layoutId: string) => Promise<void>;
         "showModal": (id: string) => Promise<void>;
         "startingDistance": number;
     }
-    interface VrImage {
+    interface LmImage {
         "borderRadius": number;
         "depth": number;
         "height": number;
@@ -78,13 +78,13 @@ export namespace Components {
         "visible": boolean;
         "width": number;
     }
-    interface VrLayout {
+    interface LmLayout {
         "depth": number;
         "id": string;
         "parent": SceneElement;
         "position": number;
     }
-    interface VrModal {
+    interface LmModal {
         "backgroundColor": string;
         "borderColor": string;
         "borderRadius": number;
@@ -101,7 +101,7 @@ export namespace Components {
         "show": () => Promise<void>;
         "width": number;
     }
-    interface VrText {
+    interface LmText {
         "backgroundColor": string;
         "borderRadius": number;
         "depth": number;
@@ -117,7 +117,7 @@ export namespace Components {
         "visible": boolean;
         "width"?: number;
     }
-    interface VrVideo {
+    interface LmVideo {
         "depth": number;
         "height": number;
         "parent": SceneElement;
@@ -128,7 +128,7 @@ export namespace Components {
         "visible": boolean;
         "width": number;
     }
-    interface VrVideoControls {
+    interface LmVideoControls {
         "color": string;
         "depth": number;
         "getVisible": () => Promise<boolean>;
@@ -146,116 +146,116 @@ export namespace Components {
         "z": number;
     }
 }
-export interface Vr360videoCustomEvent<T> extends CustomEvent<T> {
+export interface Lm360videoCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVr360videoElement;
+    target: HTMLLm360videoElement;
 }
-export interface VrAssetCustomEvent<T> extends CustomEvent<T> {
+export interface LmAssetCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVrAssetElement;
+    target: HTMLLmAssetElement;
 }
-export interface VrImageCustomEvent<T> extends CustomEvent<T> {
+export interface LmImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVrImageElement;
+    target: HTMLLmImageElement;
 }
-export interface VrModalCustomEvent<T> extends CustomEvent<T> {
+export interface LmModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVrModalElement;
+    target: HTMLLmModalElement;
 }
-export interface VrTextCustomEvent<T> extends CustomEvent<T> {
+export interface LmTextCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVrTextElement;
+    target: HTMLLmTextElement;
 }
-export interface VrVideoCustomEvent<T> extends CustomEvent<T> {
+export interface LmVideoCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVrVideoElement;
+    target: HTMLLmVideoElement;
 }
-export interface VrVideoControlsCustomEvent<T> extends CustomEvent<T> {
+export interface LmVideoControlsCustomEvent<T> extends CustomEvent<T> {
     detail: T;
-    target: HTMLVrVideoControlsElement;
+    target: HTMLLmVideoControlsElement;
 }
 declare global {
-    interface HTMLVr360videoElement extends Components.Vr360video, HTMLStencilElement {
+    interface HTMLLm360videoElement extends Components.Lm360video, HTMLStencilElement {
     }
-    var HTMLVr360videoElement: {
-        prototype: HTMLVr360videoElement;
-        new (): HTMLVr360videoElement;
+    var HTMLLm360videoElement: {
+        prototype: HTMLLm360videoElement;
+        new (): HTMLLm360videoElement;
     };
-    interface HTMLVrAssetElement extends Components.VrAsset, HTMLStencilElement {
+    interface HTMLLmAssetElement extends Components.LmAsset, HTMLStencilElement {
     }
-    var HTMLVrAssetElement: {
-        prototype: HTMLVrAssetElement;
-        new (): HTMLVrAssetElement;
+    var HTMLLmAssetElement: {
+        prototype: HTMLLmAssetElement;
+        new (): HTMLLmAssetElement;
     };
-    interface HTMLVrDivElement extends Components.VrDiv, HTMLStencilElement {
+    interface HTMLLmDivElement extends Components.LmDiv, HTMLStencilElement {
     }
-    var HTMLVrDivElement: {
-        prototype: HTMLVrDivElement;
-        new (): HTMLVrDivElement;
+    var HTMLLmDivElement: {
+        prototype: HTMLLmDivElement;
+        new (): HTMLLmDivElement;
     };
-    interface HTMLVrDocumentElement extends Components.VrDocument, HTMLStencilElement {
+    interface HTMLLmDocumentElement extends Components.LmDocument, HTMLStencilElement {
     }
-    var HTMLVrDocumentElement: {
-        prototype: HTMLVrDocumentElement;
-        new (): HTMLVrDocumentElement;
+    var HTMLLmDocumentElement: {
+        prototype: HTMLLmDocumentElement;
+        new (): HTMLLmDocumentElement;
     };
-    interface HTMLVrImageElement extends Components.VrImage, HTMLStencilElement {
+    interface HTMLLmImageElement extends Components.LmImage, HTMLStencilElement {
     }
-    var HTMLVrImageElement: {
-        prototype: HTMLVrImageElement;
-        new (): HTMLVrImageElement;
+    var HTMLLmImageElement: {
+        prototype: HTMLLmImageElement;
+        new (): HTMLLmImageElement;
     };
-    interface HTMLVrLayoutElement extends Components.VrLayout, HTMLStencilElement {
+    interface HTMLLmLayoutElement extends Components.LmLayout, HTMLStencilElement {
     }
-    var HTMLVrLayoutElement: {
-        prototype: HTMLVrLayoutElement;
-        new (): HTMLVrLayoutElement;
+    var HTMLLmLayoutElement: {
+        prototype: HTMLLmLayoutElement;
+        new (): HTMLLmLayoutElement;
     };
-    interface HTMLVrModalElement extends Components.VrModal, HTMLStencilElement {
+    interface HTMLLmModalElement extends Components.LmModal, HTMLStencilElement {
     }
-    var HTMLVrModalElement: {
-        prototype: HTMLVrModalElement;
-        new (): HTMLVrModalElement;
+    var HTMLLmModalElement: {
+        prototype: HTMLLmModalElement;
+        new (): HTMLLmModalElement;
     };
-    interface HTMLVrTextElement extends Components.VrText, HTMLStencilElement {
+    interface HTMLLmTextElement extends Components.LmText, HTMLStencilElement {
     }
-    var HTMLVrTextElement: {
-        prototype: HTMLVrTextElement;
-        new (): HTMLVrTextElement;
+    var HTMLLmTextElement: {
+        prototype: HTMLLmTextElement;
+        new (): HTMLLmTextElement;
     };
-    interface HTMLVrVideoElement extends Components.VrVideo, HTMLStencilElement {
+    interface HTMLLmVideoElement extends Components.LmVideo, HTMLStencilElement {
     }
-    var HTMLVrVideoElement: {
-        prototype: HTMLVrVideoElement;
-        new (): HTMLVrVideoElement;
+    var HTMLLmVideoElement: {
+        prototype: HTMLLmVideoElement;
+        new (): HTMLLmVideoElement;
     };
-    interface HTMLVrVideoControlsElement extends Components.VrVideoControls, HTMLStencilElement {
+    interface HTMLLmVideoControlsElement extends Components.LmVideoControls, HTMLStencilElement {
     }
-    var HTMLVrVideoControlsElement: {
-        prototype: HTMLVrVideoControlsElement;
-        new (): HTMLVrVideoControlsElement;
+    var HTMLLmVideoControlsElement: {
+        prototype: HTMLLmVideoControlsElement;
+        new (): HTMLLmVideoControlsElement;
     };
     interface HTMLElementTagNameMap {
-        "vr-360video": HTMLVr360videoElement;
-        "vr-asset": HTMLVrAssetElement;
-        "vr-div": HTMLVrDivElement;
-        "vr-document": HTMLVrDocumentElement;
-        "vr-image": HTMLVrImageElement;
-        "vr-layout": HTMLVrLayoutElement;
-        "vr-modal": HTMLVrModalElement;
-        "vr-text": HTMLVrTextElement;
-        "vr-video": HTMLVrVideoElement;
-        "vr-video-controls": HTMLVrVideoControlsElement;
+        "lm-360video": HTMLLm360videoElement;
+        "lm-asset": HTMLLmAssetElement;
+        "lm-div": HTMLLmDivElement;
+        "lm-document": HTMLLmDocumentElement;
+        "lm-image": HTMLLmImageElement;
+        "lm-layout": HTMLLmLayoutElement;
+        "lm-modal": HTMLLmModalElement;
+        "lm-text": HTMLLmTextElement;
+        "lm-video": HTMLLmVideoElement;
+        "lm-video-controls": HTMLLmVideoControlsElement;
     }
 }
 declare namespace LocalJSX {
-    interface Vr360video {
+    interface Lm360video {
         "depth"?: number;
-        "onAddToRoot"?: (event: Vr360videoCustomEvent<SceneElement>) => void;
-        "onClick"?: (event: Vr360videoCustomEvent<any>) => void;
-        "onHideCurrentLayout"?: (event: Vr360videoCustomEvent<any>) => void;
-        "onShowCurrentLayout"?: (event: Vr360videoCustomEvent<any>) => void;
-        "onViewCurrentLayout"?: (event: Vr360videoCustomEvent<any>) => void;
+        "onAddToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
+        "onClick"?: (event: Lm360videoCustomEvent<any>) => void;
+        "onHideCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
+        "onShowCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
+        "onViewCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "src"?: string;
@@ -263,10 +263,10 @@ declare namespace LocalJSX {
         "videoRadius"?: number;
         "videoWidthSegments"?: number;
     }
-    interface VrAsset {
+    interface LmAsset {
         "activeAnimation"?: string;
         "depth"?: number;
-        "onClick"?: (event: VrAssetCustomEvent<any>) => void;
+        "onClick"?: (event: LmAssetCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "radius"?: number;
@@ -278,9 +278,9 @@ declare namespace LocalJSX {
         "zRotation"?: number;
         "zRotationSpeed"?: number;
     }
-    interface VrDiv {
+    interface LmDiv {
+        "backgroundColor"?: string;
         "borderRadius"?: number;
-        "color"?: string;
         "depth"?: number;
         "height"?: number;
         "horizontalAlign"?: string;
@@ -298,29 +298,29 @@ declare namespace LocalJSX {
         "yRotation"?: number;
         "zRotation"?: number;
     }
-    interface VrDocument {
+    interface LmDocument {
         "startingDistance"?: number;
     }
-    interface VrImage {
+    interface LmImage {
         "borderRadius"?: number;
         "depth"?: number;
         "height"?: number;
         "modal"?: boolean;
-        "onClick"?: (event: VrImageCustomEvent<any>) => void;
-        "onShowModalDialog"?: (event: VrImageCustomEvent<string>) => void;
+        "onClick"?: (event: LmImageCustomEvent<any>) => void;
+        "onShowModalDialog"?: (event: LmImageCustomEvent<string>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "src"?: string;
         "visible"?: boolean;
         "width"?: number;
     }
-    interface VrLayout {
+    interface LmLayout {
         "depth"?: number;
         "id"?: string;
         "parent"?: SceneElement;
         "position"?: number;
     }
-    interface VrModal {
+    interface LmModal {
         "backgroundColor"?: string;
         "borderColor"?: string;
         "borderRadius"?: number;
@@ -329,13 +329,13 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "offset"?: number;
-        "onAddToRoot"?: (event: VrModalCustomEvent<SceneElement>) => void;
-        "onClick"?: (event: VrModalCustomEvent<any>) => void;
+        "onAddToRoot"?: (event: LmModalCustomEvent<SceneElement>) => void;
+        "onClick"?: (event: LmModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
         "width"?: number;
     }
-    interface VrText {
+    interface LmText {
         "backgroundColor"?: string;
         "borderRadius"?: number;
         "depth"?: number;
@@ -343,7 +343,7 @@ declare namespace LocalJSX {
         "fontFamily"?: string;
         "fontSize"?: number;
         "height"?: number;
-        "onClick"?: (event: VrTextCustomEvent<any>) => void;
+        "onClick"?: (event: LmTextCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
         "position"?: number;
@@ -352,10 +352,10 @@ declare namespace LocalJSX {
         "visible"?: boolean;
         "width"?: number;
     }
-    interface VrVideo {
+    interface LmVideo {
         "depth"?: number;
         "height"?: number;
-        "onClick"?: (event: VrVideoCustomEvent<any>) => void;
+        "onClick"?: (event: LmVideoCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "placeholder"?: number;
         "play360"?: boolean;
@@ -364,11 +364,11 @@ declare namespace LocalJSX {
         "visible"?: boolean;
         "width"?: number;
     }
-    interface VrVideoControls {
+    interface LmVideoControls {
         "color"?: string;
         "depth"?: number;
         "height"?: number;
-        "onAddToRoot"?: (event: VrVideoControlsCustomEvent<SceneElement>) => void;
+        "onAddToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
         "onClose"?: Function;
         "onPause"?: Function;
         "onPlay"?: Function;
@@ -380,32 +380,32 @@ declare namespace LocalJSX {
         "z"?: number;
     }
     interface IntrinsicElements {
-        "vr-360video": Vr360video;
-        "vr-asset": VrAsset;
-        "vr-div": VrDiv;
-        "vr-document": VrDocument;
-        "vr-image": VrImage;
-        "vr-layout": VrLayout;
-        "vr-modal": VrModal;
-        "vr-text": VrText;
-        "vr-video": VrVideo;
-        "vr-video-controls": VrVideoControls;
+        "lm-360video": Lm360video;
+        "lm-asset": LmAsset;
+        "lm-div": LmDiv;
+        "lm-document": LmDocument;
+        "lm-image": LmImage;
+        "lm-layout": LmLayout;
+        "lm-modal": LmModal;
+        "lm-text": LmText;
+        "lm-video": LmVideo;
+        "lm-video-controls": LmVideoControls;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "vr-360video": LocalJSX.Vr360video & JSXBase.HTMLAttributes<HTMLVr360videoElement>;
-            "vr-asset": LocalJSX.VrAsset & JSXBase.HTMLAttributes<HTMLVrAssetElement>;
-            "vr-div": LocalJSX.VrDiv & JSXBase.HTMLAttributes<HTMLVrDivElement>;
-            "vr-document": LocalJSX.VrDocument & JSXBase.HTMLAttributes<HTMLVrDocumentElement>;
-            "vr-image": LocalJSX.VrImage & JSXBase.HTMLAttributes<HTMLVrImageElement>;
-            "vr-layout": LocalJSX.VrLayout & JSXBase.HTMLAttributes<HTMLVrLayoutElement>;
-            "vr-modal": LocalJSX.VrModal & JSXBase.HTMLAttributes<HTMLVrModalElement>;
-            "vr-text": LocalJSX.VrText & JSXBase.HTMLAttributes<HTMLVrTextElement>;
-            "vr-video": LocalJSX.VrVideo & JSXBase.HTMLAttributes<HTMLVrVideoElement>;
-            "vr-video-controls": LocalJSX.VrVideoControls & JSXBase.HTMLAttributes<HTMLVrVideoControlsElement>;
+            "lm-360video": LocalJSX.Lm360video & JSXBase.HTMLAttributes<HTMLLm360videoElement>;
+            "lm-asset": LocalJSX.LmAsset & JSXBase.HTMLAttributes<HTMLLmAssetElement>;
+            "lm-div": LocalJSX.LmDiv & JSXBase.HTMLAttributes<HTMLLmDivElement>;
+            "lm-document": LocalJSX.LmDocument & JSXBase.HTMLAttributes<HTMLLmDocumentElement>;
+            "lm-image": LocalJSX.LmImage & JSXBase.HTMLAttributes<HTMLLmImageElement>;
+            "lm-layout": LocalJSX.LmLayout & JSXBase.HTMLAttributes<HTMLLmLayoutElement>;
+            "lm-modal": LocalJSX.LmModal & JSXBase.HTMLAttributes<HTMLLmModalElement>;
+            "lm-text": LocalJSX.LmText & JSXBase.HTMLAttributes<HTMLLmTextElement>;
+            "lm-video": LocalJSX.LmVideo & JSXBase.HTMLAttributes<HTMLLmVideoElement>;
+            "lm-video-controls": LocalJSX.LmVideoControls & JSXBase.HTMLAttributes<HTMLLmVideoControlsElement>;
         }
     }
 }

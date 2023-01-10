@@ -13,8 +13,8 @@ import { SceneElement } from '../components/SceneElement';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
-import { VRModal } from '../components/vr-modal/VRModal';
-import { VRLayout } from '../components/vr-layout/VRLayout';
+import { LMModal } from '../components/lm-modal/LMModal';
+import { LMLayout } from '../components/lm-layout/LMLayout';
 
 export class MainScene {
     public static BasePlaneWidth: number = 1000;
@@ -41,7 +41,7 @@ export class MainScene {
     private _selectedLayout?: string = null;
 
     private _childElements: SceneElement[] = new Array<SceneElement>();
-    private _modalElements: VRModal[] = new Array<VRModal>();
+    private _modalElements: LMModal[] = new Array<LMModal>();
 
     private _isInitialized: boolean = false;
     
@@ -154,7 +154,7 @@ export class MainScene {
         return new Promise(async (resolve) => {
             let currentLayout = this.getCurrentLayout();
 
-            if (!(childElement instanceof VRLayout)) {
+            if (!(childElement instanceof LMLayout)) {
                 if (childElement.isPartOfLayout()) {
                     if (childElement.visible && childElement.isLayoutChild(currentLayout)) childElement.visible = true;
                     else childElement.visible = false;;
@@ -164,15 +164,10 @@ export class MainScene {
             if (childElement.getPlacementLocation() == SceneElementPlacement.Main) {
                 await childElement.enableLayout(currentLayout);
     
-                this._mainObjectContainer.add(await childElement.getContent());
-
-                const mainBox = new Box3().setFromObject(this._mainObjectContainer);
-                
-                this._mainObjectContainer.position.x = mainBox.max.x-(mainBox.max.x-mainBox.min.x)/2;
-                this._mainObjectContainer.position.y = (mainBox.max.y-mainBox.min.y)/2;    
+                this._mainObjectContainer.add(await childElement.getContent());  
             }
             else if (childElement.getPlacementLocation() == SceneElementPlacement.Modal) {
-                this._modalElements.push(childElement as VRModal);
+                this._modalElements.push(childElement as LMModal);
 
                 const modalDialog = await childElement.getContent();
                 modalDialog.position.z = (await childElement.getPosition()).z;
