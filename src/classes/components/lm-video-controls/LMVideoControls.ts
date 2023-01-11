@@ -105,6 +105,18 @@ export class LMVideoControls implements SceneElement {
         return this._backgroundColor;
     }
 
+    public get x(): number {
+        return this.x;
+    }
+
+    public get y(): number {
+        return this.y;
+    }
+
+    public get z(): number {
+        return this.z;
+    }
+
     public get visible(): boolean {
         return (this._content == null) || this._content.visible;
     }
@@ -121,6 +133,18 @@ export class LMVideoControls implements SceneElement {
 
     public set height(value: number) {
         this._setHeight = value;
+    }
+
+    public set x(value: number) {
+        this._x = value;
+    }
+
+    public set y(value: number) {
+        this._z = value;
+    }
+
+    public set z(value: number) {
+        this._z = value;
     }
 
     public set visible(value: boolean) {

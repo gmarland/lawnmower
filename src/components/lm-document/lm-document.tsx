@@ -59,8 +59,17 @@ export class LmDocument {
     });
   }
 
-  @Listen("addToRoot")
-  private async addToRoot(e: CustomEvent): Promise<void> {
+  @Listen("addElementToRoot")
+  private async addElementToRoot(e: CustomEvent): Promise<void> {
+    return new Promise(async (resolve) => {
+      await this._mainScene.addChildElement(0, e.detail);
+
+      resolve();
+    });
+  }
+
+  @Listen("updateRootElementPosition")
+  private async updateRootElementPosition(e: CustomEvent): Promise<void> {
     return new Promise(async (resolve) => {
       await this._mainScene.addChildElement(0, e.detail);
 

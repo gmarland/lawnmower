@@ -47,7 +47,7 @@ export class LmVideoControls {
 
   // *** Component specific
 
-  @Event() public addToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
   private _videoControls: LMVideoControls;
 
@@ -86,6 +86,39 @@ export class LmVideoControls {
   
         const dimensionsUpdated = await this._videoControls.draw();
         if (dimensionsUpdated) await this._videoControls.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('x')
+  private updateX(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.x = newValue;
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('y')
+  private updateY(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.x = newValue;
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('z')
+  private updateZ(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.width = newValue;
       }
 
       resolve();
@@ -143,7 +176,7 @@ export class LmVideoControls {
   }
 
   componentDidLoad() {
-    this.addToRoot.emit(this._videoControls);
+    this.addElementToRoot.emit(this._videoControls);
   }
 
   render() {
