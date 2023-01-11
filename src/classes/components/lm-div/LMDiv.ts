@@ -29,6 +29,8 @@ export class LMDiv implements SceneElement {
 
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _initialWidth?: number = null; 
@@ -66,12 +68,14 @@ export class LMDiv implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, config: LMDivConfig) {
+    constructor(depth: number, parent: SceneElement, id: string, config: LMDivConfig) {
         this._depth = depth;
         
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
 
         this._verticalAlign = config.verticalAlign;
         this._horizontalAlign = config.horizontalAlign;
@@ -102,6 +106,10 @@ export class LMDiv implements SceneElement {
 
     public get initialized(): boolean {
         return this._initialized;
+    }
+    
+    public get id(): string {
+        return this._id;
     }
     
     public get uuid(): string {
@@ -194,6 +202,10 @@ export class LMDiv implements SceneElement {
 
     public set initialized(initialized: boolean) {
         this._initialized = initialized;
+    }
+
+    public set id(value: string) {
+        this._id = value;
     }
 
     public set width(value: number) {

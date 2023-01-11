@@ -151,7 +151,10 @@ export class LMLayout implements SceneElement {
 
     ////////// Setters
 
-
+    public set id(value: string) {
+        this._id = value;
+    }
+    
     public set width(value: number) {
         let keys = Array.from(this._childElements.keys());
         keys.sort(function(a, b){return a-b});

@@ -1,8 +1,6 @@
 export interface LMModalConfig {
     baseImagePath: string;
 
-    id: string;
-
     width: number;
     
     height: number;

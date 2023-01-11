@@ -62,12 +62,12 @@ export class LMModal implements SceneElement {
 
     private  _childElement: SceneElement = null;
 
-    constructor(depth: number, parent: SceneElement, config: LMModalConfig) {
+    constructor(depth: number, parent: SceneElement, id: string, config: LMModalConfig) {
         this._depth = depth;
 
         this._parent = parent;
 
-        this._id = config.id;
+        this._id = id;
 
         this._uuid = MeshUtils.generateId();
         
@@ -141,6 +141,10 @@ export class LMModal implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set width(value: number) {
         this._setWidth = value;

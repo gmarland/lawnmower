@@ -7,7 +7,7 @@ import { Dimensions } from '../geometry/Dimensions';
 import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 
 export interface SceneElement {
-    uuid: string;
+    id: string;
 
     dynamicWidth: boolean;
 

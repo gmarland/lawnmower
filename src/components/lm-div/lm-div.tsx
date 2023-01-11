@@ -35,6 +35,8 @@ export class LmDiv {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop() public layout: string = "Row";
 
   @Prop() public verticalAlign: string = "Top";
@@ -64,6 +66,17 @@ export class LmDiv {
   @Prop() public zRotation: number = 0;
 
   private _div: LMDiv;
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._div) {
+        this._div.id = newValue;
+      }
+
+      resolve();
+    });
+  }
 
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
@@ -206,8 +219,8 @@ export class LmDiv {
       zRotation: this.zRotation
     };
 
-    if (LMDivLayout[this.layout] == LMDivLayout.Column) this._div = new ColumnLMDiv(this.depth, this.parent, config);
-    else this._div = new RowVRDiv(this.depth, this.parent, config);
+    if (LMDivLayout[this.layout] == LMDivLayout.Column) this._div = new ColumnLMDiv(this.depth, this.parent, this.id, config);
+    else this._div = new RowVRDiv(this.depth, this.parent, this.id, config);
     
     let position = 1;
 

@@ -22,6 +22,8 @@ import { LM360VideoConfig } from './LM360VideoConfig';
 export class LM360Video implements SceneElement {
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _src: string;
@@ -49,21 +51,27 @@ export class LM360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(parent: SceneElement, src: string, config: LM360VideoConfig) {
-        this._uuid = MeshUtils.generateId();
-
+    constructor(parent: SceneElement, id: string, src: string, config: LM360VideoConfig) {
         this._videoRadius = config.videoRadius;
         this._videoWidthSegments = config.videoWidthSegments;
         this._videoHeightSegments = config.videoHeightSegments;
 
         this._parent = parent;
         
+        this._id = id;
+
+        this._uuid = MeshUtils.generateId();
+
         this._src = src;
         
         this._content.visible = false;
     }
 
     ////////// Getters
+    
+    public get id(): string {
+        return this._id;
+    }
     
     public get uuid(): string {
         return this._uuid;
@@ -163,6 +171,10 @@ export class LM360Video implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set src(value: string) {
         this._src = value;

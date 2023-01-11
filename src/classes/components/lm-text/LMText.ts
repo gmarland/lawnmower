@@ -21,6 +21,8 @@ import { LMTextConfig } from './LMTextConfig';
 export class LMText implements SceneElement {
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _fontSize: number;
@@ -59,10 +61,12 @@ export class LMText implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, text: string, config: LMTextConfig) {
+    constructor(parent: SceneElement, id: string, text: string, config: LMTextConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
         
         this._text = text;
         
@@ -90,6 +94,10 @@ export class LMText implements SceneElement {
     }
 
     ////////// Getters
+    
+    public get id(): string {
+        return this._id;
+    }
     
     public get uuid(): string {
         return this._uuid;
@@ -215,6 +223,10 @@ export class LMText implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set width(value: number) {
         this._setWidth = value;

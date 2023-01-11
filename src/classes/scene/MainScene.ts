@@ -30,6 +30,8 @@ export class MainScene {
 
     private _scene = new Scene();
 
+    private _id: string;
+
     private _raycaster: Raycaster;
     private _mouse: Vector2;
 
@@ -61,6 +63,14 @@ export class MainScene {
         this._raycaster = new Raycaster();
 
         this._mouse = mouse;
+    }
+    
+    public get id(): string {
+        return this._id;
+    }
+
+    public set id(value: string) {
+        this._id = value;
     }
 
     public init(parentElement: HTMLDivElement, startingDistance: number, basePlaneWidth?: number): void {

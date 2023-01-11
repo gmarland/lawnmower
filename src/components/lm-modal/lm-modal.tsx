@@ -55,13 +55,6 @@ export class LmModal {
   private _modal: LMModal;
 
   @Method()
-  public async getId(): Promise<string> {
-    return new Promise((resolve) => {
-      resolve(this.id);
-    });
-  }
-
-  @Method()
   public async getUUID(): Promise<string> {
     return new Promise((resolve) => {
       resolve(this._modal.uuid);
@@ -81,6 +74,17 @@ export class LmModal {
   public async hide(): Promise<void> {
     return new Promise((resolve) => {
       this._modal.visible = false;
+
+      resolve();
+    });
+  }
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.id = newValue;
+      }
 
       resolve();
     });
@@ -171,9 +175,8 @@ export class LmModal {
   }
 
   componentWillLoad() {
-    this._modal = new LMModal(1, this.parent, { 
+    this._modal = new LMModal(1, this.parent, this.id, { 
         baseImagePath: getAssetPath('assets'),
-        id: this.id,
         width: this.width, 
         height: this.height,
         offset: this.offset,

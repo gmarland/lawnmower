@@ -27,6 +27,8 @@ export class LMVideo implements SceneElement {
 
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _src: string;
@@ -61,12 +63,14 @@ export class LMVideo implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, src: string, config: LMVideoConfig) {
+    constructor(depth: number, parent: SceneElement, id: string, src: string, config: LMVideoConfig) {
         this._depth = depth;
 
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
         
         this._src = src;
 
@@ -81,6 +85,10 @@ export class LMVideo implements SceneElement {
     }
 
     ////////// Getters
+    
+    public get id(): string {
+        return this._id;
+    }
     
     public get uuid(): string {
         return this._uuid;
@@ -119,6 +127,10 @@ export class LMVideo implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set src(value: string) {
         this._src = value;

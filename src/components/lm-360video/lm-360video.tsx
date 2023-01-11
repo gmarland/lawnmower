@@ -31,6 +31,8 @@ export class Lm360Video {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop() public src: string;
 
   @Prop() public videoRadius: number = 600;
@@ -84,6 +86,17 @@ export class Lm360Video {
   public async close(): Promise<void> {
     return new Promise((resolve) => {
       this.hideVideo();
+
+      resolve();
+    });
+  }
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.id = newValue;
+      }
 
       resolve();
     });
@@ -159,7 +172,7 @@ export class Lm360Video {
   }
 
   componentWillLoad() {
-    this._video = new LM360Video(this.parent, this.src, { 
+    this._video = new LM360Video(this.parent, this.id, this.src, { 
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,
       videoHeightSegments: this.videoHeightSegments

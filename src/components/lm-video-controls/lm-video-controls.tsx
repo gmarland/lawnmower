@@ -27,6 +27,10 @@ export class LmVideoControls {
 
   @Prop() public depth: number;
 
+  // *** Component specific
+
+  @Prop() public id: string = "";
+
   @Prop() public backgroundColor: string = "#333333";
     
   @Prop() public width: number = 75;
@@ -52,6 +56,17 @@ export class LmVideoControls {
   @Event() public updateRootElementPosition: EventEmitter<SceneElement>;
 
   private _videoControls: LMVideoControls;
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.id = newValue;
+      }
+
+      resolve();
+    });
+  }
 
   @Watch('backgroundColor')
   private updateBackgroundColor(newValue: string): Promise<void> {
@@ -160,7 +175,7 @@ export class LmVideoControls {
   }
 
   componentWillLoad() {
-    this._videoControls = new LMVideoControls(this.parent, {
+    this._videoControls = new LMVideoControls(this.parent, this.id, {
       baseImagePath: getAssetPath('assets'),
       backgroundColor: this.backgroundColor,
       width: this.width,

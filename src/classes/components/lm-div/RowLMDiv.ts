@@ -12,8 +12,8 @@ import { LMDiv } from './LMDiv';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class RowVRDiv extends LMDiv {
-    constructor(depth: number, parent: SceneElement, config: LMDivConfig) {
-        super(depth, parent, config);
+    constructor(depth: number, parent: SceneElement, id: string, config: LMDivConfig) {
+        super(depth, parent, id, config);
     }
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {

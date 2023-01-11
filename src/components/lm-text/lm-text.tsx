@@ -30,6 +30,8 @@ export class LmText {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop({ mutable: true }) public text: string;
 
   @Prop() public width?: number;
@@ -55,6 +57,17 @@ export class LmText {
   @Event() public click: EventEmitter;
 
   private _textblock: LMText;
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._textblock) {
+        this._textblock.id = newValue;
+      }
+
+      resolve();
+    });
+  }
 
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
@@ -237,7 +250,7 @@ export class LmText {
       }
     }
 
-    this._textblock = new LMText(this.parent, this.text, { 
+    this._textblock = new LMText(this.parent, this.id, this.text, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,

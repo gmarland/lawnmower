@@ -6,7 +6,8 @@ import {
   Element,
   Event,
   EventEmitter,
-  Method
+  Method,
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -29,6 +30,8 @@ export class LmAsset {
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public id: string = "";
 
   @Prop() public src: string;
 
@@ -107,8 +110,19 @@ export class LmAsset {
     });
   }
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._asset) {
+        this._asset.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   componentWillLoad() {
-    this._asset = new LMAsset(this.parent, this.src, { 
+    this._asset = new LMAsset(this.parent, this.id, this.src, { 
       activeAnimation: this.activeAnimation,
       radius: this.radius, 
       xRotation: this.xRotation,
