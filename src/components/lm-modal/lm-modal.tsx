@@ -55,13 +55,6 @@ export class LmModal {
   private _modal: LMModal;
 
   @Method()
-  public async getId(): Promise<string> {
-    return new Promise((resolve) => {
-      resolve(this.id);
-    });
-  }
-
-  @Method()
   public async getUUID(): Promise<string> {
     return new Promise((resolve) => {
       resolve(this._modal.uuid);

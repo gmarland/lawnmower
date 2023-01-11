@@ -95,7 +95,6 @@ export namespace Components {
         "borderRadius": number;
         "borderWidth": number;
         "closeButtonWidth": number;
-        "getId": () => Promise<string>;
         "getUUID": () => Promise<string>;
         "height"?: number;
         "hide": () => Promise<void>;
