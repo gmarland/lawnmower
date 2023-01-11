@@ -30,6 +30,7 @@ export namespace Components {
         "position": number;
         "radius": number;
         "src": string;
+        "visible": boolean;
         "xRotation": number;
         "xRotationSpeed": number;
         "yRotation": number;
@@ -274,6 +275,7 @@ declare namespace LocalJSX {
         "position"?: number;
         "radius"?: number;
         "src"?: string;
+        "visible"?: boolean;
         "xRotation"?: number;
         "xRotationSpeed"?: number;
         "yRotation"?: number;

@@ -51,6 +51,8 @@ export class LmAsset {
   
   @Prop() public zRotationSpeed: number = 0;
 
+  @Prop() public visible: boolean = true;
+
   @Event() public click: EventEmitter;
 
   private _asset: LMAsset;
@@ -151,6 +153,19 @@ export class LmAsset {
     return new Promise((resolve) => {
       this._asset.zRotationSpeed = newValue;
       
+      resolve();
+    });
+  }
+
+  @Watch('visible')
+  private updateVisible(newValue: boolean): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._asset) {
+        this._asset.visible = newValue;
+  
+        await this._asset.drawParent();
+      }
+
       resolve();
     });
   }

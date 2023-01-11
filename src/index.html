@@ -151,7 +151,7 @@
 
         //****** Testing assets
         
-        setTimeout(async () => {
+        /*setTimeout(async () => {
           const foxy = document.getElementById("fox-asset");
           
           //foxy.radius = 800;
@@ -161,14 +161,22 @@
           foxy.yRotation = 0;
           foxy.zRotation = 0;
 
-        /*
           setTimeout(async () => {
             foxy.xRotation = 90;
             foxy.yRotation = 90;
             foxy.zRotation = 90;
 
             foxy.yRotationSpeed = 2;
-          }, 3000)*/
+          }, 3000)
+        }, 3000);*/
+        
+        // ----- Testing changing asset visibility
+        setTimeout(() => {
+          document.getElementById('fox-asset').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('fox-asset').visible = true;
+          }, 3000);
         }, 3000);
         
         // ****** Testing modal-dialog
