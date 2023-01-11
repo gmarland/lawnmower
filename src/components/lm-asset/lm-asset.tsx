@@ -55,61 +55,6 @@ export class LmAsset {
 
   private _asset: LMAsset;
 
-  @Method()
-  public async getAnimationNames(): Promise<Array<string>> {
-    return new Promise((resolve) => resolve(this._asset.getAnimationNames()));
-  }
-
-  @Method()
-  public async getActiveAnimationName(): Promise<string> {
-    return new Promise((resolve) => resolve(this._asset.getActiveAnimationName()));
-  }
-
-  @Method()
-  public async setActiveAnimation(animationName: string): Promise<void> {
-    return new Promise((resolve) => {
-      this._asset.setActiveAnimation(animationName);
-      
-      resolve();
-    });
-  }
-
-  @Method()
-  public async setRotation(x: number, y: number, z: number): Promise<void> {
-    return new Promise((resolve) => {
-      this._asset.setRotation(x, y, z);
-      
-      resolve();
-    });
-  }
-
-  @Method()
-  public async setXRotationSpeed(rotationSpeed: number): Promise<void> {
-    return new Promise((resolve) => {
-      this._asset.setXRotationSpeed(rotationSpeed);
-      
-      resolve();
-    });
-  }
-
-  @Method()
-  public async setYRotationSpeed(rotationSpeed: number): Promise<void> {
-    return new Promise((resolve) => {
-      this._asset.setYRotationSpeed(rotationSpeed);
-      
-      resolve();
-    });
-  }
-
-  @Method()
-  public async setZRotationSpeed(rotationSpeed: number): Promise<void> {
-    return new Promise((resolve) => {
-      this._asset.setZRotationSpeed(rotationSpeed);
-      
-      resolve();
-    });
-  }
-
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
@@ -119,6 +64,88 @@ export class LmAsset {
 
       resolve();
     });
+  }
+
+  @Watch('src')
+  private updateSrc(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._asset) {
+        this._asset.src = newValue;
+  
+        const dimensionsUpdated = await this._asset.draw();
+        if (dimensionsUpdated) await this._asset.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('activeAnimation')
+  public async updateActiveAnimation(newValue: string): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.activeAnimation = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Watch('xRotation')
+  public async setXRotation(newValue: number): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.xRotation = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Watch('yRotation')
+  public async setYRotation(newValue: number): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.yRotation = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Watch('zRotationSpeed')
+  public async setZRotation(newValue: number): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.zRotation = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Watch('xRotationSpeed')
+  public async setXRotationSpeed(newValue: number): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.xRotationSpeed = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Watch('yRotationSpeed')
+  public async setYRotationSpeed(newValue: number): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.yRotationSpeed = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Watch('zRotationSpeed')
+  public async setZRotationSpeed(newValue: number): Promise<void> {
+    return new Promise((resolve) => {
+      this._asset.zRotationSpeed = newValue;
+      
+      resolve();
+    });
+  }
+
+  @Method()
+  public async getAnimationNames(): Promise<Array<string>> {
+    return new Promise((resolve) => resolve(this._asset.getAnimationNames()));
   }
 
   componentWillLoad() {

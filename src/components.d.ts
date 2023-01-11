@@ -24,17 +24,11 @@ export namespace Components {
     interface LmAsset {
         "activeAnimation": string;
         "depth": number;
-        "getActiveAnimationName": () => Promise<string>;
         "getAnimationNames": () => Promise<Array<string>>;
         "id": string;
         "parent": SceneElement;
         "position": number;
         "radius": number;
-        "setActiveAnimation": (animationName: string) => Promise<void>;
-        "setRotation": (x: number, y: number, z: number) => Promise<void>;
-        "setXRotationSpeed": (rotationSpeed: number) => Promise<void>;
-        "setYRotationSpeed": (rotationSpeed: number) => Promise<void>;
-        "setZRotationSpeed": (rotationSpeed: number) => Promise<void>;
         "src": string;
         "xRotation": number;
         "xRotationSpeed": number;

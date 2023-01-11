@@ -233,7 +233,7 @@ export class MainScene {
     public setLayout(layoutId: string): Promise<void> {
         return new Promise(async (resolve) => {
             this._selectedLayout = layoutId;
-    
+
             let currentLayout = this.getCurrentLayout();
     
             this._mainObjectContainer.visible = false;

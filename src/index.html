@@ -147,6 +147,10 @@
         await customElements.whenDefined('lm-document');
         const main = document.getElementById('main');
 
+        setTimeout(() => {
+            main.setLayout("boom");
+          }, 3000);
+        
         // ****** Testing modal-dialog
 
         /*await main.showModal("image-modal");
