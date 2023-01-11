@@ -17,6 +17,7 @@ import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { LMLayout } from '../lm-layout/LMLayout';
 import { MainScene } from '../../scene/MainScene';
+import { AssetUtils } from './AssetUtils';
 
 export class LMAsset implements SceneElement {
     private _parent: SceneElement;
@@ -228,15 +229,18 @@ export class LMAsset implements SceneElement {
     }
 
     public set xRotation(value: number) {
-        this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(value), this._loadedAssetContainer.rotation.y, this._loadedAssetContainer.rotation.z );
+        this._xRotation = value;
+        this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(this._xRotation), GeometryUtils.degToRad(this._yRotation), GeometryUtils.degToRad(this._zRotation));
     }
 
     public set yRotation(value: number) {
-        this._loadedAssetContainer.rotation.set(this._loadedAssetContainer.rotation.x, GeometryUtils.degToRad(value), this._loadedAssetContainer.rotation.z); 
+        this._yRotation = value;
+        this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(this._xRotation), GeometryUtils.degToRad(this._yRotation), GeometryUtils.degToRad(this._zRotation));
     }
 
     public set zRotation(value: number) {
-        this._loadedAssetContainer.rotation.set(this._loadedAssetContainer.rotation.x, this._loadedAssetContainer.rotation.y, GeometryUtils.degToRad(value));
+        this._zRotation = value;
+        this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(this._xRotation), GeometryUtils.degToRad(this._yRotation), GeometryUtils.degToRad(this._zRotation));
     }
     
     public set xRotationSpeed(value: number) {
@@ -334,7 +338,7 @@ export class LMAsset implements SceneElement {
 
     public async drawParent(): Promise<void> {
         const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions) await this._parent.drawParent();
+        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -359,50 +363,60 @@ export class LMAsset implements SceneElement {
 
     ////////// Private Methods
 
-    private generateContent(width: number): Promise<void> {  
-        return new Promise((resolve) => {
+    private generateContent(width: number): Promise<void> {
+        return new Promise(async (resolve) => {
+            for (let i=(this._content.children.length-1); i>=0; i--) {
+                this._content.remove(this._content.children[i]);
+            }
+
+            for (let i=(this._loadedAssetContainer.children.length-1); i>=0; i--) {
+                this._loadedAssetContainer.remove(this._loadedAssetContainer.children[i]);
+            }
+
             if ((!this._loadedAsset)|| (this._reloadSrc)) {
                 this._reloadSrc = false
-
-                for (let i=(this._content.children.length-1); i>=0; i--) {
-                    this._content.remove(this._content.children[i]);
-                }
     
-                for (let i=(this._loadedAssetContainer.children.length-1); i>=0; i--) {
-                    this._loadedAssetContainer.remove(this._loadedAssetContainer.children[i]);
-                }
+                if (this._action) this._action.stopAnimation();
 
                 this._loadedAsset = null;
-                this._loadedAssetContainer = new Group();
-    
-                new AssetLoader().load(this._src, width).then((loadedAssetDetail) => {
-                    this._loadedAsset = loadedAssetDetail.element;
-                    this._loadedAsset.recieveShadow = true;
-                    this._animations = loadedAssetDetail.animations;
-                    
-                    if (this._animations && (this._animations.length > 0)) {
-                        this._animationMixer = new AnimationMixer(this._loadedAsset);
-        
-                        if (this._activeAnimation) {
-                            this._action = this._animationMixer.clipAction(AnimationClip.findByName(this._animations, this._activeAnimation));
-                            this.startAnimation();
-                        }
-                    }                   
-
-                    this._loadedAssetContainer.add(this._loadedAsset);
-                    
-                    this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(this._xRotation,), GeometryUtils.degToRad(this._yRotation), GeometryUtils.degToRad(this._zRotation));
                 
-                    this._content.add(this._loadedAssetContainer);
-                    this._content.add(this.drawShapingCube(width));
-                    
-                    resolve();
+                await new Promise<void>((resolve): void => {
+                    new AssetLoader().load(this._src).then((loadedAssetDetail) => {
+                        this._loadedAsset = loadedAssetDetail.element;
+                        this._loadedAsset.recieveShadow = true;
+    
+                        this._animations = loadedAssetDetail.animations;
+
+                        resolve();
+                    });
                 });
             }
-            else {
-                resolve();
-            }
-        })
+
+            AssetUtils.resetAssetMesh(this._loadedAsset);
+            AssetUtils.resizeAssetMesh(this._loadedAsset, width);
+
+            if (this._animations && (this._animations.length > 0)) {
+                this._animationMixer = new AnimationMixer(this._loadedAsset);
+
+                if (this._activeAnimation) {
+                    const animationClip = AnimationClip.findByName(this._animations, this._activeAnimation);
+
+                    if (animationClip) {
+                        this._action = this._animationMixer.clipAction(animationClip);
+                        this.startAnimation();
+                    }
+                }
+            }    
+
+            this._loadedAssetContainer.add(this._loadedAsset);
+            
+            this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(this._xRotation), GeometryUtils.degToRad(this._yRotation), GeometryUtils.degToRad(this._zRotation));
+            
+            this._content.add(this._loadedAssetContainer);
+            this._content.add(this.drawShapingCube(width));
+            
+            resolve();
+        });
     }
 
     private drawShapingCube(width: number): Mesh {

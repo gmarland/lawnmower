@@ -66,6 +66,18 @@ export class LmAsset {
     });
   }
 
+  @Watch('radius')
+  public async setRadius(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      this._asset.width = newValue;
+  
+      const dimensionsUpdated = await this._asset.draw();
+      if (dimensionsUpdated) await this._asset.drawParent();
+      
+      resolve();
+    });
+  }
+
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
@@ -107,7 +119,7 @@ export class LmAsset {
     });
   }
 
-  @Watch('zRotationSpeed')
+  @Watch('zRotation')
   public async setZRotation(newValue: number): Promise<void> {
     return new Promise((resolve) => {
       this._asset.zRotation = newValue;

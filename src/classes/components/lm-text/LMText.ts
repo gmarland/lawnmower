@@ -340,7 +340,7 @@ export class LMText implements SceneElement {
 
     public async drawParent(): Promise<void> {
         const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions) await this._parent.drawParent();
+        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
