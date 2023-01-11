@@ -39,7 +39,7 @@ export class Lm360Video {
 
   @Event() public click: EventEmitter;
 
-  @Event() public addToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
   @Event() public hideCurrentLayout: EventEmitter;
 
@@ -188,7 +188,7 @@ export class Lm360Video {
       this.hideVideo();
     }
 
-    this.addToRoot.emit(this._video);
+    this.addElementToRoot.emit(this._video);
   }
 
   render() {

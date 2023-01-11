@@ -11,5 +11,5 @@ export interface LMVideoControlsConfig {
 
     height: number;
 
-    color: string;
+    backgroundColor: string;
 }

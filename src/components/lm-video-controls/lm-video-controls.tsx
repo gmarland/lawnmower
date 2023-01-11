@@ -6,6 +6,7 @@ import {
   Event,
   EventEmitter,
   getAssetPath,
+  Watch
 } from '@stencil/core';
 import { Method } from '@stencil/sass/dist/declarations';
 
@@ -26,7 +27,7 @@ export class LmVideoControls {
 
   @Prop() public depth: number;
 
-  @Prop() public color: string = "#333333";
+  @Prop() public backgroundColor: string = "#333333";
     
   @Prop() public width: number = 75;
   
@@ -46,9 +47,91 @@ export class LmVideoControls {
 
   // *** Component specific
 
-  @Event() public addToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<SceneElement>;
+
+  @Event() public updateRootElementPosition: EventEmitter<SceneElement>;
 
   private _videoControls: LMVideoControls;
+
+  @Watch('backgroundColor')
+  private updateBackgroundColor(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.backgroundColor = newValue;
+  
+        await this._videoControls.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('width')
+  private updateWidth(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.width = newValue;
+  
+        const dimensionsUpdated = await this._videoControls.draw();
+        if (dimensionsUpdated) await this._videoControls.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('height')
+  private updateHeight(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.height = newValue;
+  
+        const dimensionsUpdated = await this._videoControls.draw();
+        if (dimensionsUpdated) await this._videoControls.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('x')
+  private updateX(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.x = newValue;
+
+        this.updateRootElementPosition.emit(this._videoControls);
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('y')
+  private updateY(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.y = newValue;
+
+        this.updateRootElementPosition.emit(this._videoControls);
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('z')
+  private updateZ(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.z = newValue;
+
+        this.updateRootElementPosition.emit(this._videoControls);
+      }
+
+      resolve();
+    });
+  }
 
   @Method()
   public async getVisible(): Promise<boolean> {
@@ -79,7 +162,7 @@ export class LmVideoControls {
   componentWillLoad() {
     this._videoControls = new LMVideoControls(this.parent, {
       baseImagePath: getAssetPath('assets'),
-      color: this.color,
+      backgroundColor: this.backgroundColor,
       width: this.width,
       height: this.height,
       x: this.x,
@@ -101,7 +184,7 @@ export class LmVideoControls {
   }
 
   componentDidLoad() {
-    this.addToRoot.emit(this._videoControls);
+    this.addElementToRoot.emit(this._videoControls);
   }
 
   render() {

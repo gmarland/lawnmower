@@ -43,7 +43,7 @@ export class Camera {
             elementContent.translateZ(this._camera.position.z + elementPosition.z);
 
             resolve();
-        })
+        });
     }
 
     // Elements that are actually attached to the camera
@@ -52,21 +52,35 @@ export class Camera {
             this._attachedElements.push(element);
 
             const elementContent = await element.getContent();
-            const elementPosition = await element.getPosition();
 
             this._scene.add(elementContent);
             this._camera.add(elementContent);
             
             elementContent.name = "attachedToCamera";
-            elementContent.translateZ(elementPosition.z*-1);
+
+            await this.updateCameraElementPosition(element);
+
+            resolve();
+        });
+    }
+
+    public async updateCameraElementPosition(element: SceneElement): Promise<void> {
+        return new Promise(async (resolve) => {
+            const elementContent = await element.getContent();
+            const elementPosition = await element.getPosition();
             
-            var vFOV = MathUtils.degToRad( this._camera.fov );
+            elementContent.position.set(0, 0, 0);
+            
+            elementContent.translateZ(elementPosition.z*-1);
+            elementContent.translateX(elementPosition.x);
+            
+            var vFOV = MathUtils.degToRad(this._camera.fov);
             var height = 2 * Math.tan( vFOV / 2 ) * elementPosition.z;
 
             elementContent.translateY(((height/2)*-1) + (element.getDimensions().height/2) + elementPosition.y);
             
             resolve();
-        })
+        });
     }
 
     public getCamera(): PerspectiveCamera {

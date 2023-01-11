@@ -129,7 +129,7 @@ export namespace Components {
         "width": number;
     }
     interface LmVideoControls {
-        "color": string;
+        "backgroundColor": string;
         "depth": number;
         "getVisible": () => Promise<boolean>;
         "height": number;
@@ -251,7 +251,7 @@ declare global {
 declare namespace LocalJSX {
     interface Lm360video {
         "depth"?: number;
-        "onAddToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
         "onClick"?: (event: Lm360videoCustomEvent<any>) => void;
         "onHideCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "onShowCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
@@ -329,7 +329,7 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "offset"?: number;
-        "onAddToRoot"?: (event: LmModalCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: LmModalCustomEvent<SceneElement>) => void;
         "onClick"?: (event: LmModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
@@ -365,13 +365,14 @@ declare namespace LocalJSX {
         "width"?: number;
     }
     interface LmVideoControls {
-        "color"?: string;
+        "backgroundColor"?: string;
         "depth"?: number;
         "height"?: number;
-        "onAddToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
         "onClose"?: Function;
         "onPause"?: Function;
         "onPlay"?: Function;
+        "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "width"?: number;

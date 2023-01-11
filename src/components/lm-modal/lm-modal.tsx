@@ -50,7 +50,7 @@ export class LmModal {
 
   @Event() public click: EventEmitter;
 
-  @Event() public addToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
   private _modal: LMModal;
 
@@ -195,7 +195,7 @@ export class LmModal {
       position++;
     });
 
-    this.addToRoot.emit(this._modal);
+    this.addElementToRoot.emit(this._modal);
   } 
 
   render() {

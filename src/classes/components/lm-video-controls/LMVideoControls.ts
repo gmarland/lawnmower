@@ -30,14 +30,16 @@ export class LMVideoControls implements SceneElement {
     private _playMesh: Mesh;
     private _pauseMesh: Mesh;
    
-    private _color: string;
+    private _backgroundColor: string;
 
     private _baseImagePath: string;
     
     private _initialWidth?: number = null; 
     private _initialHeight?: number = null;
     
-    private _setWidth?: number = null; // Set through the API, typically through a parent div
+    // Set through the API, typically through a parent div
+    private _setWidth?: number = null;
+    private _setHeight?: number = null;
 
     private _borderRadius: number = 10;
     
@@ -67,7 +69,7 @@ export class LMVideoControls implements SceneElement {
 
         this._baseImagePath = config.baseImagePath;
 
-        this._color = config.color;
+        this._backgroundColor = config.backgroundColor;
 
         if (config.width) this._initialWidth = config.width;
         if (config.height) this._initialHeight = config.height;
@@ -89,25 +91,72 @@ export class LMVideoControls implements SceneElement {
         return (this._initialWidth == null);
     }
 
-    public get width() {
+    public get width(): number {
         if (this._setWidth !== null) return this._setWidth;
         else return this._initialWidth ? this._initialWidth : 0;
+    }
+
+    public get height(): number {
+        if (this._setHeight !== null) return this._setHeight;
+        else return this._initialHeight ? this._initialHeight : 0;
+    }
+
+    public get backgroundColor(): string {
+        return this._backgroundColor;
+    }
+
+    public get x(): number {
+        return this.x;
+    }
+
+    public get y(): number {
+        return this.y;
+    }
+
+    public get z(): number {
+        return this.z;
     }
 
     public get visible(): boolean {
         return (this._content == null) || this._content.visible;
     }
 
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.AttachedToCamera;
+    ////////// Setters
+
+    public set width(value: number) {
+        this._setWidth = value;
+    }
+
+    public set backgroundColor(value: string) {
+        this._backgroundColor = value;
+    }
+
+    public set height(value: number) {
+        this._setHeight = value;
+    }
+
+    public set x(value: number) {
+        this._x = value;
+    }
+
+    public set y(value: number) {
+        this._y = value;
+    }
+
+    public set z(value: number) {
+        this._z = value;
+    }
+
+    public set visible(value: boolean) {
+        this._content.visible = value;
     }
     
-    public getContent(): Promise<Group> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
+    ////////// Public Methods
 
-            resolve(this._content);
-        });
+    // --- Data Methods
+
+    public getPlacementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.AttachedToCamera;
     }
     
     public getDimensions(): Dimensions {
@@ -123,6 +172,17 @@ export class LMVideoControls implements SceneElement {
     
             resolve(new Vector3(this._x, this._y, this._z));
         });
+    }
+
+    public addChildElement(position: number, childElement: SceneElement): void {
+    }
+    
+    public getChildSceneElements(): SceneElement[] {
+        return [];
+    }
+
+    public getIsChildElement(uuid: string): boolean {
+        return uuid === this._uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -153,45 +213,16 @@ export class LMVideoControls implements SceneElement {
             return false;
         }
     }
-    
-    public getChildSceneElements(): SceneElement[] {
-        return [];
-    }
-
-    public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
-    }
-
-    ////////// Setters
-
-    public set width(value: number) {
-        this._setWidth = value;
-    }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-    
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): void {
-    }
 
     // --- Rendering Methods
+    
+    public getContent(): Promise<Group> {
+        return new Promise(async (resolve) => {
+            if (!this._initialized) await this.draw();
+
+            resolve(this._content);
+        });
+    }
 
     public draw(): Promise<boolean> {
         this._initialized = true;
@@ -203,8 +234,7 @@ export class LMVideoControls implements SceneElement {
                 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                if (this._initialWidth !== null) await this.generateContent(this._initialWidth);
-                else await this.generateContent(this._setWidth);
+                await this.generateContent(this.width, this.height);
                     
                 this._drawing = false;
                         
@@ -274,9 +304,21 @@ export class LMVideoControls implements SceneElement {
     public update(delta: number): void {
     }
 
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     ////////// Private Methods
     
-    private async generateContent(width: number): Promise<void> {
+    private async generateContent(width: number, height: number): Promise<void> {
         return new Promise((resolve) => {
             // Clean up existing layout
 
@@ -292,10 +334,10 @@ export class LMVideoControls implements SceneElement {
 
             // Build layout
         
-            const geometry = PlaneUtils.getPlane(width, this._initialHeight, this._borderRadius);
+            const geometry = PlaneUtils.getPlane(width, height, this._borderRadius);
     
             const material = MaterialUtils.getBasicMaterial({
-                color: new Color(this._color),
+                color: new Color(this._backgroundColor),
                 side: DoubleSide
             });
             
@@ -303,32 +345,32 @@ export class LMVideoControls implements SceneElement {
             this._mesh.rotation.y = GeometryUtils.degToRad(180);
             this._mesh.rotation.z = GeometryUtils.degToRad(180);
             
-            this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(height-(this._padding*2), height-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/close.png'),
                 transparent: true,
                 side: DoubleSide
             }));
 
-            this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(height-(this._padding*2), height-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/play.png'),
                 transparent: true,
                 side: DoubleSide
             }));
 
-            this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(this._initialHeight-(this._padding*2), this._initialHeight-(this._padding*2)), MaterialUtils.getBasicMaterial({
+            this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(height-(this._padding*2), height-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/pause.png'),
                 transparent: true,
                 side: DoubleSide
             }));
             this._pauseMesh.visible = false;
 
-            this._closeMesh.translateX(((this._initialWidth/2)*-1) + (this._initialHeight/2));
+            this._closeMesh.translateX(((this.width/2)*-1) + (this.height/2));
             this._closeMesh.translateZ(-0.2);
 
-            this._playMesh.translateX((this._initialWidth/2) - (this._initialHeight/2));
+            this._playMesh.translateX((this.width/2) - (this.height/2));
             this._playMesh.translateZ(-0.2);
 
-            this._pauseMesh.translateX((this._initialWidth/2) - (this._initialHeight/2));
+            this._pauseMesh.translateX((this.width/2) - (this.height/2));
             this._pauseMesh.translateZ(-0.2);
 
             this._mesh.add(this._closeMesh);
