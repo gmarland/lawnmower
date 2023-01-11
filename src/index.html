@@ -39,7 +39,7 @@
       </lm-modal>
       <lm-360video id="demo-video-360" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"></lm-360video>
       <lm-div margin="10" background-color="#ff2211">
-        <lm-div width="2000" height="800" background-color="#00ffff" margin="30" layout="Column" item-vertical-align="Bottom" vertical-align="Center" horizontal-align="Right" padding="10">
+        <lm-div width="2000" background-color="#00ffff" margin="30" layout="Column" item-vertical-align="Bottom" vertical-align="Center" horizontal-align="Right" padding="10">
           <lm-div width="500" background-color="#fffff1" margin="10"padding="10">
             <lm-text id="demo-text-1" font-color="#222222" background-color="#0f00f1" padding="15" text-decoration="bold">
               Jumping
@@ -147,6 +147,38 @@
         await customElements.whenDefined('lm-document');
         const main = document.getElementById('main');
 
+        await main.setLayout("boom");
+
+        //****** Testing assets
+        
+        /*setTimeout(async () => {
+          const foxy = document.getElementById("fox-asset");
+          
+          //foxy.radius = 800;
+          foxy.src = "https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf";
+          
+          foxy.xRotation = 0;
+          foxy.yRotation = 0;
+          foxy.zRotation = 0;
+
+          setTimeout(async () => {
+            foxy.xRotation = 90;
+            foxy.yRotation = 90;
+            foxy.zRotation = 90;
+
+            foxy.yRotationSpeed = 2;
+          }, 3000)
+        }, 3000);*/
+        
+        // ----- Testing changing asset visibility
+        setTimeout(() => {
+          document.getElementById('fox-asset').visible = false;
+          
+          setTimeout(() => {
+            document.getElementById('fox-asset').visible = true;
+          }, 3000);
+        }, 3000);
+        
         // ****** Testing modal-dialog
 
         /*await main.showModal("image-modal");
@@ -324,16 +356,16 @@
         const animationNames = await foxElement.getAnimationNames();
 
         if (animationNames.length > 0) {
-          const activeAnimation = await foxElement.getActiveAnimationName();
+          const activeAnimation = foxElement.activeAnimation;
 
           if (activeAnimation) {
             for (let i=0; animationNames.length; i++) {
               if (animationNames[i] == activeAnimation) {
                 if (i < (animationNames.length-1)) {
-                  await foxElement.setActiveAnimation(animationNames[(i+1)]);
+                  foxElement.activeAnimation = animationNames[(i+1)];
                 }
                 else {
-                  await foxElement.setActiveAnimation(animationNames[0]);
+                  foxElement.activeAnimation = animationNames[0];
                 }
                 break;
               }
