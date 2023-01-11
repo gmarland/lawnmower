@@ -31,6 +31,8 @@ export class Lm360Video {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop() public src: string;
 
   @Prop() public videoRadius: number = 600;
