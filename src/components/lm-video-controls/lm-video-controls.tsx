@@ -49,6 +49,8 @@ export class LmVideoControls {
 
   @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
+  @Event() public updateRootElementPosition: EventEmitter<SceneElement>;
+
   private _videoControls: LMVideoControls;
 
   @Watch('backgroundColor')
@@ -97,6 +99,8 @@ export class LmVideoControls {
     return new Promise(async (resolve) => {
       if (this._videoControls) {
         this._videoControls.x = newValue;
+
+        this.updateRootElementPosition.emit(this._videoControls);
       }
 
       resolve();
@@ -107,7 +111,9 @@ export class LmVideoControls {
   private updateY(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
       if (this._videoControls) {
-        this._videoControls.x = newValue;
+        this._videoControls.y = newValue;
+
+        this.updateRootElementPosition.emit(this._videoControls);
       }
 
       resolve();
@@ -118,7 +124,9 @@ export class LmVideoControls {
   private updateZ(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
       if (this._videoControls) {
-        this._videoControls.width = newValue;
+        this._videoControls.z = newValue;
+
+        this.updateRootElementPosition.emit(this._videoControls);
       }
 
       resolve();

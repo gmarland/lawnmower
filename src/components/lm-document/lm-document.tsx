@@ -71,7 +71,7 @@ export class LmDocument {
   @Listen("updateRootElementPosition")
   private async updateRootElementPosition(e: CustomEvent): Promise<void> {
     return new Promise(async (resolve) => {
-      await this._mainScene.addChildElement(0, e.detail);
+      await this._mainScene.updateRootElementPosition(e.detail);
 
       resolve();
     });

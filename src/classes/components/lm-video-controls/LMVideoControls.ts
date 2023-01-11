@@ -140,7 +140,7 @@ export class LMVideoControls implements SceneElement {
     }
 
     public set y(value: number) {
-        this._z = value;
+        this._y = value;
     }
 
     public set z(value: number) {

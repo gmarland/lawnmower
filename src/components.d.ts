@@ -372,6 +372,7 @@ declare namespace LocalJSX {
         "onClose"?: Function;
         "onPause"?: Function;
         "onPlay"?: Function;
+        "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
         "parent"?: SceneElement;
         "position"?: number;
         "width"?: number;
