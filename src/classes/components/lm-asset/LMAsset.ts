@@ -221,7 +221,7 @@ export class LMAsset implements SceneElement {
 
     public set src(value: string) {
         this._src = value;
-        this._reloadSrc = false;
+        this._reloadSrc = true;
     }
 
     public set width(value: number) {
@@ -376,7 +376,7 @@ export class LMAsset implements SceneElement {
             if ((!this._loadedAsset)|| (this._reloadSrc)) {
                 this._reloadSrc = false
     
-                if (this._action) this._action.stopAnimation();
+                if (this._action) this._action.stop();
 
                 this._loadedAsset = null;
                 

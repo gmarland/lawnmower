@@ -39,7 +39,7 @@
       </lm-modal>
       <lm-360video id="demo-video-360" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"></lm-360video>
       <lm-div margin="10" background-color="#ff2211">
-        <lm-div width="2000" height="800" background-color="#00ffff" margin="30" layout="Column" item-vertical-align="Bottom" vertical-align="Center" horizontal-align="Right" padding="10">
+        <lm-div width="2000" background-color="#00ffff" margin="30" layout="Column" item-vertical-align="Bottom" vertical-align="Center" horizontal-align="Right" padding="10">
           <lm-div width="500" background-color="#fffff1" margin="10"padding="10">
             <lm-text id="demo-text-1" font-color="#222222" background-color="#0f00f1" padding="15" text-decoration="bold">
               Jumping
@@ -154,7 +154,12 @@
         setTimeout(async () => {
           const foxy = document.getElementById("fox-asset");
           
-          foxy.radius = 800;
+          //foxy.radius = 800;
+          foxy.src = "https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf";
+          
+          foxy.xRotation = 0;
+          foxy.yRotation = 0;
+          foxy.zRotation = 0;
 
         /*
           setTimeout(async () => {
