@@ -21,6 +21,8 @@ import { MainScene } from '../../scene/MainScene';
 export class LMAsset implements SceneElement {
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _src: string;
@@ -72,6 +74,10 @@ export class LMAsset implements SceneElement {
     }
 
     ////////// Getters
+    
+    public get id(): string {
+        return this._id;
+    }
     
     public get uuid(): string {
         return this._uuid;
@@ -195,6 +201,10 @@ export class LMAsset implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set width(value: number) {
         this._setRadius = value;

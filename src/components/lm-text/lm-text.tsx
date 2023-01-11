@@ -30,6 +30,8 @@ export class LmText {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop({ mutable: true }) public text: string;
 
   @Prop() public width?: number;

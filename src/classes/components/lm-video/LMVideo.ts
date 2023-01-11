@@ -27,6 +27,8 @@ export class LMVideo implements SceneElement {
 
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _src: string;
@@ -82,6 +84,10 @@ export class LMVideo implements SceneElement {
 
     ////////// Getters
     
+    public get id(): string {
+        return this._id;
+    }
+    
     public get uuid(): string {
         return this._uuid;
     }
@@ -119,6 +125,10 @@ export class LMVideo implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set src(value: string) {
         this._src = value;

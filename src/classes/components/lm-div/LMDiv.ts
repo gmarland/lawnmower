@@ -29,6 +29,8 @@ export class LMDiv implements SceneElement {
 
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _initialWidth?: number = null; 
@@ -102,6 +104,10 @@ export class LMDiv implements SceneElement {
 
     public get initialized(): boolean {
         return this._initialized;
+    }
+    
+    public get id(): string {
+        return this._id;
     }
     
     public get uuid(): string {
@@ -194,6 +200,10 @@ export class LMDiv implements SceneElement {
 
     public set initialized(initialized: boolean) {
         this._initialized = initialized;
+    }
+
+    public set id(value: string) {
+        this._id = value;
     }
 
     public set width(value: number) {

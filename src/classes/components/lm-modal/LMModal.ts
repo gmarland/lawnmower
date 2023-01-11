@@ -142,6 +142,10 @@ export class LMModal implements SceneElement {
 
     ////////// Setters
 
+    public set id(value: string) {
+        this._id = value;
+    }
+
     public set width(value: number) {
         this._setWidth = value;
     }

@@ -24,6 +24,8 @@ import { MainScene } from '../../classes/scene/MainScene';
 export class LmDocument {
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop() startingDistance: number = 500;
 
   private _sceneContainer: HTMLDivElement;

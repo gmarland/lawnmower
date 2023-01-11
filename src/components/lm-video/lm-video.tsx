@@ -30,6 +30,8 @@ export class LmVideo {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop() public src: string;
 
   @Prop() public width: number = 100;

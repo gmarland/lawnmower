@@ -21,6 +21,8 @@ import { LMVideoControlsConfig } from './LMVideoControlsConfig';
 export class LMVideoControls implements SceneElement {
     private _parent: SceneElement;
 
+    private _id: string;
+
     private _uuid: string;
 
     private _mesh: Mesh;
@@ -83,6 +85,10 @@ export class LMVideoControls implements SceneElement {
 
     ////////// Getters
     
+    public get id(): string {
+        return this._id;
+    }
+    
     public get uuid(): string {
         return this._uuid;
     }
@@ -122,6 +128,10 @@ export class LMVideoControls implements SceneElement {
     }
 
     ////////// Setters
+
+    public set id(value: string) {
+        this._id = value;
+    }
 
     public set width(value: number) {
         this._setWidth = value;

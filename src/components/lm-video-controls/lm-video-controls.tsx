@@ -27,6 +27,10 @@ export class LmVideoControls {
 
   @Prop() public depth: number;
 
+  // *** Component specific
+
+  @Prop() public id: string = "";
+
   @Prop() public backgroundColor: string = "#333333";
     
   @Prop() public width: number = 75;

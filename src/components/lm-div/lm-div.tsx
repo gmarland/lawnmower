@@ -35,6 +35,8 @@ export class LmDiv {
 
   @Element() el: HTMLElement
 
+  @Prop() public id: string = "";
+
   @Prop() public layout: string = "Row";
 
   @Prop() public verticalAlign: string = "Top";
