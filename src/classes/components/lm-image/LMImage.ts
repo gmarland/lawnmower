@@ -52,10 +52,12 @@ export class LMImage implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, src: string, config: LMImageConfig) {
+    constructor(parent: SceneElement, id: string, src: string, config: LMImageConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
         
         this._src = src;
 

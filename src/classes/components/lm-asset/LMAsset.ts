@@ -53,10 +53,12 @@ export class LMAsset implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, src: string, assetConfig: LMAssetConfig) {
+    constructor(parent: SceneElement, id: string, src: string, assetConfig: LMAssetConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
 
         this._src = src;
 

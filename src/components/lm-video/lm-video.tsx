@@ -50,6 +50,17 @@ export class LmVideo {
 
   private _video360Element: HTMLLm360videoElement;
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
@@ -144,7 +155,7 @@ export class LmVideo {
   }
 
   componentWillLoad() {
-    this._video = new LMVideo(this.depth, this.parent, this.src, { 
+    this._video = new LMVideo(this.depth, this.parent, this.id, this.src, { 
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,

@@ -61,10 +61,12 @@ export class LMText implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, text: string, config: LMTextConfig) {
+    constructor(parent: SceneElement, id: string, text: string, config: LMTextConfig) {
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
         
         this._text = text;
         

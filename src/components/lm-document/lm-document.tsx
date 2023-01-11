@@ -5,7 +5,8 @@ import {
   Element,
   Prop,
   Listen,
-  Method
+  Method,
+  Watch
 } from '@stencil/core';
  
 import { 
@@ -110,6 +111,17 @@ export class LmDocument {
   private async showModalDialog(e: CustomEvent): Promise<void> {
     return new Promise(async (resolve) => {
       this._mainScene.showModalDialogByUUID(e.detail);
+
+      resolve();
+    });
+  }
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._mainScene) {
+        this._mainScene.id = newValue;
+      }
 
       resolve();
     });

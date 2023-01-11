@@ -91,6 +91,17 @@ export class Lm360Video {
     });
   }
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._video) {
+        this._video.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
@@ -161,7 +172,7 @@ export class Lm360Video {
   }
 
   componentWillLoad() {
-    this._video = new LM360Video(this.parent, this.src, { 
+    this._video = new LM360Video(this.parent, this.id, this.src, { 
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,
       videoHeightSegments: this.videoHeightSegments

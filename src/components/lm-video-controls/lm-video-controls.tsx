@@ -57,6 +57,17 @@ export class LmVideoControls {
 
   private _videoControls: LMVideoControls;
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._videoControls) {
+        this._videoControls.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('backgroundColor')
   private updateBackgroundColor(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
@@ -164,7 +175,7 @@ export class LmVideoControls {
   }
 
   componentWillLoad() {
-    this._videoControls = new LMVideoControls(this.parent, {
+    this._videoControls = new LMVideoControls(this.parent, this.id, {
       baseImagePath: getAssetPath('assets'),
       backgroundColor: this.backgroundColor,
       width: this.width,

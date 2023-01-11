@@ -68,12 +68,14 @@ export class LMDiv implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, config: LMDivConfig) {
+    constructor(depth: number, parent: SceneElement, id: string, config: LMDivConfig) {
         this._depth = depth;
         
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
 
         this._verticalAlign = config.verticalAlign;
         this._horizontalAlign = config.horizontalAlign;

@@ -58,6 +58,17 @@ export class LmText {
 
   private _textblock: LMText;
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._textblock) {
+        this._textblock.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
@@ -239,7 +250,7 @@ export class LmText {
       }
     }
 
-    this._textblock = new LMText(this.parent, this.text, { 
+    this._textblock = new LMText(this.parent, this.id, this.text, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,

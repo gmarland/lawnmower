@@ -51,15 +51,17 @@ export class LM360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(parent: SceneElement, src: string, config: LM360VideoConfig) {
-        this._uuid = MeshUtils.generateId();
-
+    constructor(parent: SceneElement, id: string, src: string, config: LM360VideoConfig) {
         this._videoRadius = config.videoRadius;
         this._videoWidthSegments = config.videoWidthSegments;
         this._videoHeightSegments = config.videoHeightSegments;
 
         this._parent = parent;
         
+        this._id = id;
+
+        this._uuid = MeshUtils.generateId();
+
         this._src = src;
         
         this._content.visible = false;

@@ -3,7 +3,8 @@ import {
   Host, 
   h,
   Element,
-  Prop
+  Prop,
+  Watch
 } from '@stencil/core';
 import { SceneElement } from '../../classes/components/SceneElement';
 
@@ -30,6 +31,17 @@ export class LmLayout {
   @Prop() id: string = "index";
 
   private _layout: LMLayout;
+
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._layout) {
+        this._layout.id = newValue;
+      }
+
+      resolve();
+    });
+  }
 
   componentWillLoad() {
     this._layout = new LMLayout(this.parent, this.id);

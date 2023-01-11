@@ -86,6 +86,17 @@ export class LmModal {
     });
   }
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._modal) {
+        this._modal.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('borderRadius')
   private updateBorderRadius(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
@@ -171,9 +182,8 @@ export class LmModal {
   }
 
   componentWillLoad() {
-    this._modal = new LMModal(1, this.parent, { 
+    this._modal = new LMModal(1, this.parent, this.id, { 
         baseImagePath: getAssetPath('assets'),
-        id: this.id,
         width: this.width, 
         height: this.height,
         offset: this.offset,

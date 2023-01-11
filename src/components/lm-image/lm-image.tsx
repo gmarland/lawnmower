@@ -52,6 +52,17 @@ export class LmImage {
 
   private _modalDialog: HTMLLmModalElement;
 
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this._image) {
+        this._image.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
@@ -122,7 +133,7 @@ export class LmImage {
   }
 
   componentWillLoad() {
-    this._image = new LMImage(this.parent, this.src, { 
+    this._image = new LMImage(this.parent, this.id, this.src, { 
         width: this.width, 
         height: this.height,
         borderRadius: this.borderRadius

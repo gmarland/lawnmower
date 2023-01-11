@@ -63,12 +63,14 @@ export class LMVideo implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, src: string, config: LMVideoConfig) {
+    constructor(depth: number, parent: SceneElement, id: string, src: string, config: LMVideoConfig) {
         this._depth = depth;
 
         this._parent = parent;
 
         this._uuid = MeshUtils.generateId();
+        
+        this._id = id;
         
         this._src = src;
 
