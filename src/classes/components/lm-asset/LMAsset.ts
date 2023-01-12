@@ -368,13 +368,8 @@ export class LMAsset implements SceneElement {
 
     private generateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
-
-            for (let i=(this._loadedAssetContainer.children.length-1); i>=0; i--) {
-                this._loadedAssetContainer.remove(this._loadedAssetContainer.children[i]);
-            }
+            this._content.clear();
+            this._loadedAssetContainer.clear();
 
             if ((!this._loadedAsset)|| (this._reloadSrc)) {
                 this._reloadSrc = false

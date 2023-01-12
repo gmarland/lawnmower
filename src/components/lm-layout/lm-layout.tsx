@@ -13,7 +13,7 @@ import { LMLayout } from '../../classes/components/lm-layout/LMLayout';
 @Component({
   tag: 'lm-layout',
   styleUrl: 'lm-layout.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmLayout {
   // *** Required for positioning ***

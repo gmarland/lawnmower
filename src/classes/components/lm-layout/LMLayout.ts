@@ -249,9 +249,7 @@ export class LMLayout implements SceneElement {
 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                for (let i=(this._content.children.length-1); i>=0; i--) {
-                    this._content.remove(this._content.children[i]);
-                }
+                this._content.clear();
 
                 let keys = Array.from(this._childElements.keys());
                 keys.sort(function(a, b){return a-b});

@@ -283,9 +283,7 @@ export class LMImage implements SceneElement {
 
     private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
+            this._content.clear();
 
             if (this._mesh) {
                 this._mesh.geometry.dispose();

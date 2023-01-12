@@ -427,11 +427,19 @@ export class LMDiv implements SceneElement {
             }
 
             if (body && child) {
-                await this.generateContent(child);
+                child.clear();
+                this._content.remove(child);
+                
+                const childLayoutContainer = new Object3D();
+                childLayoutContainer.name = "child";
+                
+                this._content.add(childLayoutContainer);
+    
+                await this.generateContent(childLayoutContainer);
 
-                this.resizePanelBody(body, child);
+                this.resizePanelBody(body, childLayoutContainer);
 
-                this.repositionContainer(body, child);
+                this.repositionContainer(body, childLayoutContainer);
             }
             
             resolve();

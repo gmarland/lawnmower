@@ -3,7 +3,8 @@ import {
     Group,
     Vector3,
     CanvasTexture,
-    LinearFilter
+    LinearFilter,
+    Box3
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -55,7 +56,7 @@ export class LMText implements SceneElement {
     private _content?: Group = new Group();
 
     private _initialized: boolean = false;
-    
+
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
@@ -76,8 +77,8 @@ export class LMText implements SceneElement {
         this._italic = config.italic;
         this._bold = config.bold;
 
-        this._initialWidth = config.width;
-        this._initialHeight = config.height;
+        if (config.width) this._initialWidth = config.width;
+        if (config.height) this._initialHeight = config.height;
 
         this._borderRadius = config.borderRadius;
         
@@ -310,13 +311,10 @@ export class LMText implements SceneElement {
 
                 const currentDimensions = GeometryUtils.getDimensions(this._content);
 
-                let contentWidth = this._initialWidth;
-                if (this._setWidth !== null) contentWidth = this._setWidth;
-
-                let contentHeight = this._initialHeight;
-                if (this._setHeight !== null) contentHeight = this._setHeight;
-
-                await this.generateContent(contentWidth, contentHeight);
+                this._calculatedWidth = null;
+                this._calculatedHeight = null;
+    
+                await this.generateContent(this.width, this.height);
                     
                 this._drawing = false;
                     
@@ -362,18 +360,16 @@ export class LMText implements SceneElement {
 
     private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
+            this._content.clear();
 
             if (this._mesh) {
                 this._mesh.geometry.dispose();
                 this._mesh.material.dispose();
                 this._mesh = null;
             }
-            
-            this._mesh = this.buildMesh(width, height);
 
+            this._mesh = this.buildMesh(width, height);
+                    
             this._content.add(this._mesh);
 
             resolve();
@@ -425,7 +421,7 @@ export class LMText implements SceneElement {
             if (width) {
                 this._calculatedWidth = width;
 
-                if (words.length > 1) {
+                if (words.length > 0) {
                     for (let i=0; i<words.length; i++) {
                         if (words[i].trim().length > 0) {
                             let word = words[i];

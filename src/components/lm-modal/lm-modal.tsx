@@ -17,7 +17,7 @@ import { LMModal } from '../../classes/components/lm-modal/LMModal';
 @Component({
   tag: 'lm-modal',
   styleUrl: 'lm-modal.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmModal {
   // *** Required for positioning ***

@@ -16,7 +16,7 @@ import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
 @Component({
   tag: 'lm-asset',
   styleUrl: 'lm-asset.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmAsset {
   // *** Required for positioning ***

@@ -16,7 +16,7 @@ import { LM360Video } from '../../classes/components/lm-360video/LM360Video';
 @Component({
   tag: 'lm-360video',
   styleUrl: 'lm-360video.scss',
-  shadow: true,
+  shadow: false
 })
 export class Lm360Video {
   // *** Required for positioning ***

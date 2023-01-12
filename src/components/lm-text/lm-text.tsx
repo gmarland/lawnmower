@@ -15,7 +15,7 @@ import { LMText } from '../../classes/components/lm-text/LMText';
 @Component({
   tag: 'lm-text',
   styleUrl: 'lm-text.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmText {
   // *** Required for positioning ***

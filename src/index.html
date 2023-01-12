@@ -168,19 +168,24 @@
           const newDiv = document.createElement("lm-div");
           newDiv.id = "new-div";
           newDiv.height = 200;
+          newDiv.margin = 10;
           newDiv.backgroundColor = "#ffffff";
           
           await document.getElementById("demo-div-2").append(newDiv);
 
-          setTimeout(async () => {
-            console.log(document.getElementById("new-div"))
+          const anotherNewText = document.createElement("lm-text");
+          anotherNewText.padding = 10;
+          anotherNewText.text = "OOOOOOOMPAPA";
+          anotherNewText.backgroundColor = "#fff000";
 
-            const anotherNewText = document.createElement("lm-text");
-            anotherNewText.text = "OOOOOOOMPAPA";
-            anotherNewText.backgroundColor = "#fff000";
+          const anotherNewText2 = document.createElement("lm-text");
+          anotherNewText2.text = "chateau";
+          anotherNewText2.backgroundColor = "#000fff";
+          anotherNewText2.height=200;
 
-            await newDiv.append(anotherNewText);
-          }, 3000);
+          await newDiv.append(anotherNewText);
+          await newDiv.append(newImage);
+          await newDiv.append(anotherNewText2);
         }, 3000);
         
         //await main.setLayout("boom");

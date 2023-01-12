@@ -15,7 +15,7 @@ import { LMVideo } from '../../classes/components/lm-video/LMVideo';
 @Component({
   tag: 'lm-video',
   styleUrl: 'lm-video.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmVideo {
   // *** Required for positioning ***

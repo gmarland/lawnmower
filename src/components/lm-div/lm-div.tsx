@@ -21,7 +21,7 @@ import { Method } from '@stencil/core/internal';
 @Component({
   tag: 'lm-div',
   styleUrl: 'lm-div.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmDiv {
   // *** Required for positioning ***
@@ -207,9 +207,9 @@ export class LmDiv {
   @Method()
   public async append(element: any): Promise<void> {
     element["parent"] = this._div;
-    element["position"] = this._div.getChildSceneElements().length;
+    element["position"] = this.el.children.length;
     element["depth"] = this.depth+1;
-    
+
     this.el.appendChild(element);
   }
 

@@ -54,15 +54,15 @@ export class RowVRDiv extends LMDiv {
     public async resizeFullWidthPanels(width: number, childLayoutContainer: Object3D): Promise<boolean> {
         return new Promise(async (resolve) => {
             const meshBox = new Box3().setFromObject(childLayoutContainer);
-            const childWidth = ((meshBox.max.x-meshBox.min.x));
+            let childSize = ((meshBox.max.x-meshBox.min.x));
 
             let spareSpace;
             
-            if (width && (((width - this.padding)*2) > childWidth)) {
+            if (width && (((width - this.padding)*2) > childSize)) {
                 spareSpace = (width - this.padding);
             } 
             else {
-                spareSpace = childWidth;
+                spareSpace = childSize;
             }
 
             let widthsUpdated = false;
@@ -107,10 +107,6 @@ export class RowVRDiv extends LMDiv {
 
     public async generateContent(childLayoutContainer: Object3D): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(childLayoutContainer.children.length-1); i>=0; i--) {
-                childLayoutContainer.remove(childLayoutContainer.children[i]);
-            }
-
             let keys = Array.from(this.childElements.keys());
             keys.sort(function(a, b){return a-b});
     
