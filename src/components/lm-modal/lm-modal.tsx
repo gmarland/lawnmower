@@ -28,7 +28,7 @@ export class LmModal {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public borderRadius: number = 0;
   

@@ -32,7 +32,7 @@ export class LmVideo {
 
   @Prop({ mutable: true }) public sceneElement: LMVideo;
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
 

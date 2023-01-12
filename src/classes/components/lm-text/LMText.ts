@@ -292,7 +292,10 @@ export class LMText implements SceneElement {
 
     // --- Data Methods
 
-    public addChildElement(position: number, childElement: SceneElement): void {
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
     
     // --- Rendering Methods

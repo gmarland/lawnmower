@@ -161,14 +161,25 @@
           const newVideo = document.createElement("lm-video");
           newVideo.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
 
-          await document.getElementById("demo-div-2").append(newText);
-          await document.getElementById("demo-div-2").append(newImage);
-          await document.getElementById("demo-div-2").prepend(newVideo);
+          //await document.getElementById("demo-div-2").append(newText);
+          //await document.getElementById("demo-div-2").append(newImage);
+          //await document.getElementById("demo-div-2").prepend(newVideo);
           
           const newDiv = document.createElement("lm-div");
+          newDiv.id = "new-div";
+          newDiv.height = 200;
+          newDiv.backgroundColor = "#ffffff";
+          
+          await document.getElementById("demo-div-2").append(newDiv);
 
           setTimeout(async () => {
-            newText.backgroundColor = "#0ff000"
+            console.log(document.getElementById("new-div"))
+
+            const anotherNewText = document.createElement("lm-text");
+            anotherNewText.text = "OOOOOOOMPAPA";
+            anotherNewText.backgroundColor = "#fff000";
+
+            await newDiv.append(anotherNewText);
           }, 3000);
         }, 3000);
         

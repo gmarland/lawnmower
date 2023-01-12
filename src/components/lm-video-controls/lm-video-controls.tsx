@@ -29,7 +29,7 @@ export class LmVideoControls {
 
   // *** Component specific
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public backgroundColor: string = "#333333";
     

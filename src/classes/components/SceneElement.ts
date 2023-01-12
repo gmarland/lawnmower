@@ -27,7 +27,7 @@ export interface SceneElement {
 
     getIsChildElement(uuid: string): boolean;
 
-    addChildElement(position: number, childElement: SceneElement): void;
+    addChildElement(position: number, childElement: SceneElement): Promise<void>;
 
     isPartOfLayout(): boolean;
 

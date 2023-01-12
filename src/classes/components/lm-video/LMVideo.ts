@@ -164,7 +164,10 @@ export class LMVideo implements SceneElement {
         return SceneElementPlacement.Main;
     }
 
-    public addChildElement(position: number, childElement: SceneElement): void {
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     public getDimensions(): Dimensions {

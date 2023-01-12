@@ -41,7 +41,7 @@ export namespace Components {
         "zRotationSpeed": number;
     }
     interface LmDiv {
-        "append": (element: HTMLLmTextElement) => Promise<void>;
+        "append": (element: any) => Promise<void>;
         "backgroundColor": string;
         "borderRadius": number;
         "depth": number;
@@ -56,7 +56,7 @@ export namespace Components {
         "padding"?: number;
         "parent": SceneElement;
         "position": number;
-        "prepend": (element: HTMLLmTextElement) => Promise<void>;
+        "prepend": (element: any) => Promise<void>;
         "verticalAlign": string;
         "width": number;
         "xRotation": number;

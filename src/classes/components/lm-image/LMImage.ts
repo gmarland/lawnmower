@@ -155,7 +155,10 @@ export class LMImage implements SceneElement {
         });
     }
 
-    public addChildElement(position: number, childElement: SceneElement): void {
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
     
     public getChildSceneElements(): SceneElement[] {

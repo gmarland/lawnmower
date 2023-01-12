@@ -209,8 +209,12 @@ export class LMModal implements SceneElement {
         });
     }
 
-    public addChildElement(position: number, childElement: SceneElement): void {
-        this._childElement  = childElement;
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            this._childElement  = childElement;
+
+            resolve();
+        });
     }
 
     public getChildSceneElements(): SceneElement[] {

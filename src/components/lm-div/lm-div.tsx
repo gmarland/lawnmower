@@ -36,7 +36,7 @@ export class LmDiv {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public layout: string = "Row";
 
@@ -205,7 +205,7 @@ export class LmDiv {
   }
 
   @Method()
-  public async append(element: HTMLLmTextElement): Promise<void> {
+  public async append(element: any): Promise<void> {
     element["parent"] = this._div;
     element["position"] = this._div.getChildSceneElements().length;
     element["depth"] = this.depth+1;
@@ -214,12 +214,12 @@ export class LmDiv {
   }
 
   @Method()
-  public async prepend(element: HTMLLmTextElement): Promise<void> {
+  public async prepend(element: any): Promise<void> {
     element["parent"] = this._div;
     element["position"] = 0;
     element["depth"] = this.depth+1;
     
-    this.el.prepend(element);
+    this.el.insertBefore(element, this.el.firstChild)
   }
 
   componentWillLoad() {

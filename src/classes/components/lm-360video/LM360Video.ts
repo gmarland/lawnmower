@@ -200,7 +200,10 @@ export class LM360Video implements SceneElement {
 
     // --- Data Methods
 
-    public addChildElement(position: number, childElement: SceneElement): void {
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     public enableLayout(layoutId: string): Promise<void> {

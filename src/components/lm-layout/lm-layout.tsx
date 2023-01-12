@@ -28,7 +28,7 @@ export class LmLayout {
   
   @Element() el: HTMLElement
 
-  @Prop() id: string = "index";
+  @Prop({ reflect: true }) id: string = "index";
 
   private _layout: LMLayout;
 

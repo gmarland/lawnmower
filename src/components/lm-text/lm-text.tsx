@@ -6,8 +6,7 @@ import {
   Prop,
   Event,
   EventEmitter,
-  Watch,
-  Method
+  Watch
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -33,7 +32,7 @@ export class LmText {
 
   @Prop({ mutable: true }) public sceneElement: LMText;
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop({ mutable: true }) public text: string;
 
