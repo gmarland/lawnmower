@@ -141,11 +141,13 @@ export class LmDocument {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._mainScene;
-      element["depth"] = 1;
-      element["position"] = position;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._mainScene;
+        element["depth"] = 1;
+        element["position"] = position;
 
-      position++;
+        position++;
+      }
     });
   }
 

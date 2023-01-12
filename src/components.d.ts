@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SceneElement } from "./classes/components/SceneElement";
+import { LMText } from "./classes/components/lm-text/LMText";
+import { LMVideo } from "./classes/components/lm-video/LMVideo";
 export namespace Components {
     interface Lm360video {
         "close": () => Promise<void>;
@@ -39,6 +41,7 @@ export namespace Components {
         "zRotationSpeed": number;
     }
     interface LmDiv {
+        "append": (element: HTMLLmTextElement) => Promise<void>;
         "backgroundColor": string;
         "borderRadius": number;
         "depth": number;
@@ -53,6 +56,7 @@ export namespace Components {
         "padding"?: number;
         "parent": SceneElement;
         "position": number;
+        "prepend": (element: HTMLLmTextElement) => Promise<void>;
         "verticalAlign": string;
         "width": number;
         "xRotation": number;
@@ -112,6 +116,7 @@ export namespace Components {
         "padding"?: number;
         "parent": SceneElement;
         "position": number;
+        "sceneElement": LMText;
         "text": string;
         "textDecoration": string;
         "visible": boolean;
@@ -125,6 +130,7 @@ export namespace Components {
         "placeholder": number;
         "play360": boolean;
         "position": number;
+        "sceneElement": LMVideo;
         "src": string;
         "visible": boolean;
         "width": number;
@@ -356,6 +362,7 @@ declare namespace LocalJSX {
         "padding"?: number;
         "parent"?: SceneElement;
         "position"?: number;
+        "sceneElement"?: LMText;
         "text"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
@@ -370,6 +377,7 @@ declare namespace LocalJSX {
         "placeholder"?: number;
         "play360"?: boolean;
         "position"?: number;
+        "sceneElement"?: LMVideo;
         "src"?: string;
         "visible"?: boolean;
         "width"?: number;

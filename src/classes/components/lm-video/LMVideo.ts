@@ -103,7 +103,7 @@ export class LMVideo implements SceneElement {
     }
 
     public get dynamicWidth(): boolean {
-        return false;
+        return this._initialWidth == null;
     }
 
     public get width(): number {

@@ -65,6 +65,9 @@
 
               herehe
             </lm-text>  
+            <lm-video id="demo-video-1"
+                      src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                      placeholder="10"></lm-video>
             <lm-text id="demo-text-3" font-color="#222222" background-color="#ff00f3" padding="15" text-decoration="bold">
               Hello Sarah
 
@@ -125,7 +128,7 @@
               this is it
             </lm-text>
           </lm-div>
-          <lm-div id="demo-div-2" height="600" width="500" background-color="#ff0000" margin="5" vertical-align="Bottom" horizontal-align="Right">
+          <lm-div id="demo-div-2" height="600" width="500" background-color="#ff0000" margin="5" padding="10" vertical-align="Bottom" horizontal-align="Right">
             <lm-text width="300" font-color="#222222" background-color="#ffffff" padding="10">
               not now
 
@@ -147,7 +150,29 @@
         await customElements.whenDefined('lm-document');
         const main = document.getElementById('main');
 
-        await main.setLayout("boom");
+        setTimeout(async () => {
+          const newText = document.createElement("lm-text");
+          newText.text = "hello hello hello";
+          newText.backgroundColor = "#fff000";
+          
+          const newImage = document.createElement("lm-image");
+          newImage.src = "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/catherine-zeta-jones-jenna-ortgea-luis-guzman-isaac-ordonez-wednesday-1660718014.jpg?crop=1.00xw:0.446xh;0,0.0999xh&resize=768:*";
+
+          const newVideo = document.createElement("lm-video");
+          newVideo.src = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+
+          await document.getElementById("demo-div-2").append(newText);
+          await document.getElementById("demo-div-2").append(newImage);
+          await document.getElementById("demo-div-2").prepend(newVideo);
+          
+          const newDiv = document.createElement("lm-div");
+
+          setTimeout(async () => {
+            newText.backgroundColor = "#0ff000"
+          }, 3000);
+        }, 3000);
+        
+        //await main.setLayout("boom");
 
         //****** Testing assets
         
@@ -171,13 +196,13 @@
         }, 3000);*/
         
         // ----- Testing changing asset visibility
-        setTimeout(() => {
+        /*setTimeout(() => {
           document.getElementById('fox-asset').visible = false;
           
           setTimeout(() => {
             document.getElementById('fox-asset').visible = true;
           }, 3000);
-        }, 3000);
+        }, 3000);*/
         
         // ****** Testing modal-dialog
 

@@ -267,7 +267,22 @@ export class LMDiv implements SceneElement {
     }
 
     public addChildElement(position: number, childElement: SceneElement): void {
+        let keys = Array.from(this._childElements.keys());
+        keys.sort(function(a, b){return a-b});
+        
+        for (let i=(keys.length-1); i>=position; i--) {
+            if (keys[i] >= position) {
+                this._childElements.set((keys[i]+1), this._childElements[keys[i]]);
+            }
+        }
+
         this._childElements.set(position, childElement);
+
+        if (this.initialized) {   
+            this.draw().then(async (sizeUpdated) => {
+                if (sizeUpdated) await this.drawParent();
+            });
+        }
     }
     
     public getChildSceneElements(): SceneElement[] {

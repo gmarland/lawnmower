@@ -212,6 +212,8 @@ export class LMLayout implements SceneElement {
 
     public addChildElement(position: number, childElement: SceneElement): void {
         this._childElements.set(position, childElement);
+
+        if (this._initialized) this.draw();
     }
     
     // --- Rendering Methods

@@ -191,11 +191,13 @@ export class LmModal {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._modal;
-      element["position"] = position;
-      element["depth"] = 2;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._modal;
+        element["position"] = position;
+        element["depth"] = 2;
 
-      position++;
+        position++;
+      }
     });
 
     this.addElementToRoot.emit(this._modal);

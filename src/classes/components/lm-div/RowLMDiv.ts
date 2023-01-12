@@ -116,7 +116,6 @@ export class RowVRDiv extends LMDiv {
     
             for (let i=0; i< keys.length; i++) {
                 const childContent = await this.childElements.get(keys[i]);
-
                 if (childContent.visible) {
                     const childLayout = await childContent.getContent(); 
 

@@ -6,7 +6,8 @@ import {
   Prop,
   Event,
   EventEmitter,
-  Watch
+  Watch,
+  Method
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -29,6 +30,8 @@ export class LmText {
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop({ mutable: true }) public sceneElement: LMText;
 
   @Prop() public id: string = "";
 
@@ -56,13 +59,11 @@ export class LmText {
 
   @Event() public click: EventEmitter;
 
-  private _textblock: LMText;
-
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
@@ -72,11 +73,11 @@ export class LmText {
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.width = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.width = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -86,11 +87,11 @@ export class LmText {
   @Watch('height')
   private updateHeight(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.height = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.height = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -100,11 +101,12 @@ export class LmText {
   @Watch('text')
   private updateText(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.text = newValue;
-  
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+      if (this.sceneElement) {
+        this.sceneElement.text = newValue;
+        this.el.innerHTML = newValue;
+        
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -114,11 +116,11 @@ export class LmText {
   @Watch('borderRadius')
   private updateBorderRadius(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.borderRadius = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.borderRadius = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -128,11 +130,11 @@ export class LmText {
   @Watch('fontFamily')
   private updateFontFamily(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.fontFamily = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.fontFamily = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -142,11 +144,11 @@ export class LmText {
   @Watch('fontSize')
   private updateFontSize(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.fontSize = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.fontSize = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -156,11 +158,11 @@ export class LmText {
   @Watch('fontColor')
   private updateFontColor(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.fontColor = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.fontColor = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -170,7 +172,7 @@ export class LmText {
   @Watch('textDecoration')
   private updateTextDecoration(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
+      if (this.sceneElement) {
         let bold = false;
         let italic = false;
     
@@ -183,11 +185,11 @@ export class LmText {
           }
         }
 
-        this._textblock.bold = bold;
-        this._textblock.italic = italic;
+        this.sceneElement.bold = bold;
+        this.sceneElement.italic = italic;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -197,11 +199,11 @@ export class LmText {
   @Watch('backgroundColor')
   private updateBackgroundColor(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.backgroundColor = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.backgroundColor = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -211,11 +213,11 @@ export class LmText {
   @Watch('padding')
   private updatePadding(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.padding = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.padding = newValue;
   
-        const dimensionsUpdated = await this._textblock.draw();
-        if (dimensionsUpdated) await this._textblock.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -225,10 +227,10 @@ export class LmText {
   @Watch('visible')
   private updateVisible(newValue: boolean): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._textblock) {
-        this._textblock.visible = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.visible = newValue;
   
-        await this._textblock.drawParent();
+        await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -239,7 +241,8 @@ export class LmText {
     let bold = false;
     let italic = false;
 
-    this.text = this.el.innerHTML;
+    if (!this.text) this.text = this.el.innerHTML;
+    else this.el.innerHTML = this.text;
 
     if (this.textDecoration) {
       const decorations = this.textDecoration.split(" ");
@@ -250,7 +253,7 @@ export class LmText {
       }
     }
 
-    this._textblock = new LMText(this.parent, this.id, this.text, { 
+    this.sceneElement = new LMText(this.parent, this.id, this.text, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,
@@ -263,13 +266,13 @@ export class LmText {
       padding: this.padding
     });
 
-    this._textblock.onClick = () => {
+    this.sceneElement.onClick = () => {
       this.click.emit();
     };
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this._textblock);
+    this.parent.addChildElement(this.position, this.sceneElement);
   }
   
   render() {

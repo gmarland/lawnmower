@@ -49,11 +49,13 @@ export class LmLayout {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._layout;
-      element["depth"] = this.depth;
-      element["position"] = position;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._layout;
+        element["depth"] = this.depth;
+        element["position"] = position;
 
-      position++;
+        position++;
+      }
     });
   }
 
