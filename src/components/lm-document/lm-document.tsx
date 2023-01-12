@@ -20,12 +20,12 @@ import { MainScene } from '../../classes/scene/MainScene';
 @Component({
   tag: 'lm-document',
   styleUrl: 'lm-document.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmDocument {
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() startingDistance: number = 500;
 
@@ -141,11 +141,13 @@ export class LmDocument {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._mainScene;
-      element["depth"] = 1;
-      element["position"] = position;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._mainScene;
+        element["depth"] = 1;
+        element["position"] = position;
 
-      position++;
+        position++;
+      }
     });
   }
 

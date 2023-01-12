@@ -16,11 +16,12 @@ import { ItemHorizontalAlign } from '../../classes/geometry/ItemHorizontalAlign'
 import { ColumnLMDiv } from '../../classes/components/lm-div/ColumnLMDiv';
 import { LMDiv } from '../../classes/components/lm-div/LMDiv';
 import { RowVRDiv } from '../../classes/components/lm-div/RowLMDiv';
+import { Method } from '@stencil/core/internal';
 
 @Component({
   tag: 'lm-div',
   styleUrl: 'lm-div.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmDiv {
   // *** Required for positioning ***
@@ -35,7 +36,7 @@ export class LmDiv {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public layout: string = "Row";
 
@@ -66,6 +67,8 @@ export class LmDiv {
   @Prop() public zRotation: number = 0;
 
   private _div: LMDiv;
+
+  private _slot: HTMLSlotElement;
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
@@ -201,6 +204,24 @@ export class LmDiv {
     });
   }
 
+  @Method()
+  public async append(element: any): Promise<void> {
+    element["parent"] = this._div;
+    element["position"] = this.el.children.length;
+    element["depth"] = this.depth+1;
+
+    this.el.appendChild(element);
+  }
+
+  @Method()
+  public async prepend(element: any): Promise<void> {
+    element["parent"] = this._div;
+    element["position"] = 0;
+    element["depth"] = this.depth+1;
+    
+    this.el.insertBefore(element, this.el.firstChild)
+  }
+
   componentWillLoad() {
     const config = {
       verticalAlign: VerticalAlign[this.verticalAlign],
@@ -222,14 +243,16 @@ export class LmDiv {
     if (LMDivLayout[this.layout] == LMDivLayout.Column) this._div = new ColumnLMDiv(this.depth, this.parent, this.id, config);
     else this._div = new RowVRDiv(this.depth, this.parent, this.id, config);
     
-    let position = 1;
+    let position = 0;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._div;
-      element["position"] = position;
-      element["depth"] = this.depth+1;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._div;
+        element["position"] = position;
+        element["depth"] = this.depth+1;
 
-      position++;
+        position++;
+      }
     });
   }
 
@@ -240,7 +263,7 @@ export class LmDiv {
   render() {
     return (
       <Host>
-        <slot></slot>
+        <slot ref={(el) => this._slot = el as HTMLSlotElement } ></slot>
       </Host>
     );
   }

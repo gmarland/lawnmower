@@ -209,8 +209,12 @@ export class LMModal implements SceneElement {
         });
     }
 
-    public addChildElement(position: number, childElement: SceneElement): void {
-        this._childElement  = childElement;
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            this._childElement  = childElement;
+
+            resolve();
+        });
     }
 
     public getChildSceneElements(): SceneElement[] {
@@ -317,9 +321,7 @@ export class LMModal implements SceneElement {
 
     private async generateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
+            this._content.clear();
 
             if (this._mesh) {
                 if (this._mesh.geometry) this._mesh.geometry.dispose();

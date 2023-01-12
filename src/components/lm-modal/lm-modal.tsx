@@ -17,7 +17,7 @@ import { LMModal } from '../../classes/components/lm-modal/LMModal';
 @Component({
   tag: 'lm-modal',
   styleUrl: 'lm-modal.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmModal {
   // *** Required for positioning ***
@@ -28,7 +28,7 @@ export class LmModal {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public borderRadius: number = 0;
   
@@ -191,11 +191,13 @@ export class LmModal {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._modal;
-      element["position"] = position;
-      element["depth"] = 2;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._modal;
+        element["position"] = position;
+        element["depth"] = 2;
 
-      position++;
+        position++;
+      }
     });
 
     this.addElementToRoot.emit(this._modal);

@@ -103,7 +103,7 @@ export class LMVideo implements SceneElement {
     }
 
     public get dynamicWidth(): boolean {
-        return false;
+        return this._initialWidth == null;
     }
 
     public get width(): number {
@@ -164,7 +164,10 @@ export class LMVideo implements SceneElement {
         return SceneElementPlacement.Main;
     }
 
-    public addChildElement(position: number, childElement: SceneElement): void {
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     public getDimensions(): Dimensions {
@@ -345,9 +348,7 @@ export class LMVideo implements SceneElement {
 
     private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(this._content.children.length-1); i>=0; i--) {
-                this._content.remove(this._content.children[i]);
-            }
+            this._content.clear();
 
             if (this._mesh) {
                 this._mesh.geometry.dispose();

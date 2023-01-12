@@ -13,7 +13,7 @@ import { LMLayout } from '../../classes/components/lm-layout/LMLayout';
 @Component({
   tag: 'lm-layout',
   styleUrl: 'lm-layout.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmLayout {
   // *** Required for positioning ***
@@ -28,7 +28,7 @@ export class LmLayout {
   
   @Element() el: HTMLElement
 
-  @Prop() id: string = "index";
+  @Prop({ reflect: true }) id: string = "index";
 
   private _layout: LMLayout;
 
@@ -49,11 +49,13 @@ export class LmLayout {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._layout;
-      element["depth"] = this.depth;
-      element["position"] = position;
+      if (!(element instanceof Text)) {
+        element["parent"] = this._layout;
+        element["depth"] = this.depth;
+        element["position"] = position;
 
-      position++;
+        position++;
+      }
     });
   }
 

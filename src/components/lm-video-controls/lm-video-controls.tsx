@@ -16,7 +16,7 @@ import { LMVideoControls } from '../../classes/components/lm-video-controls/LMVi
 @Component({
   tag: 'lm-video-controls',
   styleUrl: 'lm-video-controls.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmVideoControls {
   // *** Required for positioning ***
@@ -29,7 +29,7 @@ export class LmVideoControls {
 
   // *** Component specific
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public backgroundColor: string = "#333333";
     

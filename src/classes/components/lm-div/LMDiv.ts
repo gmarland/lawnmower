@@ -266,8 +266,31 @@ export class LMDiv implements SceneElement {
         return SceneElementPlacement.Main;
     }
 
-    public addChildElement(position: number, childElement: SceneElement): void {
-        this._childElements.set(position, childElement);
+    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._childElements.has(position)) {
+                let keys = Array.from(this._childElements.keys());
+                keys.sort(function(a, b){return a-b});
+                
+                for (let i=(keys.length-1); i>=position; i--) {
+                    if (keys[i] >= position) {
+                        const childElement = this._childElements.get(keys[i]);
+    
+                        this._childElements.set((keys[i]+1), childElement);
+                        this._childElements.delete(keys[i]);
+                    }
+                }
+            }
+    
+            this._childElements.set(position, childElement);
+    
+            if (this.initialized) { 
+                const sizeUpdated = await this.draw();
+                if (sizeUpdated) await this.drawParent();
+            }
+
+            resolve();
+        })
     }
     
     public getChildSceneElements(): SceneElement[] {
@@ -404,11 +427,19 @@ export class LMDiv implements SceneElement {
             }
 
             if (body && child) {
-                await this.generateContent(child);
+                child.clear();
+                this._content.remove(child);
+                
+                const childLayoutContainer = new Object3D();
+                childLayoutContainer.name = "child";
+                
+                this._content.add(childLayoutContainer);
+    
+                await this.generateContent(childLayoutContainer);
 
-                this.resizePanelBody(body, child);
+                this.resizePanelBody(body, childLayoutContainer);
 
-                this.repositionContainer(body, child);
+                this.repositionContainer(body, childLayoutContainer);
             }
             
             resolve();

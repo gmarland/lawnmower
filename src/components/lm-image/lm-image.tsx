@@ -15,7 +15,7 @@ import { LMImage } from '../../classes/components/lm-image/LMImage';
 @Component({
   tag: 'lm-image',
   styleUrl: 'lm-image.css',
-  shadow: true,
+  shadow: false
 })
 export class LmImage {
   // *** Required for positioning ***
@@ -30,7 +30,7 @@ export class LmImage {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
 

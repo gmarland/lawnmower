@@ -54,7 +54,9 @@ export class ColumnLMDiv extends LMDiv {
     public async resizeFullWidthPanels(width: number, childLayoutContainer: Object3D): Promise<boolean> {
         return new Promise(async (resolve) => {
             const totalBox = new Box3().setFromObject(childLayoutContainer);
-            const spareSpace = (width-(this.padding*2))-(totalBox.max.x-totalBox.min.x);
+            let childSize = (totalBox.max.x-totalBox.min.x);
+            
+            const spareSpace = (width-(this.padding*2))-childSize;
 
             const widthUpdated = (spareSpace > 0);
             
@@ -118,9 +120,7 @@ export class ColumnLMDiv extends LMDiv {
 
     public async generateContent(childLayoutContainer: Object3D): Promise<void> {
         return new Promise(async (resolve) => {
-            for (let i=(childLayoutContainer.children.length-1); i>=0; i--) {
-                childLayoutContainer.remove(childLayoutContainer.children[i]);
-            }
+            childLayoutContainer.clear();
 
             let keys = Array.from(this.childElements.keys());
             keys.sort(function(a, b){return a-b});

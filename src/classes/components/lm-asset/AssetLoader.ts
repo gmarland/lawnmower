@@ -1,11 +1,8 @@
 import { 
-    Box3,
-    Group,
-    Vector3
+    Group
 } from 'three';
 
 import { GLTFLoader } from '../../../utils/GLTFLoader.js';
-import { AssetUtils } from './AssetUtils.js';
 import { LoadedAssetDetail } from './LoadedAssetDetail.js';
 
 export class AssetLoader {

@@ -16,7 +16,7 @@ import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
 @Component({
   tag: 'lm-asset',
   styleUrl: 'lm-asset.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmAsset {
   // *** Required for positioning ***
@@ -31,7 +31,7 @@ export class LmAsset {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
 

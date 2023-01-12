@@ -15,7 +15,7 @@ import { LMVideo } from '../../classes/components/lm-video/LMVideo';
 @Component({
   tag: 'lm-video',
   styleUrl: 'lm-video.scss',
-  shadow: true,
+  shadow: false
 })
 export class LmVideo {
   // *** Required for positioning ***
@@ -30,11 +30,13 @@ export class LmVideo {
 
   @Element() el: HTMLElement
 
-  @Prop() public id: string = "";
+  @Prop({ mutable: true }) public sceneElement: LMVideo;
+
+  @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
 
-  @Prop() public width: number = 100;
+  @Prop() public width: number;
 
   @Prop() public height: number;
 
@@ -46,15 +48,13 @@ export class LmVideo {
 
   @Event() public click: EventEmitter;
 
-  private _video: LMVideo;
-
-  private _video360Element: HTMLLm360videoElement;
+  private _dideo360Element: HTMLLm360videoElement;
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video) {
-        this._video.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
@@ -64,18 +64,18 @@ export class LmVideo {
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video360Element) {
-        await this._video360Element.close();
+      if (this._dideo360Element) {
+        await this._dideo360Element.close();
 
-        this._video360Element.src = newValue;
+        this._dideo360Element.src = newValue;
       }
 
-      if (this._video) {
-        this._video.reset();
-        this._video.src = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.reset();
+        this.sceneElement.src = newValue;
   
-        const dimensionsUpdated = await this._video.draw();
-        if (dimensionsUpdated) await this._video.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -85,11 +85,11 @@ export class LmVideo {
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video) {
-        this._video.width = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.width = newValue;
   
-        const dimensionsUpdated = await this._video.draw();
-        if (dimensionsUpdated) await this._video.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -99,11 +99,11 @@ export class LmVideo {
   @Watch('height')
   private updateHeight(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video) {
-        this._video.height = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.height = newValue;
   
-        const dimensionsUpdated = await this._video.draw();
-        if (dimensionsUpdated) await this._video.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -113,11 +113,11 @@ export class LmVideo {
   @Watch('placeholder')
   private updatePlaceholder(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video) {
-        this._video.placeholderTimestamp = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.placeholderTimestamp = newValue;
   
-        const dimensionsUpdated = await this._video.draw();
-        if (dimensionsUpdated) await this._video.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -127,14 +127,14 @@ export class LmVideo {
   @Watch('play360')
   private updatePlay360(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video360Element) await this._video360Element.close();
+      if (this._dideo360Element) await this._dideo360Element.close();
 
-      if (this._video) {
-        this._video.reset();
-        this._video.playInline = !this.play360;
+      if (this.sceneElement) {
+        this.sceneElement.reset();
+        this.sceneElement.playInline = !this.play360;
   
-        const dimensionsUpdated = await this._video.draw();
-        if (dimensionsUpdated) await this._video.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -144,10 +144,10 @@ export class LmVideo {
   @Watch('visible')
   private updateVisible(newValue: boolean): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video) {
-        this._video.visible = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.visible = newValue;
   
-        await this._video.drawParent();
+        await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -155,15 +155,15 @@ export class LmVideo {
   }
 
   componentWillLoad() {
-    this._video = new LMVideo(this.depth, this.parent, this.id, this.src, { 
+    this.sceneElement = new LMVideo(this.depth, this.parent, this.id, this.src, { 
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,
       playInline: !this.play360
     });
 
-    this._video.onClick = () => {
-      if (this.play360) this._video360Element.play();
+    this.sceneElement.onClick = () => {
+      if (this.play360) this._dideo360Element.play();
 
       this.click.emit();
     };
@@ -171,24 +171,26 @@ export class LmVideo {
     let position = 1;
 
     this.el.childNodes.forEach(element => {
-      element["parent"] = this._video;
-      element["position"] = position;
-      element["depth"] = this.depth+1;
+      if (!(element instanceof Text)) {
+        element["parent"] = this.sceneElement;
+        element["position"] = position;
+        element["depth"] = this.depth+1;
 
-      position++;
+        position++;
+      }
     });
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this._video);
+    this.parent.addChildElement(this.position, this.sceneElement);
   }
 
   render() {
     return (
       <Host>
-        <lm-360video ref={(el) => this._video360Element = el as HTMLLm360videoElement}
+        <lm-360video ref={(el) => this._dideo360Element = el as HTMLLm360videoElement}
                         src={ this.src }
-                        parent={ this._video }></lm-360video>
+                        parent={ this.sceneElement }></lm-360video>
       </Host>
     );
   }
