@@ -20,7 +20,7 @@ import { MainScene } from '../../classes/scene/MainScene';
 @Component({
   tag: 'lm-document',
   styleUrl: 'lm-document.scss',
-  shadow: false
+  shadow: true
 })
 export class LmDocument {
   @Element() el: HTMLElement
