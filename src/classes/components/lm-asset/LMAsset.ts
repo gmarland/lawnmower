@@ -368,6 +368,22 @@ export class LMAsset implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._loadedAsset) {
+                this._loadedAsset.clear();
+                this._loadedAsset = null;
+            }
+
+            if (this._loadedAssetContainer) {
+                this._loadedAssetContainer.clear();
+                this._loadedAssetContainer = null;
+            }
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            } 
+
             resolve();
         });
     }

@@ -6,7 +6,8 @@ import {
   Prop, 
   Event, 
   EventEmitter,
-  Watch
+  Watch,
+  Method
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -30,6 +31,8 @@ export class LmImage {
 
   @Element() el: HTMLElement
 
+  @Prop({ mutable: true }) public sceneElement: LMImage;
+
   @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
@@ -48,15 +51,13 @@ export class LmImage {
 
   @Event() public showModalDialog: EventEmitter<string>;
 
-  private _image: LMImage;
-
   private _modalDialog: HTMLLmModalElement;
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._image) {
-        this._image.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
@@ -66,11 +67,11 @@ export class LmImage {
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._image) {
-        this._image.src = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.src = newValue;
   
-        const dimensionsUpdated = await this._image.draw();
-        if (dimensionsUpdated) await this._image.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -80,11 +81,11 @@ export class LmImage {
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._image) {
-        this._image.width = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.width = newValue;
   
-        const dimensionsUpdated = await this._image.draw();
-        if (dimensionsUpdated) await this._image.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -94,11 +95,11 @@ export class LmImage {
   @Watch('height')
   private updateHeight(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._image) {
-        this._image.height = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.height = newValue;
   
-        const dimensionsUpdated = await this._image.draw();
-        if (dimensionsUpdated) await this._image.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -108,11 +109,11 @@ export class LmImage {
   @Watch('borderRadius')
   private updateBorderRadius(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._image) {
-        this._image.borderRadius = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.borderRadius = newValue;
   
-        const dimensionsUpdated = await this._image.draw();
-        if (dimensionsUpdated) await this._image.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -122,24 +123,35 @@ export class LmImage {
   @Watch('visible')
   private updateVisible(newValue: boolean): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._image) {
-        this._image.visible = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.visible = newValue;
   
-        await this._image.drawParent();
+        await this.sceneElement.drawParent();
       }
 
       resolve();
     });
   }
 
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
+      resolve();
+    });
+  }
+
   componentWillLoad() {
-    this._image = new LMImage(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMImage(this.parent, this.id, this.src, { 
         width: this.width, 
         height: this.height,
         borderRadius: this.borderRadius
     });
 
-    this._image.onClick =async  () => {
+    this.sceneElement.onClick =async  () => {
       if (this.modal && this._modalDialog) {
         this.showModalDialog.emit(await this._modalDialog.getUUID());
       }
@@ -149,9 +161,9 @@ export class LmImage {
   }
 
   componentDidLoad() {
-    if (this._modalDialog) this._modalDialog.parent = this._image;
+    if (this._modalDialog) this._modalDialog.parent = this.sceneElement;
 
-    this.parent.addChildElement(this.position, this._image);
+    this.parent.addChildElement(this.position, this.sceneElement);
   }
   
   render() {
@@ -160,7 +172,7 @@ export class LmImage {
         {
           this.modal 
           ? <lm-modal ref={(el) => this._modalDialog = el as HTMLLmModalElement } 
-                      parent={this._image} 
+                      parent={this.sceneElement} 
                       border-radius="10">
               <lm-image src={ this.src }></lm-image>
             </lm-modal>

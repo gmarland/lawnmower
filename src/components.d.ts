@@ -6,18 +6,26 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { SceneElement } from "./classes/components/SceneElement";
+import { LM360Video } from "./classes/components/lm-360video/LM360Video";
+import { LMAsset } from "./classes/components/lm-asset/LMAsset";
+import { LMDiv } from "./classes/components/lm-div/LMDiv";
+import { LMImage } from "./classes/components/lm-image/LMImage";
+import { LMLayout } from "./classes/components/lm-layout/LMLayout";
+import { LMModal } from "./classes/components/lm-modal/LMModal";
 import { LMText } from "./classes/components/lm-text/LMText";
 import { LMVideo } from "./classes/components/lm-video/LMVideo";
 export namespace Components {
     interface Lm360video {
         "close": () => Promise<void>;
         "depth": number;
+        "destroy": () => Promise<void>;
         "id": string;
         "parent": SceneElement;
         "pause": () => Promise<void>;
         "play": () => Promise<void>;
         "position": number;
         "reset": () => Promise<void>;
+        "sceneElement": LM360Video;
         "src": string;
         "videoHeightSegments": number;
         "videoRadius": number;
@@ -26,11 +34,13 @@ export namespace Components {
     interface LmAsset {
         "activeAnimation": string;
         "depth": number;
+        "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
         "id": string;
         "parent": SceneElement;
         "position": number;
         "radius": number;
+        "sceneElement": LMAsset;
         "src": string;
         "visible": boolean;
         "xRotation": number;
@@ -45,6 +55,7 @@ export namespace Components {
         "backgroundColor": string;
         "borderRadius": number;
         "depth": number;
+        "destroy": () => Promise<void>;
         "height"?: number;
         "horizontalAlign": string;
         "id": string;
@@ -57,6 +68,8 @@ export namespace Components {
         "parent": SceneElement;
         "position": number;
         "prepend": (element: any) => Promise<void>;
+        "removeElement": (element: any) => Promise<void>;
+        "sceneElement": LMDiv;
         "verticalAlign": string;
         "width": number;
         "xRotation": number;
@@ -73,20 +86,24 @@ export namespace Components {
     interface LmImage {
         "borderRadius": number;
         "depth": number;
+        "destroy": () => Promise<void>;
         "height": number;
         "id": string;
         "modal": boolean;
         "parent": SceneElement;
         "position": number;
+        "sceneElement": LMImage;
         "src": string;
         "visible": boolean;
         "width": number;
     }
     interface LmLayout {
         "depth": number;
+        "destroy": () => Promise<void>;
         "id": string;
         "parent": SceneElement;
         "position": number;
+        "sceneElement": LMLayout;
     }
     interface LmModal {
         "backgroundColor": string;
@@ -94,6 +111,7 @@ export namespace Components {
         "borderRadius": number;
         "borderWidth": number;
         "closeButtonWidth": number;
+        "destroy": () => Promise<void>;
         "getUUID": () => Promise<string>;
         "height"?: number;
         "hide": () => Promise<void>;
@@ -101,6 +119,7 @@ export namespace Components {
         "offset": number;
         "padding": number;
         "parent": SceneElement;
+        "sceneElement": LMModal;
         "show": () => Promise<void>;
         "width": number;
     }
@@ -125,6 +144,7 @@ export namespace Components {
     }
     interface LmVideo {
         "depth": number;
+        "destroy": () => Promise<void>;
         "height": number;
         "id": string;
         "parent": SceneElement;
@@ -268,6 +288,7 @@ declare namespace LocalJSX {
         "onViewCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "position"?: number;
+        "sceneElement"?: LM360Video;
         "src"?: string;
         "videoHeightSegments"?: number;
         "videoRadius"?: number;
@@ -281,6 +302,7 @@ declare namespace LocalJSX {
         "parent"?: SceneElement;
         "position"?: number;
         "radius"?: number;
+        "sceneElement"?: LMAsset;
         "src"?: string;
         "visible"?: boolean;
         "xRotation"?: number;
@@ -305,6 +327,7 @@ declare namespace LocalJSX {
         "padding"?: number;
         "parent"?: SceneElement;
         "position"?: number;
+        "sceneElement"?: LMDiv;
         "verticalAlign"?: string;
         "width"?: number;
         "xRotation"?: number;
@@ -325,6 +348,7 @@ declare namespace LocalJSX {
         "onShowModalDialog"?: (event: LmImageCustomEvent<string>) => void;
         "parent"?: SceneElement;
         "position"?: number;
+        "sceneElement"?: LMImage;
         "src"?: string;
         "visible"?: boolean;
         "width"?: number;
@@ -334,6 +358,7 @@ declare namespace LocalJSX {
         "id"?: string;
         "parent"?: SceneElement;
         "position"?: number;
+        "sceneElement"?: LMLayout;
     }
     interface LmModal {
         "backgroundColor"?: string;
@@ -348,6 +373,7 @@ declare namespace LocalJSX {
         "onClick"?: (event: LmModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
+        "sceneElement"?: LMModal;
         "width"?: number;
     }
     interface LmText {

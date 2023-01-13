@@ -282,6 +282,15 @@ export class LMImage implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+
             resolve();
         });
     }
@@ -292,12 +301,8 @@ export class LMImage implements SceneElement {
         return new Promise(async (resolve) => {
             this._content.clear();
 
-            if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
-                this._mesh = null;
-            }
-
+            this.destroyMesh();
+            
             this._mesh = await this.buildMesh(width, height);
 
             this._content.add(this._mesh);
@@ -372,5 +377,13 @@ export class LMImage implements SceneElement {
     
             resolve(mesh);
         });
+    }
+
+    private destroyMesh(): void {
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
     }
 }

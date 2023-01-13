@@ -334,6 +334,15 @@ export class LMVideoControls implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+            
             resolve();
         });
     }
@@ -346,11 +355,7 @@ export class LMVideoControls implements SceneElement {
 
             this._content.clear();
 
-            if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
-                this._mesh = null;
-            }
+            this.destroyMesh();
 
             // Build layout
         
@@ -401,5 +406,31 @@ export class LMVideoControls implements SceneElement {
 
             resolve();
         });
+    }
+
+    private destroyMesh(): void {
+        if (this._closeMesh) {
+            this._closeMesh.geometry.dispose();
+            this._closeMesh.material.dispose();
+            this._closeMesh = null;
+        }
+        
+        if (this._playMesh) {
+            this._playMesh.geometry.dispose();
+            this._playMesh.material.dispose();
+            this._pauseMesh = null;
+        }
+        
+        if (this._pauseMesh) {
+            this._pauseMesh.geometry.dispose();
+            this._pauseMesh.material.dispose();
+            this._pauseMesh = null;
+        }
+
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
     }
 }

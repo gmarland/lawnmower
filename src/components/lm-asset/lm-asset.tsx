@@ -31,6 +31,8 @@ export class LmAsset {
 
   @Element() el: HTMLElement
 
+  @Prop({ mutable: true }) public sceneElement: LMAsset;
+
   @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
@@ -55,13 +57,11 @@ export class LmAsset {
 
   @Event() public click: EventEmitter;
 
-  private _asset: LMAsset;
-
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._asset) {
-        this._asset.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
@@ -71,10 +71,10 @@ export class LmAsset {
   @Watch('radius')
   public async setRadius(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      this._asset.width = newValue;
+      this.sceneElement.width = newValue;
   
-      const dimensionsUpdated = await this._asset.draw();
-      if (dimensionsUpdated) await this._asset.drawParent();
+      const dimensionsUpdated = await this.sceneElement.draw();
+      if (dimensionsUpdated) await this.sceneElement.drawParent();
       
       resolve();
     });
@@ -83,11 +83,11 @@ export class LmAsset {
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._asset) {
-        this._asset.src = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.src = newValue;
   
-        const dimensionsUpdated = await this._asset.draw();
-        if (dimensionsUpdated) await this._asset.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -97,7 +97,7 @@ export class LmAsset {
   @Watch('activeAnimation')
   public async updateActiveAnimation(newValue: string): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.activeAnimation = newValue;
+      this.sceneElement.activeAnimation = newValue;
       
       resolve();
     });
@@ -106,7 +106,7 @@ export class LmAsset {
   @Watch('xRotation')
   public async setXRotation(newValue: number): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.xRotation = newValue;
+      this.sceneElement.xRotation = newValue;
       
       resolve();
     });
@@ -115,7 +115,7 @@ export class LmAsset {
   @Watch('yRotation')
   public async setYRotation(newValue: number): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.yRotation = newValue;
+      this.sceneElement.yRotation = newValue;
       
       resolve();
     });
@@ -124,7 +124,7 @@ export class LmAsset {
   @Watch('zRotation')
   public async setZRotation(newValue: number): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.zRotation = newValue;
+      this.sceneElement.zRotation = newValue;
       
       resolve();
     });
@@ -133,7 +133,7 @@ export class LmAsset {
   @Watch('xRotationSpeed')
   public async setXRotationSpeed(newValue: number): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.xRotationSpeed = newValue;
+      this.sceneElement.xRotationSpeed = newValue;
       
       resolve();
     });
@@ -142,7 +142,7 @@ export class LmAsset {
   @Watch('yRotationSpeed')
   public async setYRotationSpeed(newValue: number): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.yRotationSpeed = newValue;
+      this.sceneElement.yRotationSpeed = newValue;
       
       resolve();
     });
@@ -151,7 +151,7 @@ export class LmAsset {
   @Watch('zRotationSpeed')
   public async setZRotationSpeed(newValue: number): Promise<void> {
     return new Promise((resolve) => {
-      this._asset.zRotationSpeed = newValue;
+      this.sceneElement.zRotationSpeed = newValue;
       
       resolve();
     });
@@ -160,10 +160,10 @@ export class LmAsset {
   @Watch('visible')
   private updateVisible(newValue: boolean): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._asset) {
-        this._asset.visible = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.visible = newValue;
   
-        await this._asset.drawParent();
+        await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -172,11 +172,22 @@ export class LmAsset {
 
   @Method()
   public async getAnimationNames(): Promise<Array<string>> {
-    return new Promise((resolve) => resolve(this._asset.getAnimationNames()));
+    return new Promise((resolve) => resolve(this.sceneElement.getAnimationNames()));
+  }
+
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
+      resolve();
+    });
   }
 
   componentWillLoad() {
-    this._asset = new LMAsset(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMAsset(this.parent, this.id, this.src, { 
       activeAnimation: this.activeAnimation,
       radius: this.radius, 
       xRotation: this.xRotation,
@@ -187,13 +198,13 @@ export class LmAsset {
       zRotationSpeed: this.zRotationSpeed
     });
 
-    this._asset.onClick = () => {
+    this.sceneElement.onClick = () => {
       this.click.emit();
     };
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this._asset);
+    this.parent.addChildElement(this.position, this.sceneElement);
   }
 
   render() {

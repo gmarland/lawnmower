@@ -289,7 +289,34 @@ export class LMDiv implements SceneElement {
     }
 
     public removeChildElement(childElement: SceneElement): Promise<void> {
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
+            let keys = Array.from(this._childElements.keys());
+            keys.sort(function(a, b){return a-b});
+            let keyFound = null;
+            
+            for (let i=0; i<keys.length; i++) {
+                const divChildElement = this._childElements.get(keys[i]);
+
+                if (!keyFound) {
+                    if (divChildElement.uuid == childElement.uuid) {
+                        this._childElements.delete(keys[i]);
+                        
+                        keyFound = keys[i];
+                    }
+                }
+                else {
+                    if (keys[i] > keyFound) {
+                        this._childElements.set((keys[i]-1), divChildElement);
+                    }
+                    
+                    if (i === (keys.length-1)) {
+                        this._childElements.delete(keys[i]);
+                    }
+                } 
+            }
+
+            await this.draw();
+
             resolve();
         });
     }
@@ -608,6 +635,33 @@ export class LMDiv implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            let body = null;
+            let child = null;
+
+            for (let i=0; i<this._content.children.length; i++) {
+                if (this._content.children[i].name == "body") body = this._content.children[i];
+                else if (this._content.children[i].name == "child") child = this._content.children[i];
+            }
+
+            if (body) {
+                if (body) {
+                    body.geometry.dispose();
+                    body.material.dispose();
+                    body = null;
+                }
+            }
+
+            if (child) {
+                child.clear();
+            }
+            
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
             resolve();
         });
     }

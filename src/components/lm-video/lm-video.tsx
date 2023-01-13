@@ -6,7 +6,8 @@ import {
   Element,
   Event,
   EventEmitter,
-  Watch
+  Watch,
+  Method
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
@@ -150,6 +151,17 @@ export class LmVideo {
         await this.sceneElement.drawParent();
       }
 
+      resolve();
+    });
+  }
+
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
       resolve();
     });
   }

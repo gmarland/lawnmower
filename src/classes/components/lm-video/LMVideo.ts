@@ -48,10 +48,10 @@ export class LMVideo implements SceneElement {
 
     private _placeholderTimestamp: number;
 
+    private _content?: Group = new Group();
+
     private _mesh?: Mesh = null;
     private _playButton?: Mesh = null;
-
-    private _content?: Group = new Group();
 
     private _initialized: boolean = false;
     
@@ -347,6 +347,15 @@ export class LMVideo implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+            
             resolve();
         });
     }
@@ -357,17 +366,7 @@ export class LMVideo implements SceneElement {
         return new Promise(async (resolve) => {
             this._content.clear();
 
-            if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
-                this._mesh = null;
-            }
-
-            if (this._playButton) {
-                this._playButton.geometry.dispose();
-                this._playButton.material.dispose();
-                this._playButton = null;
-            }
+            this.destroyMesh();
 
             this._mesh = await this.buildMesh(width, height);
             this._playButton = this.buildPlayButton();
@@ -472,5 +471,19 @@ export class LMVideo implements SceneElement {
         this._content.translateZ(this._depth+1);
 
         return playMesh;
+    }
+
+    private destroyMesh(): void {
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
+
+        if (this._playButton) {
+            this._playButton.geometry.dispose();
+            this._playButton.material.dispose();
+            this._playButton = null;
+        }
     }
 }

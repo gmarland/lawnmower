@@ -36,6 +36,8 @@ export class LmDiv {
 
   @Element() el: HTMLElement
 
+  @Prop({ mutable: true }) public sceneElement: LMDiv;
+
   @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public layout: string = "Row";
@@ -66,15 +68,11 @@ export class LmDiv {
   
   @Prop() public zRotation: number = 0;
 
-  private _div: LMDiv;
-
-  private _slot: HTMLSlotElement;
-
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
@@ -84,11 +82,11 @@ export class LmDiv {
   @Watch('width')
   private updateWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.width = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.width = newValue;
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -98,11 +96,11 @@ export class LmDiv {
   @Watch('height')
   private updateheight(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.height = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.height = newValue;
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -112,8 +110,8 @@ export class LmDiv {
   @Watch('backgroundColor')
   private updateBackgroundColor(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.backgroundColor = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.backgroundColor = newValue;
       }
 
       resolve();
@@ -123,11 +121,11 @@ export class LmDiv {
   @Watch('borderRadius')
   private updateBorderRadius(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.borderRadius = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.borderRadius = newValue;
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -137,11 +135,11 @@ export class LmDiv {
   @Watch('padding')
   private updatePadding(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.padding = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.padding = newValue;
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -151,11 +149,11 @@ export class LmDiv {
   @Watch('verticalAlign')
   public updateVerticalAlign(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.verticalAlign = VerticalAlign[newValue];
+      if (this.sceneElement) {
+        this.sceneElement.verticalAlign = VerticalAlign[newValue];
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -165,11 +163,11 @@ export class LmDiv {
   @Watch('horizontalAlign')
   public updateHorizontalAlign(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.horizontalAlign = HorizontalAlign[newValue];
+      if (this.sceneElement) {
+        this.sceneElement.horizontalAlign = HorizontalAlign[newValue];
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -179,11 +177,11 @@ export class LmDiv {
   @Watch('itemHorizontalAlign')
   public updateItemHorizontalAlign(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.itemHorizontalAlign = ItemHorizontalAlign[newValue];
+      if (this.sceneElement) {
+        this.sceneElement.itemHorizontalAlign = ItemHorizontalAlign[newValue];
   
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -193,11 +191,11 @@ export class LmDiv {
   @Watch('itemVerticalAlign')
   public updateItemVerticalAlign(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._div) {
-        this._div.itemVerticalAlign = ItemVerticalAlign[newValue];
+      if (this.sceneElement) {
+        this.sceneElement.itemVerticalAlign = ItemVerticalAlign[newValue];
     
-        const dimensionsUpdated = await this._div.draw();
-        if (dimensionsUpdated) await this._div.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -206,20 +204,52 @@ export class LmDiv {
 
   @Method()
   public async append(element: any): Promise<void> {
-    element["parent"] = this._div;
-    element["position"] = this.el.children.length;
-    element["depth"] = this.depth+1;
+    return new Promise(async (resolve) => {
+      element["parent"] = this.sceneElement;
+      element["position"] = this.el.children.length;
+      element["depth"] = this.depth+1;
 
-    this.el.appendChild(element);
+      this.el.appendChild(element);
+          
+      resolve();
+    });
   }
 
   @Method()
   public async prepend(element: any): Promise<void> {
-    element["parent"] = this._div;
-    element["position"] = 0;
-    element["depth"] = this.depth+1;
-    
-    this.el.insertBefore(element, this.el.firstChild)
+    return new Promise(async (resolve) => {
+      element["parent"] = this.sceneElement;
+      element["position"] = 0;
+      element["depth"] = this.depth+1;
+      
+      this.el.insertBefore(element, this.el.firstChild);
+          
+      resolve();
+    });
+  }
+
+  @Method()
+  public async removeElement(element: any): Promise<void> {
+    return new Promise(async (resolve) => {
+      for (let i=0; i<this.el.children.length; i++) {
+        if(element.sceneElement.uuid == (this.el.children[i] as any).sceneElement.uuid) {
+          await element.destroy();
+        }
+      }
+        
+      resolve();
+    });
+  }
+
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
+      resolve();
+    });
   }
 
   componentWillLoad() {
@@ -240,14 +270,14 @@ export class LmDiv {
       zRotation: this.zRotation
     };
 
-    if (LMDivLayout[this.layout] == LMDivLayout.Column) this._div = new ColumnLMDiv(this.depth, this.parent, this.id, config);
-    else this._div = new RowVRDiv(this.depth, this.parent, this.id, config);
+    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.depth, this.parent, this.id, config);
+    else this.sceneElement = new RowVRDiv(this.depth, this.parent, this.id, config);
     
     let position = 0;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
-        element["parent"] = this._div;
+        element["parent"] = this.sceneElement;
         element["position"] = position;
         element["depth"] = this.depth+1;
 
@@ -257,13 +287,13 @@ export class LmDiv {
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this._div);
+    this.parent.addChildElement(this.position, this.sceneElement);
   }
 
   render() {
     return (
       <Host>
-        <slot ref={(el) => this._slot = el as HTMLSlotElement } ></slot>
+        <slot></slot>
       </Host>
     );
   }

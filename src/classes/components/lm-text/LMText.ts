@@ -3,8 +3,7 @@ import {
     Group,
     Vector3,
     CanvasTexture,
-    LinearFilter,
-    Box3
+    LinearFilter
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -359,6 +358,15 @@ export class LMText implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+
             resolve();
         });
     }
@@ -369,12 +377,8 @@ export class LMText implements SceneElement {
         return new Promise(async (resolve) => {
             this._content.clear();
 
-            if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
-                this._mesh = null;
-            }
-
+            this.destroyMesh();
+            
             this._mesh = this.buildMesh(width, height);
                     
             this._content.add(this._mesh);
@@ -546,5 +550,13 @@ export class LMText implements SceneElement {
         textTexture.repeat.set(aspect, aspect);
 
         return textTexture;
+    }
+
+    private destroyMesh(): void {
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
     }
 }

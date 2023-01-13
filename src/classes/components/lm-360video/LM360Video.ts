@@ -303,6 +303,15 @@ export class LM360Video implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+
             resolve();
         });
     }
@@ -313,21 +322,7 @@ export class LM360Video implements SceneElement {
         return new Promise(async (resolve) => {
             this._content.clear();
 
-            if (this._mesh) {
-                if (this._mesh) {
-                    if (this._mesh.children[0]) {
-                        if (this._mesh.children[0].geometry) this._mesh.children[0].geometry.dispose();
-                        if (this._mesh.children[0].material) this._mesh.children[0].material.dispose();
-                    }
-                    if (this._mesh.children[1]) {
-                        if (this._mesh.children[1].geometry) this._mesh.children[1].geometry.dispose();
-                        if (this._mesh.children[1].material) this._mesh.children[1].material.dispose();
-                    }
-                }
-                if (this._mesh.geometry) this._mesh.geometry.dispose();
-                if (this._mesh.material) this._mesh.material.dispose();
-                this._mesh = null;
-            }
+            this.destroyMesh();
             
             this._mesh = await this.buildMesh(videoRadius);
             this._mesh.recieveShadow = true;
@@ -414,5 +409,24 @@ export class LM360Video implements SceneElement {
     
             resolve(videoLayout);
         });
+    }
+
+    private destroyMesh(): void {
+        if (this._mesh) {
+            if (this._mesh) {
+                if (this._mesh.children[0]) {
+                    if (this._mesh.children[0].geometry) this._mesh.children[0].geometry.dispose();
+                    if (this._mesh.children[0].material) this._mesh.children[0].material.dispose();
+                }
+                if (this._mesh.children[1]) {
+                    if (this._mesh.children[1].geometry) this._mesh.children[1].geometry.dispose();
+                    if (this._mesh.children[1].material) this._mesh.children[1].material.dispose();
+                }
+            }
+            if (this._mesh.geometry) this._mesh.geometry.dispose();
+            if (this._mesh.material) this._mesh.material.dispose();
+            
+            this._mesh = null;
+        }
     }
 }
