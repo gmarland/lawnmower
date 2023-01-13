@@ -24,8 +24,6 @@ export class LMAsset implements SceneElement {
 
     private _id: string;
 
-    private _uuid: string;
-
     private _src: string;
     private _reloadSrc: boolean = true;
 
@@ -61,8 +59,6 @@ export class LMAsset implements SceneElement {
     constructor(parent: SceneElement, id: string, src: string, assetConfig: LMAssetConfig) {
         this._parent = parent;
 
-        this._uuid = MeshUtils.generateId();
-        
         this._id = id;
 
         this._src = src;
@@ -87,7 +83,7 @@ export class LMAsset implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get dynamicWidth(): boolean {
@@ -181,7 +177,7 @@ export class LMAsset implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -292,6 +288,12 @@ export class LMAsset implements SceneElement {
         });
     }
 
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     public startAnimation(): void {
         if (this._animationMixer) {
             this._action.play();
@@ -362,6 +364,12 @@ export class LMAsset implements SceneElement {
 
             this._animationMixer.update(delta);
         }
+    }
+
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     ////////// Private Methods

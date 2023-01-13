@@ -19,7 +19,6 @@ import { Dimensions } from '../../geometry/Dimensions';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
-import { MeshUtils } from '../../geometry/MeshUtils';
 import { LMLayout } from '../lm-layout/LMLayout';
 import { MainScene } from '../../scene/MainScene';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
@@ -30,8 +29,6 @@ export class LMDiv implements SceneElement {
     private _parent: SceneElement;
 
     private _id: string;
-
-    private _uuid: string;
 
     private _initialWidth?: number = null; 
     private _initialHeight?: number = null;
@@ -73,8 +70,6 @@ export class LMDiv implements SceneElement {
         
         this._parent = parent;
 
-        this._uuid = MeshUtils.generateId();
-        
         this._id = id;
 
         this._verticalAlign = config.verticalAlign;
@@ -113,7 +108,7 @@ export class LMDiv implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get dynamicWidth(): boolean {
@@ -290,7 +285,13 @@ export class LMDiv implements SceneElement {
             }
 
             resolve();
-        })
+        });
+    }
+
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
     
     public getChildSceneElements(): SceneElement[] {
@@ -307,7 +308,7 @@ export class LMDiv implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        if (uuid === this._uuid) {
+        if (uuid === this.uuid) {
             return true;
         }
         else {
@@ -350,6 +351,19 @@ export class LMDiv implements SceneElement {
         else {
             return false;
         }
+    }
+
+    private getBodyContent(): Mesh {
+        let body = null;
+
+        for (let i=0; i<this._content.children.length; i++) {
+            if (this._content.children[i].name == "body") {
+                body = this._content.children[i];
+                break;
+            }
+        }
+
+        return body;
     }
 
     // --- Rendering Methods
@@ -592,17 +606,10 @@ export class LMDiv implements SceneElement {
         });
     }
 
-    private getBodyContent(): Mesh {
-        let body = null;
-
-        for (let i=0; i<this._content.children.length; i++) {
-            if (this._content.children[i].name == "body") {
-                body = this._content.children[i];
-                break;
-            }
-        }
-
-        return body;
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     ////////// Virtual Methods

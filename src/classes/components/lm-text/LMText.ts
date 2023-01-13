@@ -10,7 +10,6 @@ import {
 import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
-import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
@@ -23,8 +22,6 @@ export class LMText implements SceneElement {
     private _parent: SceneElement;
 
     private _id: string;
-
-    private _uuid: string;
 
     private _fontSize: number;
     private _fontFamily: string;
@@ -65,8 +62,6 @@ export class LMText implements SceneElement {
     constructor(parent: SceneElement, id: string, text: string, config: LMTextConfig) {
         this._parent = parent;
 
-        this._uuid = MeshUtils.generateId();
-        
         this._id = id;
         
         this._text = text;
@@ -101,7 +96,7 @@ export class LMText implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get dynamicWidth(): boolean {
@@ -191,7 +186,7 @@ export class LMText implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -298,6 +293,12 @@ export class LMText implements SceneElement {
             resolve();
         });
     }
+
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
     
     // --- Rendering Methods
 
@@ -354,6 +355,12 @@ export class LMText implements SceneElement {
     }
 
     public update(delta: number): void {
+    }
+
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
     ////////// Private Methods

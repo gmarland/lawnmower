@@ -24,8 +24,6 @@ export class LM360Video implements SceneElement {
 
     private _id: string;
 
-    private _uuid: string;
-
     private _src: string;
 
     private _videoRadius: number;
@@ -40,7 +38,7 @@ export class LM360Video implements SceneElement {
 
     private _mesh?: Object3D = null;
 
-    private _content: Object3D = new Object3D();
+    private _content: Object3D = new Group();
     
     private _initialized: boolean = false;
     
@@ -60,8 +58,6 @@ export class LM360Video implements SceneElement {
         
         this._id = id;
 
-        this._uuid = MeshUtils.generateId();
-
         this._src = src;
         
         this._content.visible = false;
@@ -74,7 +70,7 @@ export class LM360Video implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get src(): string {
@@ -138,7 +134,7 @@ export class LM360Video implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -201,6 +197,12 @@ export class LM360Video implements SceneElement {
     // --- Data Methods
 
     public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public removeChildElement(childElement: SceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
@@ -299,9 +301,15 @@ export class LM360Video implements SceneElement {
     public update(delta: number): void {
     }
 
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     ////////// Private Methods
 
-    public async generateContent(videoRadius: number): Promise<void> {
+    private async generateContent(videoRadius: number): Promise<void> {
         return new Promise(async (resolve) => {
             this._content.clear();
 

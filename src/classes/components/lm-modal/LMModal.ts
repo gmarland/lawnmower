@@ -26,8 +26,6 @@ export class LMModal implements SceneElement {
 
     private _id: string;
 
-    private _uuid: string;
-
     private _baseImagePath: string;
 
     private _initialWidth: number; //Defined width from the HTML tag
@@ -69,8 +67,6 @@ export class LMModal implements SceneElement {
 
         this._id = id;
 
-        this._uuid = MeshUtils.generateId();
-        
         this._baseImagePath = config.baseImagePath;
 
         this._initialWidth = config.width;
@@ -100,7 +96,7 @@ export class LMModal implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get dynamicWidth(): boolean {
@@ -217,12 +213,18 @@ export class LMModal implements SceneElement {
         });
     }
 
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     public getChildSceneElements(): SceneElement[] {
         return [];
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -312,6 +314,12 @@ export class LMModal implements SceneElement {
     }
 
     public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public destroy(): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });

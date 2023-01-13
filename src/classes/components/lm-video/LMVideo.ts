@@ -14,7 +14,6 @@ import {
 
 import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
-import { MeshUtils } from '../../geometry/MeshUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 
@@ -28,8 +27,6 @@ export class LMVideo implements SceneElement {
     private _parent: SceneElement;
 
     private _id: string;
-
-    private _uuid: string;
 
     private _src: string;
 
@@ -67,8 +64,6 @@ export class LMVideo implements SceneElement {
         this._depth = depth;
 
         this._parent = parent;
-
-        this._uuid = MeshUtils.generateId();
         
         this._id = id;
         
@@ -91,7 +86,7 @@ export class LMVideo implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get src(): string {
@@ -170,6 +165,12 @@ export class LMVideo implements SceneElement {
         });
     }
 
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     public getDimensions(): Dimensions {
         return {
             width: this.width,
@@ -190,7 +191,7 @@ export class LMVideo implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -342,6 +343,12 @@ export class LMVideo implements SceneElement {
     }
 
     public update(delta: number): void {
+    }
+
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
     
     ////////// Private Methods

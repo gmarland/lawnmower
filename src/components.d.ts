@@ -108,6 +108,7 @@ export namespace Components {
         "backgroundColor": string;
         "borderRadius": number;
         "depth": number;
+        "destroy": () => Promise<void>;
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
