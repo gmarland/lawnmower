@@ -116,7 +116,7 @@
                 src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"></lm-asset>
             </lm-layout>
           </lm-div>
-          <lm-div width="800" height="800" background-color="#00d000" margin="10" padding="10" border-radius="20" vertical-align="Top" horizontal-align="Middle-.3"> 
+          <lm-div id="demo-image-div" width="800" height="800" background-color="#00d000" margin="10" padding="10" border-radius="20" vertical-align="Top" horizontal-align="Middle-.3"> 
             <lm-image id="demo-image"
                       border-radius="20" 
                       width="300"
@@ -150,7 +150,9 @@
         await customElements.whenDefined('lm-document');
         const main = document.getElementById('main');
 
-        setTimeout(async () => {
+        //****** Testing add and destroy
+
+        /* setTimeout(async () => {
           const newText = document.createElement("lm-text");
           newText.text = "hello hello hello";
           newText.backgroundColor = "#fff000";
@@ -186,7 +188,21 @@
           await newDiv.append(anotherNewText);
           await newDiv.append(newImage);
           await newDiv.append(anotherNewText2);
+
+          setTimeout(async () => {
+            await anotherNewText.destroy();
+          }, 3000);
         }, 3000);
+
+        setTimeout(async () => {
+          const video360 = document.getElementById("360-video-button");
+          await video360.destroy();
+
+          const existingImage = document.getElementById("demo-image");
+          const existingImageContainer = document.getElementById("demo-image-div");
+
+          await existingImageContainer.removeElement(existingImage);
+        }, 3000); */
         
         //await main.setLayout("boom");
 

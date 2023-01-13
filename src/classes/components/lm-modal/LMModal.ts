@@ -26,8 +26,6 @@ export class LMModal implements SceneElement {
 
     private _id: string;
 
-    private _uuid: string;
-
     private _baseImagePath: string;
 
     private _initialWidth: number; //Defined width from the HTML tag
@@ -69,8 +67,6 @@ export class LMModal implements SceneElement {
 
         this._id = id;
 
-        this._uuid = MeshUtils.generateId();
-        
         this._baseImagePath = config.baseImagePath;
 
         this._initialWidth = config.width;
@@ -100,7 +96,7 @@ export class LMModal implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get dynamicWidth(): boolean {
@@ -217,12 +213,18 @@ export class LMModal implements SceneElement {
         });
     }
 
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     public getChildSceneElements(): SceneElement[] {
         return [];
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -317,27 +319,28 @@ export class LMModal implements SceneElement {
         });
     }
 
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+
+            resolve();
+        });
+    }
+
     ////////// Private Methods
 
     private async generateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
             this._content.clear();
 
-            if (this._mesh) {
-                if (this._mesh.geometry) this._mesh.geometry.dispose();
-                if (this._mesh.material) this._mesh.material.dispose();
-                this._mesh = null;
-            }
-            
-            if (this._closeButtonMesh) {
-                for (let i=(this._closeButtonMesh.children.length-1); i>=0; i--) {
-                    if (this._closeButtonMesh.children[i]) {
-                        if (this._closeButtonMesh.children[i].geometry) this._closeButtonMesh.children[i].geometry.dispose();
-                        if (this._closeButtonMesh.children[i].material) this._closeButtonMesh.children[i].material.dispose();
-                        this._closeButtonMesh.children[i] = null
-                    }
-                }
-            }
+            this.destroyMesh();
             
             let dialogWidth = width;
             let dialogHeight = this._height ? this._height : 0;
@@ -418,5 +421,23 @@ export class LMModal implements SceneElement {
         buttonGroup.translateZ((this._depth+2)*1);
 
         return buttonGroup;
+    }
+
+    private destroyMesh(): void {
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
+
+        if (this._closeButtonMesh) {
+            for (let i=(this._closeButtonMesh.children.length-1); i>=0; i--) {
+                if (this._closeButtonMesh.children[i]) {
+                    if (this._closeButtonMesh.children[i].geometry) this._closeButtonMesh.children[i].geometry.dispose();
+                    if (this._closeButtonMesh.children[i].material) this._closeButtonMesh.children[i].material.dispose();
+                    this._closeButtonMesh.children[i] = null
+                }
+            }
+        }
     }
 }

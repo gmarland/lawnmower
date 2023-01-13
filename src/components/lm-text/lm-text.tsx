@@ -11,6 +11,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMText } from '../../classes/components/lm-text/LMText';
+import { Method } from '@stencil/core/internal';
 
 @Component({
   tag: 'lm-text',
@@ -232,6 +233,17 @@ export class LmText {
         await this.sceneElement.drawParent();
       }
 
+      resolve();
+    });
+  }
+
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
       resolve();
     });
   }

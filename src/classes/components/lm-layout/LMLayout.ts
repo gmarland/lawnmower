@@ -6,8 +6,6 @@ import {
 
 import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
-
-import { MeshUtils } from "../../geometry/MeshUtils";
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { SceneElement } from '../SceneElement';
@@ -16,8 +14,6 @@ export class LMLayout implements SceneElement {
     private _parent: SceneElement;
 
     private _id: string;
-
-    private _uuid: string;
 
     private _content?: Group = new Group();
 
@@ -33,8 +29,6 @@ export class LMLayout implements SceneElement {
 
         this._id = id;
         
-        this._uuid = MeshUtils.generateId();
-        
         this._content.name = "layout";
         this._content.visible = false;
     }
@@ -46,7 +40,7 @@ export class LMLayout implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
     
     public get dynamicWidth(): boolean {
@@ -96,7 +90,7 @@ export class LMLayout implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        if (uuid === this._uuid) {
+        if (uuid === this.uuid) {
             return true;
         }
         else {
@@ -234,7 +228,13 @@ export class LMLayout implements SceneElement {
             }
 
             resolve();
-        })
+        });
+    }
+
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
     
     // --- Rendering Methods
@@ -306,5 +306,18 @@ export class LMLayout implements SceneElement {
         for (let i=0; i<childElements.length; i++) {
             childElements[i].update(delta);
         }
+    }
+
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+            
+            resolve();
+        });
     }
 }

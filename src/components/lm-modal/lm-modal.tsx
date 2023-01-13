@@ -28,6 +28,8 @@ export class LmModal {
 
   @Element() el: HTMLElement
 
+  @Prop({ mutable: true }) public sceneElement: LMModal;
+
   @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public borderRadius: number = 0;
@@ -52,38 +54,11 @@ export class LmModal {
 
   @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
-  private _modal: LMModal;
-
-  @Method()
-  public async getUUID(): Promise<string> {
-    return new Promise((resolve) => {
-      resolve(this._modal.uuid);
-    });
-  }
-
-  @Method()
-  public async show(): Promise<void> {
-    return new Promise((resolve) => {
-      this._modal.visible = true;
-
-      resolve();
-    });
-  }
-
-  @Method()
-  public async hide(): Promise<void> {
-    return new Promise((resolve) => {
-      this._modal.visible = false;
-
-      resolve();
-    });
-  }
-
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
@@ -93,11 +68,11 @@ export class LmModal {
   @Watch('borderRadius')
   private updateBorderRadius(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.borderRadius = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.borderRadius = newValue;
   
-        const dimensionsUpdated = await this._modal.draw();
-        if (dimensionsUpdated) await this._modal.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -107,11 +82,11 @@ export class LmModal {
   @Watch('borderColor')
   private updateBorderColo(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.borderColor = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.borderColor = newValue;
   
-        const dimensionsUpdated = await this._modal.draw();
-        if (dimensionsUpdated) await this._modal.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -121,11 +96,11 @@ export class LmModal {
   @Watch('borderWidth')
   private updateBorderWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.borderWidth = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.borderWidth = newValue;
   
-        const dimensionsUpdated = await this._modal.draw();
-        if (dimensionsUpdated) await this._modal.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -135,11 +110,11 @@ export class LmModal {
   @Watch('backgroundColor')
   private updateBackgroundColor(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.backgroundColor = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.backgroundColor = newValue;
   
-        const dimensionsUpdated = await this._modal.draw();
-        if (dimensionsUpdated) await this._modal.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -149,11 +124,11 @@ export class LmModal {
   @Watch('padding')
   private updatePadding(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.padding = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.padding = newValue;
   
-        const dimensionsUpdated = await this._modal.draw();
-        if (dimensionsUpdated) await this._modal.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
@@ -163,19 +138,55 @@ export class LmModal {
   @Watch('closeButtonWidth')
   private updateCloseButtonWidth(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._modal) {
-        this._modal.closeButtonWidth = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.closeButtonWidth = newValue;
   
-        const dimensionsUpdated = await this._modal.draw();
-        if (dimensionsUpdated) await this._modal.drawParent();
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
       }
 
       resolve();
     });
   }
 
+  @Method()
+  public async getUUID(): Promise<string> {
+    return new Promise((resolve) => {
+      resolve(this.sceneElement.uuid);
+    });
+  }
+
+  @Method()
+  public async show(): Promise<void> {
+    return new Promise((resolve) => {
+      this.sceneElement.visible = true;
+
+      resolve();
+    });
+  }
+
+  @Method()
+  public async hide(): Promise<void> {
+    return new Promise((resolve) => {
+      this.sceneElement.visible = false;
+
+      resolve();
+    });
+  }
+
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
+      resolve();
+    });
+  }
+
   componentWillLoad() {
-    this._modal = new LMModal(1, this.parent, this.id, { 
+    this.sceneElement = new LMModal(1, this.parent, this.id, { 
         baseImagePath: getAssetPath('assets'),
         width: this.width, 
         height: this.height,
@@ -192,7 +203,7 @@ export class LmModal {
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
-        element["parent"] = this._modal;
+        element["parent"] = this.sceneElement;
         element["position"] = position;
         element["depth"] = 2;
 
@@ -200,7 +211,7 @@ export class LmModal {
       }
     });
 
-    this.addElementToRoot.emit(this._modal);
+    this.addElementToRoot.emit(this.sceneElement);
   } 
 
   render() {

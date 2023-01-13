@@ -4,7 +4,8 @@ import {
   h,
   Element,
   Prop,
-  Watch
+  Watch,
+  Method
 } from '@stencil/core';
 import { SceneElement } from '../../classes/components/SceneElement';
 
@@ -28,29 +29,40 @@ export class LmLayout {
   
   @Element() el: HTMLElement
 
-  @Prop({ reflect: true }) id: string = "index";
+  @Prop({ mutable: true }) public sceneElement: LMLayout;
 
-  private _layout: LMLayout;
+  @Prop({ reflect: true }) id: string = "index";
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._layout) {
-        this._layout.id = newValue;
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
       }
 
       resolve();
     });
   }
 
+  @Method()
+  public async destroy(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.el.remove();
+
+      await this.sceneElement.destroy();
+      
+      resolve();
+    });
+  }
+
   componentWillLoad() {
-    this._layout = new LMLayout(this.parent, this.id);
+    this.sceneElement = new LMLayout(this.parent, this.id);
 
     let position = 1;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
-        element["parent"] = this._layout;
+        element["parent"] = this.sceneElement;
         element["depth"] = this.depth;
         element["position"] = position;
 
@@ -60,7 +72,7 @@ export class LmLayout {
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this._layout);
+    this.parent.addChildElement(this.position, this.sceneElement);
   }
 
   render() {

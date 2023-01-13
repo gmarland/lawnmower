@@ -31,6 +31,8 @@ export class Lm360Video {
 
   @Element() el: HTMLElement
 
+  @Prop({ mutable: true }) public sceneElement: LM360Video;
+
   @Prop({ reflect: true }) public id: string = "";
 
   @Prop() public src: string;
@@ -51,12 +53,81 @@ export class Lm360Video {
 
   private _controls: HTMLLmVideoControlsElement;
 
-  private _video: LM360Video;
+  @Watch('id')
+  private updateId(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this.sceneElement) {
+        this.sceneElement.id = newValue;
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('src')
+  private updateSrc(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this.sceneElement) {
+        this.hideVideo();
+
+        this.sceneElement.src = newValue;
+  
+        await this.sceneElement.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('videoRadius')
+  private updateVideoRadius(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this.sceneElement) {
+        this.hideVideo();
+
+        this.sceneElement.width = newValue;
+  
+        await this.sceneElement.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('videoWidthSegments')
+  private updateWidthSegments(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this.sceneElement) {
+        this.hideVideo();
+
+        this.sceneElement.widthSegments = newValue;
+  
+        await this.sceneElement.draw();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('videoHeightSegments')
+  private updateHeightSegments(newValue: number): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this.sceneElement) {
+        this.hideVideo();
+
+        this.sceneElement.heightSegments = newValue;
+  
+        await this.sceneElement.draw();
+      }
+
+      resolve();
+    });
+  }
 
   @Method()
   public async play(): Promise<void> {
     return new Promise((resolve) => {
-      this._video.play();
+      this.sceneElement.play();
 
       this.hideCurrentLayout.emit();
 
@@ -67,7 +138,7 @@ export class Lm360Video {
   @Method()
   public async pause(): Promise<void> {
     return new Promise((resolve) => {
-      this._video.pause();
+      this.sceneElement.pause();
 
       resolve();
     });
@@ -76,7 +147,7 @@ export class Lm360Video {
   @Method()
   public async reset(): Promise<void> {
     return new Promise((resolve) => {
-      this._video.reset();
+      this.sceneElement.reset();
 
       resolve();
     });
@@ -91,97 +162,37 @@ export class Lm360Video {
     });
   }
 
-  @Watch('id')
-  private updateId(newValue: string): Promise<void> {
+  @Method()
+  public async destroy(): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._video) {
-        this._video.id = newValue;
-      }
+      this.el.remove();
 
-      resolve();
-    });
-  }
-
-  @Watch('src')
-  private updateSrc(newValue: string): Promise<void> {
-    return new Promise(async (resolve) => {
-      if (this._video) {
-        this.hideVideo();
-
-        this._video.src = newValue;
-  
-        await this._video.draw();
-      }
-
-      resolve();
-    });
-  }
-
-  @Watch('videoRadius')
-  private updateVideoRadius(newValue: number): Promise<void> {
-    return new Promise(async (resolve) => {
-      if (this._video) {
-        this.hideVideo();
-
-        this._video.width = newValue;
-  
-        await this._video.draw();
-      }
-
-      resolve();
-    });
-  }
-
-  @Watch('videoWidthSegments')
-  private updateWidthSegments(newValue: number): Promise<void> {
-    return new Promise(async (resolve) => {
-      if (this._video) {
-        this.hideVideo();
-
-        this._video.widthSegments = newValue;
-  
-        await this._video.draw();
-      }
-
-      resolve();
-    });
-  }
-
-  @Watch('videoHeightSegments')
-  private updateHeightSegments(newValue: number): Promise<void> {
-    return new Promise(async (resolve) => {
-      if (this._video) {
-        this.hideVideo();
-
-        this._video.heightSegments = newValue;
-  
-        await this._video.draw();
-      }
-
+      await this.sceneElement.destroy();
+      
       resolve();
     });
   }
 
   private hideVideo(): void {
-    this._video.reset();
+    this.sceneElement.reset();
 
     this._controls.hide();
-    this._video.visible = false;
+    this.sceneElement.visible = false;
     
     this.showCurrentLayout.emit();
   }
 
   componentWillLoad() {
-    this._video = new LM360Video(this.parent, this.id, this.src, { 
+    this.sceneElement = new LM360Video(this.parent, this.id, this.src, { 
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,
       videoHeightSegments: this.videoHeightSegments
     });
 
-    this._video.onClick = () => {
+    this.sceneElement.onClick = () => {
       this._controls.getVisible().then((visible) => {
         if (visible) this._controls.hide();
-        else this._controls.show(this._video.getIsPlaying());
+        else this._controls.show(this.sceneElement.getIsPlaying());
       });
 
       this.click.emit();
@@ -190,25 +201,25 @@ export class Lm360Video {
 
   componentDidLoad() {
     this._controls.onPlay = () => {
-      this._video.play();
+      this.sceneElement.play();
     }
 
     this._controls.onPause = () => {
-      this._video.pause();
+      this.sceneElement.pause();
     }
 
     this._controls.onClose = () => {
       this.hideVideo();
     }
 
-    this.addElementToRoot.emit(this._video);
+    this.addElementToRoot.emit(this.sceneElement);
   }
 
   render() {
     return (
       <Host>
         <lm-video-controls ref={(el) => this._controls = el as HTMLLmVideoControlsElement} 
-                            parent={this._video}></lm-video-controls>
+                            parent={this.sceneElement}></lm-video-controls>
       </Host>
     );
   }

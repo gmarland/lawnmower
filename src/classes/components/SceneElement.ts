@@ -9,6 +9,8 @@ import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 export interface SceneElement {
     id: string;
 
+    uuid: string;
+
     dynamicWidth: boolean;
 
     width: number;
@@ -29,6 +31,8 @@ export interface SceneElement {
 
     addChildElement(position: number, childElement: SceneElement): Promise<void>;
 
+    removeChildElement(childElement: SceneElement): Promise<void>;
+
     isPartOfLayout(): boolean;
 
     isLayoutChild(layoutId): boolean;
@@ -44,4 +48,6 @@ export interface SceneElement {
     clicked(meshId: string): Promise<void>;
 
     update(delta: number): void;
+
+    destroy(): Promise<void>;
 }

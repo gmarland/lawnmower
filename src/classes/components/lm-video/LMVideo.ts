@@ -14,7 +14,6 @@ import {
 
 import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
-import { MeshUtils } from '../../geometry/MeshUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 
@@ -28,8 +27,6 @@ export class LMVideo implements SceneElement {
     private _parent: SceneElement;
 
     private _id: string;
-
-    private _uuid: string;
 
     private _src: string;
 
@@ -51,10 +48,10 @@ export class LMVideo implements SceneElement {
 
     private _placeholderTimestamp: number;
 
+    private _content?: Group = new Group();
+
     private _mesh?: Mesh = null;
     private _playButton?: Mesh = null;
-
-    private _content?: Group = new Group();
 
     private _initialized: boolean = false;
     
@@ -67,8 +64,6 @@ export class LMVideo implements SceneElement {
         this._depth = depth;
 
         this._parent = parent;
-
-        this._uuid = MeshUtils.generateId();
         
         this._id = id;
         
@@ -91,7 +86,7 @@ export class LMVideo implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get src(): string {
@@ -170,6 +165,12 @@ export class LMVideo implements SceneElement {
         });
     }
 
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
     public getDimensions(): Dimensions {
         return {
             width: this.width,
@@ -190,7 +191,7 @@ export class LMVideo implements SceneElement {
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -343,6 +344,21 @@ export class LMVideo implements SceneElement {
 
     public update(delta: number): void {
     }
+
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+            
+            resolve();
+        });
+    }
     
     ////////// Private Methods
 
@@ -350,17 +366,7 @@ export class LMVideo implements SceneElement {
         return new Promise(async (resolve) => {
             this._content.clear();
 
-            if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
-                this._mesh = null;
-            }
-
-            if (this._playButton) {
-                this._playButton.geometry.dispose();
-                this._playButton.material.dispose();
-                this._playButton = null;
-            }
+            this.destroyMesh();
 
             this._mesh = await this.buildMesh(width, height);
             this._playButton = this.buildPlayButton();
@@ -465,5 +471,19 @@ export class LMVideo implements SceneElement {
         this._content.translateZ(this._depth+1);
 
         return playMesh;
+    }
+
+    private destroyMesh(): void {
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
+
+        if (this._playButton) {
+            this._playButton.geometry.dispose();
+            this._playButton.material.dispose();
+            this._playButton = null;
+        }
     }
 }

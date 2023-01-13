@@ -10,7 +10,6 @@ import {
 import { Dimensions } from "../../geometry/Dimensions";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
-import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
@@ -22,8 +21,6 @@ export class LMVideoControls implements SceneElement {
     private _parent: SceneElement;
 
     private _id: string;
-
-    private _uuid: string;
 
     private _mesh: Mesh;
 
@@ -66,8 +63,6 @@ export class LMVideoControls implements SceneElement {
 
     constructor(parent: SceneElement, id: string, config: LMVideoControlsConfig) {
         this._parent = parent;
-
-        this._uuid = MeshUtils.generateId();
         
         this._id = id;
 
@@ -92,7 +87,7 @@ export class LMVideoControls implements SceneElement {
     }
     
     public get uuid(): string {
-        return this._uuid;
+        return this._content.uuid;
     }
 
     public get dynamicWidth(): boolean {
@@ -191,13 +186,19 @@ export class LMVideoControls implements SceneElement {
             resolve();
         });
     }
+
+    public removeChildElement(childElement: SceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
     
     public getChildSceneElements(): SceneElement[] {
         return [];
     }
 
     public getIsChildElement(uuid: string): boolean {
-        return uuid === this._uuid;
+        return uuid === this.uuid;
     }
     
     public isPartOfLayout(): boolean {
@@ -331,6 +332,21 @@ export class LMVideoControls implements SceneElement {
         });
     }
 
+    public destroy(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+
+            if (this._content) {
+                this._content.clear();
+                this._content = null;
+            }
+
+            this.destroyMesh();
+            
+            resolve();
+        });
+    }
+
     ////////// Private Methods
     
     private async generateContent(width: number, height: number): Promise<void> {
@@ -339,11 +355,7 @@ export class LMVideoControls implements SceneElement {
 
             this._content.clear();
 
-            if (this._mesh) {
-                this._mesh.geometry.dispose();
-                this._mesh.material.dispose();
-                this._mesh = null;
-            }
+            this.destroyMesh();
 
             // Build layout
         
@@ -394,5 +406,31 @@ export class LMVideoControls implements SceneElement {
 
             resolve();
         });
+    }
+
+    private destroyMesh(): void {
+        if (this._closeMesh) {
+            this._closeMesh.geometry.dispose();
+            this._closeMesh.material.dispose();
+            this._closeMesh = null;
+        }
+        
+        if (this._playMesh) {
+            this._playMesh.geometry.dispose();
+            this._playMesh.material.dispose();
+            this._pauseMesh = null;
+        }
+        
+        if (this._pauseMesh) {
+            this._pauseMesh.geometry.dispose();
+            this._pauseMesh.material.dispose();
+            this._pauseMesh = null;
+        }
+
+        if (this._mesh) {
+            this._mesh.geometry.dispose();
+            this._mesh.material.dispose();
+            this._mesh = null;
+        }
     }
 }
