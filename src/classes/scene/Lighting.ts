@@ -10,17 +10,14 @@ export class Lighting {
 
     private _basePlaneWidth: number;
 
-    private _voxelSize: number;
-
     private _lights: Array<PointLight> = new Array<PointLight>();
 
     private _ambientLight: AmbientLight;
 
-    constructor(scene: Scene, basePlaneWidth: number, voxelSize: number) {
+    constructor(scene: Scene, basePlaneWidth: number) {
         this._scene = scene;
 
         this._basePlaneWidth =  basePlaneWidth; 
-        this._voxelSize = voxelSize;
 
         var directionalLightCenter = new DirectionalLight(0xffffff); 
         directionalLightCenter.position.set(0, 0, 500);
