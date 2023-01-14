@@ -15,6 +15,7 @@ export class Camera {
     private _basePlaneWidth: number;
 
     private _camera: PerspectiveCamera;
+    private _light: DirectionalLight;
 
     private _placeElements: Array<SceneElement> = new Array<SceneElement>();
     private _attachedElements: Array<SceneElement> = new Array<SceneElement>();
@@ -30,6 +31,7 @@ export class Camera {
     }
 
     public addLightToCamera(light: DirectionalLight) {
+        this._light = light;
         this._camera.add(light);
     }
 
@@ -116,5 +118,9 @@ export class Camera {
         this._camera = new PerspectiveCamera(fov, aspect, 0.1, far);
 
         this._scene.add(this._camera);
+    }
+
+    public Update(): void {
+        this._light.lookAt(this._camera.lookAt)
     }
 }

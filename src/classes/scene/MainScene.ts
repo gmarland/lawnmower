@@ -182,8 +182,6 @@ export class MainScene {
                 const content = await childElement.getContent();
                 content.translateZ(this._defaultSceneRadius*-1);
 
-                this._lighting.addLight(content);
-                
                 this._mainObjectContainer.add(content);  
             }
             else if (childElement.getPlacementLocation() == SceneElementPlacement.Modal) {
@@ -191,8 +189,6 @@ export class MainScene {
 
                 const modalDialog = await childElement.getContent();
                 modalDialog.position.z = (this._defaultSceneRadius*-1) + (await childElement.getPosition()).z;
-
-                this._lighting.addLight(modalDialog);
 
                 this._modalContainer.add(modalDialog);
             }
@@ -304,5 +300,7 @@ export class MainScene {
                 this._childElements[i].update(delta);
             }
         }
+
+        if (this._camera) this._camera.Update();
     }
 }
