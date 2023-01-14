@@ -11,3 +11,18 @@
   z-index: 1;
   overflow: hidden;
 }
+
+.vr-loading-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  align-content: center;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 99;
+  overflow: hidden;
+}

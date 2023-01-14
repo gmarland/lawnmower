@@ -11,6 +11,7 @@ import {
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
+
 import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
 
 @Component({

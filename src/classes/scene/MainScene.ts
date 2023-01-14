@@ -67,6 +67,10 @@ export class MainScene {
         return this._id;
     }
 
+    public get renderer(): Renderer {
+        return this._renderer;
+    }
+
     public set id(value: string) {
         this._id = value;
     }

@@ -82,6 +82,12 @@ export namespace Components {
         "setLayout": (layoutId: string) => Promise<void>;
         "showModal": (id: string) => Promise<void>;
         "startingDistance": number;
+        "title": string;
+        "titlecardBackground": string;
+        "titlecardFontColor": string;
+        "titlecardFontFamily": string;
+        "titlecardFontSize": string;
+        "vrEnabled": boolean;
     }
     interface LmImage {
         "borderRadius": number;
@@ -337,6 +343,12 @@ declare namespace LocalJSX {
     interface LmDocument {
         "id"?: string;
         "startingDistance"?: number;
+        "title"?: string;
+        "titlecardBackground"?: string;
+        "titlecardFontColor"?: string;
+        "titlecardFontFamily"?: string;
+        "titlecardFontSize"?: string;
+        "vrEnabled"?: boolean;
     }
     interface LmImage {
         "borderRadius"?: number;
