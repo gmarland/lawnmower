@@ -149,7 +149,7 @@ export namespace Components {
         "id": string;
         "parent": SceneElement;
         "placeholder": number;
-        "play360": boolean;
+        "play": string;
         "position": number;
         "sceneElement": LMVideo;
         "src": string;
@@ -402,7 +402,7 @@ declare namespace LocalJSX {
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
         "parent"?: SceneElement;
         "placeholder"?: number;
-        "play360"?: boolean;
+        "play"?: string;
         "position"?: number;
         "sceneElement"?: LMVideo;
         "src"?: string;

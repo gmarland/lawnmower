@@ -43,13 +43,13 @@ export class LmVideo {
 
   @Prop() public placeholder: number = 0.1;
 
-  @Prop() public play360: boolean = false;
+  @Prop() public play: string = "inline";
 
   @Prop() public visible: boolean = true;
 
   @Event() public click: EventEmitter;
 
-  private _dideo360Element: HTMLLm360videoElement;
+  private _video360Element: HTMLLm360videoElement;
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
@@ -65,10 +65,10 @@ export class LmVideo {
   @Watch('src')
   private updateSrc(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._dideo360Element) {
-        await this._dideo360Element.close();
+      if (this._video360Element) {
+        await this._video360Element.close();
 
-        this._dideo360Element.src = newValue;
+        this._video360Element.src = newValue;
       }
 
       if (this.sceneElement) {
@@ -125,14 +125,15 @@ export class LmVideo {
     });
   }
   
-  @Watch('play360')
-  private updatePlay360(newValue: number): Promise<void> {
+  @Watch('play')
+  private updatePlayStyle(newValue: number): Promise<void> {
     return new Promise(async (resolve) => {
-      if (this._dideo360Element) await this._dideo360Element.close();
+      if (this._video360Element) await this._video360Element.close();
 
       if (this.sceneElement) {
         this.sceneElement.reset();
-        this.sceneElement.playInline = !this.play360;
+
+        this.sceneElement.playInline = (this.play == "360");
   
         const dimensionsUpdated = await this.sceneElement.draw();
         if (dimensionsUpdated) await this.sceneElement.drawParent();
@@ -171,11 +172,11 @@ export class LmVideo {
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,
-      playInline: !this.play360
+      playInline: (this.play == "inline")
     });
 
     this.sceneElement.onClick = () => {
-      if (this.play360) this._dideo360Element.play();
+      if (this.play == "360") this._video360Element.play();
 
       this.click.emit();
     };
@@ -200,7 +201,7 @@ export class LmVideo {
   render() {
     return (
       <Host>
-        <lm-360video ref={(el) => this._dideo360Element = el as HTMLLm360videoElement}
+        <lm-360video ref={(el) => this._video360Element = el as HTMLLm360videoElement}
                         src={ this.src }
                         parent={ this.sceneElement }></lm-360video>
       </Host>

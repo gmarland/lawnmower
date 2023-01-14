@@ -17,11 +17,7 @@ import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
 
 export class MainScene {
-    public static BasePlaneWidth: number = 1000;
-
-    public static readonly VoxelSize: number = 10;
-
-    public gridPositionChanged?: Function = null;
+    public _defaultSceneRadius: number = 1000;
 
     private _skyboxColor: number = 0xefefef;
     private _skyboxOpacity: number = 1;
@@ -36,6 +32,8 @@ export class MainScene {
     private _mouse: Vector2;
 
     private _clock: Clock;
+
+    private _lighting: Lighting;
 
     private _camera: Camera;
     private _renderer: Renderer;
@@ -73,17 +71,17 @@ export class MainScene {
         this._id = value;
     }
 
-    public init(parentElement: HTMLDivElement, startingDistance: number, basePlaneWidth?: number): void {
+    public init(parentElement: HTMLDivElement, startingDistance: number): void {
         this._parentElement = parentElement;
-        if (basePlaneWidth) MainScene.BasePlaneWidth = basePlaneWidth;
+        if (startingDistance) this._defaultSceneRadius = startingDistance;
         
         this._clock = new Clock();
 
-        new Lighting(this._scene, MainScene.BasePlaneWidth, MainScene.VoxelSize);
-
-        this._camera = new Camera(this._parentElement, this._scene, MainScene.BasePlaneWidth);
-        this._camera.setPosition(0, 0, startingDistance);
+        this._camera = new Camera(this._parentElement, this._scene, this._defaultSceneRadius);
+        this._camera.setPosition(0, 0, 0);
         this._camera.setLookAt(0, 0, 0);
+
+        this._lighting = new Lighting(this._scene, this._camera);
 
         this._renderer = new Renderer(this._parentElement, this._skyboxColor, this._skyboxOpacity);
         
@@ -180,14 +178,17 @@ export class MainScene {
             
             if (childElement.getPlacementLocation() == SceneElementPlacement.Main) {
                 await childElement.enableLayout(currentLayout);
-    
-                this._mainObjectContainer.add(await childElement.getContent());  
+
+                const content = await childElement.getContent();
+                content.translateZ(this._defaultSceneRadius*-1);
+
+                this._mainObjectContainer.add(content);  
             }
             else if (childElement.getPlacementLocation() == SceneElementPlacement.Modal) {
                 this._modalElements.push(childElement as LMModal);
 
                 const modalDialog = await childElement.getContent();
-                modalDialog.position.z = (await childElement.getPosition()).z;
+                modalDialog.position.z = (this._defaultSceneRadius*-1) + (await childElement.getPosition()).z;
 
                 this._modalContainer.add(modalDialog);
             }
@@ -258,8 +259,8 @@ export class MainScene {
 
                 this._mainObjectContainer.translateX(((mainObjectBox.max.x+mainObjectBox.min.x)/2)*-1);
                 this._mainObjectContainer.translateY(((mainObjectBox.max.y+mainObjectBox.min.y)/2)*-1);
+                this._mainObjectContainer.translateZ(((mainObjectBox.max.z+mainObjectBox.min.z)/2)*-1);
 
-                
                 this._drawing = false;
                 
                 if (this._redraw) {
@@ -299,5 +300,7 @@ export class MainScene {
                 this._childElements[i].update(delta);
             }
         }
+
+        if (this._camera) this._camera.Update();
     }
 }
