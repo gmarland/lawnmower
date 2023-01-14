@@ -77,11 +77,11 @@ export class MainScene {
         
         this._clock = new Clock();
 
-        this._lighting = new Lighting(this._scene, this._defaultSceneRadius);
-
         this._camera = new Camera(this._parentElement, this._scene, this._defaultSceneRadius);
         this._camera.setPosition(0, 0, 0);
         this._camera.setLookAt(0, 0, 0);
+
+        this._lighting = new Lighting(this._scene, this._camera);
 
         this._renderer = new Renderer(this._parentElement, this._skyboxColor, this._skyboxOpacity);
         
@@ -180,8 +180,9 @@ export class MainScene {
                 await childElement.enableLayout(currentLayout);
 
                 const content = await childElement.getContent();
-
                 content.translateZ(this._defaultSceneRadius*-1);
+
+                this._lighting.addLight(content);
                 
                 this._mainObjectContainer.add(content);  
             }
@@ -189,7 +190,9 @@ export class MainScene {
                 this._modalElements.push(childElement as LMModal);
 
                 const modalDialog = await childElement.getContent();
-                modalDialog.position.z = (await childElement.getPosition()).z;
+                modalDialog.position.z = (this._defaultSceneRadius*-1) + (await childElement.getPosition()).z;
+
+                this._lighting.addLight(modalDialog);
 
                 this._modalContainer.add(modalDialog);
             }

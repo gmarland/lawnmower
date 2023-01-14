@@ -3,7 +3,7 @@ import {
     Vector3,
     MathUtils,
     Scene,
-    Box3
+    DirectionalLight
 } from 'three';
 import { SceneElement } from '../components/SceneElement';
 
@@ -27,6 +27,10 @@ export class Camera {
         this._basePlaneWidth = basePlaneWidth;
 
         this.buildCamera();
+    }
+
+    public addLightToCamera(light: DirectionalLight) {
+        this._camera.add(light);
     }
 
     // Elements that are actually placed at the camera
