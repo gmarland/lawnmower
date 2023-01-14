@@ -168,7 +168,7 @@ export class LmDocument {
   }
 
   componentDidLoad() {
-    this._mainScene.init(this._sceneContainer, this.startingDistance);
+    this._mainScene.init(this.vrEnabled, this._sceneContainer, this.startingDistance);
       
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();
@@ -176,9 +176,11 @@ export class LmDocument {
 
     resizeObserver.observe(this._sceneContainer);
 
-    this._vrLoadingContainer.appendChild(VRButton.createButton(this._mainScene.renderer, () => {
-      this._vrLoadingContainer.style.display = "none";
-    }));
+    if (this.vrEnabled) {
+      this._vrLoadingContainer.appendChild(VRButton.createButton(this._mainScene.renderer.webGLRenderer, () => {
+        this._vrLoadingContainer.style.display = "none";
+      }));
+    }
   }
 
   render() {

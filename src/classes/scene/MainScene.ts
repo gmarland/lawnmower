@@ -4,7 +4,8 @@ import {
     Raycaster,
     Vector2,
     Object3D,
-    Box3
+    Box3,
+    WebGLRenderer
 } from 'three';
 
 import { Camera } from '../scene/Camera';
@@ -18,6 +19,8 @@ import { LMLayout } from '../components/lm-layout/LMLayout';
 
 export class MainScene {
     public _defaultSceneRadius: number = 1000;
+
+    private _vrEnabled: boolean;
 
     private _skyboxColor: number = 0xefefef;
     private _skyboxOpacity: number = 1;
@@ -71,11 +74,17 @@ export class MainScene {
         return this._renderer;
     }
 
+    public get webGLRenderer(): WebGLRenderer {
+        return this._renderer.webGLRenderer;
+    }
+
     public set id(value: string) {
         this._id = value;
     }
 
-    public init(parentElement: HTMLDivElement, startingDistance: number): void {
+    public init(vrEnabled: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
+        this._vrEnabled = vrEnabled;
+
         this._parentElement = parentElement;
         if (startingDistance) this._defaultSceneRadius = startingDistance;
         
@@ -87,7 +96,7 @@ export class MainScene {
 
         this._lighting = new Lighting(this._scene, this._camera);
 
-        this._renderer = new Renderer(this._parentElement, this._skyboxColor, this._skyboxOpacity);
+        this._renderer = new Renderer(this._vrEnabled, this._parentElement, this._skyboxColor, this._skyboxOpacity);
         
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
@@ -285,7 +294,16 @@ export class MainScene {
     }
 
     private startRender(): void {
-        this.renderScene();
+        if (this._vrEnabled) {
+            this._renderer.setAnimationLoop(() => {
+                this.update();
+        
+                this._renderer.render(this._scene, this._camera);
+            } );
+        }
+        else {
+            this.renderScene();
+        }
     }
 
     private renderScene(): void {
