@@ -313,7 +313,7 @@ export class LMImage implements SceneElement {
 
     private async buildTexture(width: number, height: number): Promise<CanvasTexture> {
         return new Promise(async (resolve) => {
-            const textTexture = await new TextureLoader().load(this._src, (tex) => {
+            const imageTexture = await new TextureLoader().load(this._src, (tex) => {
                 tex.wrapS = ClampToEdgeWrapping;
                 tex.wrapT = RepeatWrapping;
 
@@ -351,9 +351,12 @@ export class LMImage implements SceneElement {
                     this._calculatedHeight = 0;
                 }
                 
-                textTexture.needsUpdate = true;
+                imageTexture.generateMipmaps = false;
+                imageTexture.minFilter = LinearFilter;
+                imageTexture.magFilter = LinearFilter;
+                imageTexture.needsUpdate = true;
 
-                resolve(textTexture)
+                resolve(imageTexture)
             });
         });
     }
@@ -368,7 +371,6 @@ export class LMImage implements SceneElement {
                 map: imageTexture,
                 transparent: false
             });
-            material.map.minFilter = LinearFilter;
             
             const mesh = new Mesh(geometry, material);
             mesh.recieveShadow = true;

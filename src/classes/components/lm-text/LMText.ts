@@ -400,8 +400,6 @@ export class LMText implements SceneElement {
             transparent: false
         });
         
-        material.map.minFilter = LinearFilter;
-        
         const mesh = new Mesh(geometry, material);
         mesh.recieveShadow = true;
     
@@ -543,6 +541,9 @@ export class LMText implements SceneElement {
         }
         
         const textTexture = new CanvasTexture(context.canvas);
+        textTexture.generateMipmaps = false;
+        textTexture.minFilter = LinearFilter;
+        textTexture.magFilter = LinearFilter;
         textTexture.needsUpdate = true;
         
         const aspect = (this._calculatedWidth/textTexture.image.width);
