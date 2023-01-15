@@ -31,7 +31,7 @@ export class LmDocument {
 
   @Prop() startingDistance: number = 500;
 
-  @Prop() vrEnabled: boolean = true;
+  @Prop() public vrEnabled: boolean = true;
 
   @Prop() title: string = "Lawnmower";
 
@@ -161,6 +161,7 @@ export class LmDocument {
         element["parent"] = this._mainScene;
         element["depth"] = 1;
         element["position"] = position;
+        element["vrEnabled"] = this.vrEnabled;
 
         position++;
       }

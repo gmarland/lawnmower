@@ -24,6 +24,8 @@ export class LmModal {
 
   @Prop() public parent: SceneElement;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement

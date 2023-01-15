@@ -28,6 +28,8 @@ export class LmAsset {
 
   @Prop() public depth: number;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement

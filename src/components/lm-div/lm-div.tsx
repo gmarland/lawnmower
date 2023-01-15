@@ -32,6 +32,8 @@ export class LmDiv {
 
   @Prop() public depth: number;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
@@ -208,6 +210,7 @@ export class LmDiv {
       element["parent"] = this.sceneElement;
       element["position"] = this.el.children.length;
       element["depth"] = this.depth+1;
+      element["vrEnabled"] = this.vrEnabled;
 
       this.el.appendChild(element);
           
@@ -221,6 +224,7 @@ export class LmDiv {
       element["parent"] = this.sceneElement;
       element["position"] = 0;
       element["depth"] = this.depth+1;
+      element["vrEnabled"] = this.vrEnabled;
       
       this.el.insertBefore(element, this.el.firstChild);
           
@@ -280,6 +284,7 @@ export class LmDiv {
         element["parent"] = this.sceneElement;
         element["position"] = position;
         element["depth"] = this.depth+1;
+        element["vrEnabled"] = this.vrEnabled;
 
         position++;
       }

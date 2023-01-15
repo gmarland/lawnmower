@@ -22,6 +22,8 @@ import { LM360VideoConfig } from './LM360VideoConfig';
 export class LM360Video implements SceneElement {
     private _parent: SceneElement;
 
+    private _vrEnabled: boolean;
+
     private _id: string;
 
     private _src: string;
@@ -55,7 +57,9 @@ export class LM360Video implements SceneElement {
         this._videoHeightSegments = config.videoHeightSegments;
 
         this._parent = parent;
-        
+
+        this._vrEnabled = config.vrEnabled;
+
         this._id = id;
 
         this._src = src;
@@ -381,7 +385,7 @@ export class LM360Video implements SceneElement {
 
             const mesh1 = new Mesh( geometry1, material1 );
             mesh1.rotation.y = - Math.PI / 2;
-            //mesh1.layers.set( 1 ); // display in left eye only
+            if (this._vrEnabled) mesh1.layers.set( 1 ); // display in left eye only
             
             videoLayout.add( mesh1 );
 
@@ -403,7 +407,7 @@ export class LM360Video implements SceneElement {
 
             const mesh2 = new Mesh( geometry2, material2 );
             mesh2.rotation.y = - Math.PI / 2;
-            //mesh2.layers.set( 2 ); // display in right eye only
+            if (this._vrEnabled) mesh2.layers.set( 2 ); // display in right eye only
 
             videoLayout.add( mesh2 );
     

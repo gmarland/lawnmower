@@ -26,6 +26,8 @@ export class LMVideo implements SceneElement {
 
     private _parent: SceneElement;
 
+    private _vrEnabled: boolean;
+
     private _id: string;
 
     private _src: string;
@@ -64,6 +66,8 @@ export class LMVideo implements SceneElement {
         this._depth = depth;
 
         this._parent = parent;
+
+        this._vrEnabled = config.vrEnabled;
         
         this._id = id;
         

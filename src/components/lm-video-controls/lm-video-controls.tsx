@@ -27,6 +27,8 @@ export class LmVideoControls {
 
   @Prop() public depth: number;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
 
   @Prop({ reflect: true }) public id: string = "";
