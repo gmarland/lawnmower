@@ -35,7 +35,9 @@ export class LmDocument {
 
   @Prop() title: string = "Lawnmower";
 
-  @Prop() titlecardBackground: string = "#000000";
+  @Prop() titlecardBackgroundImage?: string = null;
+
+  @Prop() titlecardBackground?: string = "#222222";
 
   @Prop() titlecardFontFamily: string = "Arial";
 
@@ -202,6 +204,11 @@ export class LmDocument {
                 fontFamily: this.titlecardFontFamily,
                 background: this.titlecardBackground
               }}>
+                {
+                  this.titlecardBackgroundImage
+                  ? <div id="title-card-image"><img src={ this.titlecardBackgroundImage } /></div>
+                  : null
+                }
                 <div>{ this.title }</div>
             </div>
           : null

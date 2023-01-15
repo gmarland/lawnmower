@@ -86,7 +86,8 @@ export namespace Components {
         "showModal": (id: string) => Promise<void>;
         "startingDistance": number;
         "title": string;
-        "titlecardBackground": string;
+        "titlecardBackground"?: string;
+        "titlecardBackgroundImage"?: string;
         "titlecardFontColor": string;
         "titlecardFontFamily": string;
         "titlecardFontSize": string;
@@ -357,6 +358,7 @@ declare namespace LocalJSX {
         "startingDistance"?: number;
         "title"?: string;
         "titlecardBackground"?: string;
+        "titlecardBackgroundImage"?: string;
         "titlecardFontColor"?: string;
         "titlecardFontFamily"?: string;
         "titlecardFontSize"?: string;
