@@ -11,6 +11,7 @@ import {
 } from '@stencil/core';
 
 import { SceneElement } from '../../classes/components/SceneElement';
+
 import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
 
 @Component({
@@ -26,6 +27,8 @@ export class LmAsset {
   @Prop() public position: number;
 
   @Prop() public depth: number;
+
+  @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 

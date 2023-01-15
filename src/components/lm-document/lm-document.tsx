@@ -13,6 +13,8 @@ import {
     Vector2
 } from 'three';
 
+import { VRButton } from '../../utils/VRButton.js';
+
 import ResizeObserver from "resize-observer-polyfill";
 
 import { MainScene } from '../../classes/scene/MainScene';
@@ -29,7 +31,23 @@ export class LmDocument {
 
   @Prop() startingDistance: number = 500;
 
+  @Prop() public vrEnabled: boolean = true;
+
+  @Prop() title: string = "Lawnmower";
+
+  @Prop() titlecardBackgroundImage?: string = null;
+
+  @Prop() titlecardBackground?: string = "#222222";
+
+  @Prop() titlecardFontFamily: string = "Arial";
+
+  @Prop() titlecardFontColor: string = "#EEEFF3";
+
+  @Prop() titlecardFontSize: string = "4em";
+
   private _sceneContainer: HTMLDivElement;
+
+  private _vrLoadingContainer: HTMLDivElement;
 
   private _mainScene: MainScene;
 
@@ -145,6 +163,7 @@ export class LmDocument {
         element["parent"] = this._mainScene;
         element["depth"] = 1;
         element["position"] = position;
+        element["vrEnabled"] = this.vrEnabled;
 
         position++;
       }
@@ -152,23 +171,48 @@ export class LmDocument {
   }
 
   componentDidLoad() {
-    this._mainScene.init(this._sceneContainer, this.startingDistance);
+    this._mainScene.init(this.vrEnabled, this._sceneContainer, this.startingDistance);
       
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();
     });
 
     resizeObserver.observe(this._sceneContainer);
+
+    if (this.vrEnabled) {
+      this._vrLoadingContainer.appendChild(VRButton.createButton(this._mainScene.renderer.webGLRenderer, () => {
+        this._vrLoadingContainer.style.display = "none";
+      }));
+    }
   }
 
   render() {
     return (
       <Host>
         <div ref={(el) => this._sceneContainer = el as HTMLDivElement } 
-              class="scene-container"
-              onMouseMove={(e: MouseEvent) => this.mouseMove(e)}
-              onClick={() => this.mouseClick()}></div>
+          class="scene-container"
+          onMouseMove={(e: MouseEvent) => this.mouseMove(e)}
+          onClick={() => this.mouseClick()}></div>
         <slot></slot>
+        {
+          this.vrEnabled
+          ? <div ref={(el) => this._vrLoadingContainer = el as HTMLDivElement }
+              class="vr-loading-container"
+              style={{
+                color: this.titlecardFontColor,
+                fontSize: this.titlecardFontSize,
+                fontFamily: this.titlecardFontFamily,
+                background: this.titlecardBackground
+              }}>
+                {
+                  this.titlecardBackgroundImage
+                  ? <div id="title-card-image"><img src={ this.titlecardBackgroundImage } /></div>
+                  : null
+                }
+                <div>{ this.title }</div>
+            </div>
+          : null
+        }
       </Host>
     );
   }

@@ -27,6 +27,8 @@ export class LmVideo {
 
   @Prop() public depth: number;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
@@ -169,6 +171,7 @@ export class LmVideo {
 
   componentWillLoad() {
     this.sceneElement = new LMVideo(this.depth, this.parent, this.id, this.src, { 
+      vrEnabled: this.vrEnabled,
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,
@@ -202,6 +205,7 @@ export class LmVideo {
     return (
       <Host>
         <lm-360video ref={(el) => this._video360Element = el as HTMLLm360videoElement}
+                        vr-enabled={this.vrEnabled}
                         src={ this.src }
                         parent={ this.sceneElement }></lm-360video>
       </Host>

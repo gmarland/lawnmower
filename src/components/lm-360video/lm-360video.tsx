@@ -27,9 +27,11 @@ export class Lm360Video {
 
   @Prop() public depth: number;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
 
-  @Element() el: HTMLElement
+  @Element() el: HTMLElement;
 
   @Prop({ mutable: true }) public sceneElement: LM360Video;
 
@@ -184,6 +186,7 @@ export class Lm360Video {
 
   componentWillLoad() {
     this.sceneElement = new LM360Video(this.parent, this.id, this.src, { 
+      vrEnabled: this.vrEnabled,
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,
       videoHeightSegments: this.videoHeightSegments

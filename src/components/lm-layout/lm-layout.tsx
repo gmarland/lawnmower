@@ -25,6 +25,8 @@ export class LmLayout {
 
   @Prop() public depth: number;
 
+  @Prop() public vrEnabled: boolean = true;
+
   // *** Component specific
   
   @Element() el: HTMLElement
@@ -65,6 +67,7 @@ export class LmLayout {
         element["parent"] = this.sceneElement;
         element["depth"] = this.depth;
         element["position"] = position;
+        element["vrEnabled"] = this.vrEnabled;
 
         position++;
       }
