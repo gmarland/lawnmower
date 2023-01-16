@@ -33,6 +33,8 @@ export class LmDocument {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public controllerGuides: boolean = true;
+
   @Prop() title: string = "Lawnmower";
 
   @Prop() titlecardBackgroundImage?: string = null;
@@ -171,7 +173,7 @@ export class LmDocument {
   }
 
   componentDidLoad() {
-    this._mainScene.init(this.vrEnabled, this._sceneContainer, this.startingDistance);
+    this._mainScene.init(this.vrEnabled, this.controllerGuides, this._sceneContainer, this.startingDistance);
       
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();

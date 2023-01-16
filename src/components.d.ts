@@ -81,6 +81,7 @@ export namespace Components {
     }
     interface LmDocument {
         "closeModal": () => Promise<void>;
+        "controllerGuides": boolean;
         "id": string;
         "setLayout": (layoutId: string) => Promise<void>;
         "showModal": (id: string) => Promise<void>;
@@ -354,6 +355,7 @@ declare namespace LocalJSX {
         "zRotation"?: number;
     }
     interface LmDocument {
+        "controllerGuides"?: boolean;
         "id"?: string;
         "startingDistance"?: number;
         "title"?: string;

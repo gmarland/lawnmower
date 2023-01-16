@@ -19,6 +19,8 @@ export class Controller {
 
     private _position: ControllerPositionType;
 
+    private _controllerGuides: boolean;
+
     private _controller: Group;
 
     private _controllerGrip: Group;
@@ -33,11 +35,13 @@ export class Controller {
 
     private _selectClicked: boolean = false;
 
-    constructor(scene: Scene, position: ControllerPositionType, controller: Group, controllerSpace: Group) {
+    constructor(scene: Scene, position: ControllerPositionType, controllerGuides: boolean, controller: Group, controllerSpace: Group) {
         this._scene = scene;
         
         this._position = position;
 
+        this._controllerGuides = controllerGuides;
+        
         this._controller = controller;
 
         this._controllerGrip = controllerSpace;
@@ -85,32 +89,34 @@ export class Controller {
 
     private attachControllerEvents(): void {
         this._controller.addEventListener('selectstart', () => {
-            this._line.material.linewidth = 3;
+            if (this._controllerGuides) this._line.material.linewidth = 3;
           });
 
         this._controller.addEventListener('selectend', () => {
             this._selectClicked = true;
 
-            this._line.material.linewidth = 1;
+            if (this._controllerGuides) this._line.material.linewidth = 1;
         });
     }
 
     private buildController(): void {
-        this._line = new Line(new BufferGeometry().setFromPoints([
-            new Vector3(0, 0, 0),
-            new Vector3(0, 0, -1)
-        ]), new LineBasicMaterial({
-            color: 0xffffff,
-            linewidth: 2,
-            linecap: 'round', //ignored by WebGLRenderer
-            linejoin:  'round' //ignored by WebGLRenderer
-        }));
+        if (this._controllerGuides) {
+            this._line = new Line(new BufferGeometry().setFromPoints([
+                new Vector3(0, 0, 0),
+                new Vector3(0, 0, -1)
+            ]), new LineBasicMaterial({
+                color: 0xffffff,
+                linewidth: 2,
+                linecap: 'round', //ignored by WebGLRenderer
+                linejoin:  'round' //ignored by WebGLRenderer
+            }));
 
-        this._line.invisible = true;
+            this._line.invisible = true;
 
-        this._line.scale.z = 10;
+            this._line.scale.z = 10;
 
-        this._controller.add(this._line);
+            this._controller.add(this._line);
+        }
 
         this._scene.add(this._controller);
         

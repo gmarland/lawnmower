@@ -44,8 +44,7 @@ export class MainScene {
     private _camera: Camera;
     private _renderer: Renderer;
 
-    private _leftController?: Controller = null;
-    private _rightController?: Controller = null;
+    private _controllers: Controller[] = new Array<Controller>();
 
     private _selectedLayout?: string = null;
 
@@ -88,7 +87,7 @@ export class MainScene {
         this._id = value;
     }
 
-    public init(vrEnabled: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
+    public init(vrEnabled: boolean, controllerGuides: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
         this._vrEnabled = vrEnabled;
 
         this._parentElement = parentElement;
@@ -105,13 +104,11 @@ export class MainScene {
         this._renderer = new Renderer(this._vrEnabled, this._parentElement, this._skyboxColor, this._skyboxOpacity);
 
         if (this._vrEnabled) {
-            // Add controllers
-
             const leftController = this._renderer.getController(0);
-            if (leftController) this._leftController = new Controller(this._scene, ControllerPositionType.Left, leftController, this._renderer.getControllerGrip(0));
+            if (leftController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Left, controllerGuides, leftController, this._renderer.getControllerGrip(0)));
 
             const rightController = this._renderer.getController(1);
-            if (rightController) this._rightController= new Controller(this._scene, ControllerPositionType.Right, rightController, this._renderer.getControllerGrip(1));
+            if (rightController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Right, controllerGuides, rightController, this._renderer.getControllerGrip(1)));
         }
 
         this._scene.add(this._mainObjectContainer);
@@ -339,8 +336,11 @@ export class MainScene {
             }
         }
 
-        if (this._leftController) this.updateController(this._leftController);
-        if (this._rightController) this.updateController(this._rightController);
+        if (this._vrEnabled) {
+            for (let i=0; i<this._controllers.length; i++) {
+                this.updateController(this._controllers[i]);
+            }
+        }
 
         if (this._camera) this._camera.Update();
     }
