@@ -25,6 +25,7 @@ export class Renderer {
         this._skyboxOpacity = skyboxOpacity;
 
         this._renderer = new WebGLRenderer({ 
+            powerPreference: this._vrEnabled ? "high-performance" : "default",
             antialias: true, 
             alpha: true,
             logarithmicDepthBuffer: true,
