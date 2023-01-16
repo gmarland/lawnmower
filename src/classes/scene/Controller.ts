@@ -33,7 +33,7 @@ export class Controller {
         this._controllerMesh = (new XRControllerModelFactory()).createControllerModel(this._controllerSpace);
 
         this._controllerSpace.add(this._controllerMesh);
-console.log(this._controllerMesh)
+        
         this._scene.add(this._controllerSpace);
     }
 }
