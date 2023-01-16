@@ -10,10 +10,13 @@ import {
 
 import { Camera } from '../scene/Camera';
 import { Renderer } from '../scene/Renderer';
-import { SceneElement } from '../components/SceneElement';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
+import { Controller } from './Controller';
+import { ControllerPositionType } from './ControllerPosition';
+
+import { SceneElement } from '../components/SceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
 
@@ -40,6 +43,9 @@ export class MainScene {
 
     private _camera: Camera;
     private _renderer: Renderer;
+
+    private _leftController?: Controller = null;
+    private _rightController?: Controller = null;
 
     private _selectedLayout?: string = null;
 
@@ -97,7 +103,16 @@ export class MainScene {
         this._lighting = new Lighting(this._scene, this._camera);
 
         this._renderer = new Renderer(this._vrEnabled, this._parentElement, this._skyboxColor, this._skyboxOpacity);
-        
+
+        if (this._vrEnabled) {
+            // Add controllers
+
+            const leftController = this._renderer.getController(0);
+            if (leftController) this._leftController = new Controller(this._scene, ControllerPositionType.Left, leftController, this._renderer.getControllerGrip(0));
+
+            const rightController = this._renderer.getController(1);
+            if (leftController) this._leftController = new Controller(this._scene, ControllerPositionType.Right, rightController, this._renderer.getControllerGrip(1));
+        }
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
 
