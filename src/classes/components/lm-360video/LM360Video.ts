@@ -385,7 +385,6 @@ export class LM360Video implements SceneElement {
 
             const mesh1 = new Mesh( geometry1, material1 );
             mesh1.rotation.y = - Math.PI / 2;
-            if (this._vrEnabled) mesh1.layers.set( 1 ); // display in left eye only
             
             videoLayout.add( mesh1 );
 
@@ -407,7 +406,6 @@ export class LM360Video implements SceneElement {
 
             const mesh2 = new Mesh( geometry2, material2 );
             mesh2.rotation.y = - Math.PI / 2;
-            if (this._vrEnabled) mesh2.layers.set( 2 ); // display in right eye only
 
             videoLayout.add( mesh2 );
     
