@@ -24,7 +24,14 @@ export class Renderer {
         this._skyboxColor = skyboxColor;
         this._skyboxOpacity = skyboxOpacity;
 
-        this._renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        this._renderer = new WebGLRenderer({ 
+            powerPreference: this._vrEnabled ? "high-performance" : "default",
+            antialias: true, 
+            alpha: true,
+            logarithmicDepthBuffer: true,
+            colorManagement: true,
+            sortObjects: true 
+        });
 
         if (this._vrEnabled) {
             this._renderer.xr.enabled = true;

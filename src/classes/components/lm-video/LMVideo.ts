@@ -9,7 +9,8 @@ import {
     PolyhedronGeometry,
     Color,
     DoubleSide,
-    Group
+    Group,
+    LinearFilter
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -417,6 +418,10 @@ export class LMVideo implements SceneElement {
                     that._calculatedWidth = 0;
                     that._calculatedWidth = 0;
                 }
+
+                videoTexture.generateMipmaps = false;
+                videoTexture.minFilter = LinearFilter;
+                videoTexture.magFilter = LinearFilter;
     
                 resolve(videoTexture);
             }, false );
@@ -472,6 +477,7 @@ export class LMVideo implements SceneElement {
 
         playMesh.position.y -= (playMeshBox.max.y-playMeshBox.min.y)/2;
         playMesh.position.x -= (playMeshBox.max.x-playMeshBox.min.x)/2;
+        playMesh.position.z += 1;
         this._content.translateZ(this._depth+1);
 
         return playMesh;
