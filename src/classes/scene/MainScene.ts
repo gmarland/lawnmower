@@ -111,8 +111,9 @@ export class MainScene {
             if (leftController) this._leftController = new Controller(this._scene, ControllerPositionType.Left, leftController, this._renderer.getControllerGrip(0));
 
             const rightController = this._renderer.getController(1);
-            if (leftController) this._leftController = new Controller(this._scene, ControllerPositionType.Right, rightController, this._renderer.getControllerGrip(1));
+            if (rightController) this._rightController= new Controller(this._scene, ControllerPositionType.Right, rightController, this._renderer.getControllerGrip(1));
         }
+
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
 
@@ -338,6 +339,21 @@ export class MainScene {
             }
         }
 
+        if (this._leftController) this.updateController(this._leftController);
+        if (this._rightController) this.updateController(this._rightController);
+
         if (this._camera) this._camera.Update();
+    }
+
+    private updateController(controller: Controller) {
+        controller.update();
+        
+        if (controller.selectClicked) {
+            controller.selectClicked = false;
+
+            for (let i=0; i<this._childElements.length; i++) {
+                this._childElements[i].clicked(controller.hoveredElementId)
+            }
+        }
     }
 }
