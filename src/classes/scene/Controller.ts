@@ -5,10 +5,11 @@ import {
     Matrix4,
     Line,
     LineBasicMaterial,
-    Raycaster
+    Raycaster,
+    Group
 } from 'three';
 
-import { XRControllerModelFactory } from '../../libs/three/controllers/XRControllerModelFactory.js';
+import { XRControllerModelFactory, XRControllerModel } from '../../libs/three/controllers/XRControllerModelFactory.js';
 import { GeometryUtils } from '../geometry/GeometryUtils.js';
 
 import { ControllerPositionType } from "./ControllerPosition";
@@ -18,22 +19,21 @@ export class Controller {
 
     private _position: ControllerPositionType;
 
-    private _controller;
+    private _controller: Group;
 
-    private _controllerGrip;
+    private _controllerGrip: Group;
 
     private _line: Line;
 
-    private _controllerMesh;
+    private _controllerMesh: XRControllerModel;
 
     private _raycaster = new Raycaster();
-
 
     private _hoveredElementId?: string = null;
 
     private _selectClicked: boolean = false;
 
-    constructor(scene: Scene, position: ControllerPositionType, controller, controllerSpace) {
+    constructor(scene: Scene, position: ControllerPositionType, controller: Group, controllerSpace: Group) {
         this._scene = scene;
         
         this._position = position;
@@ -101,7 +101,7 @@ export class Controller {
             new Vector3(0, 0, -1)
         ]), new LineBasicMaterial({
             color: 0xffffff,
-            linewidth: 1,
+            linewidth: 2,
             linecap: 'round', //ignored by WebGLRenderer
             linejoin:  'round' //ignored by WebGLRenderer
         }));
@@ -116,7 +116,7 @@ export class Controller {
         
         this._controllerMesh = (new XRControllerModelFactory()).createControllerModel(this._controllerGrip);
         this._controllerMesh.invisible = true;
-
+    
         this._controllerGrip.add(this._controllerMesh);
         
         this._scene.add(this._controllerGrip);
