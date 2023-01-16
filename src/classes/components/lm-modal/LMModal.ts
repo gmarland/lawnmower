@@ -274,7 +274,7 @@ export class LMModal implements SceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                resolve(false);
+                    resolve(false);
                 }
                 else {
                     resolve(false);
@@ -401,24 +401,27 @@ export class LMModal implements SceneElement {
             color: new Color(this._borderColor),
             side: DoubleSide
         }));
+        buttonContainerMargin.translateZ(0.5);
 
         const buttonContainer = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth-2, this._closeButtonWidth-2, this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._backgroundColor),
             side: DoubleSide
         }));
+        buttonContainer.translateZ(1);
 
         const button = new Mesh(PlaneUtils.getSquaredPlane(this._closeButtonWidth-(this._closeButtonWidth/2), this._closeButtonWidth-(this._closeButtonWidth/2)), MaterialUtils.getBasicMaterial({
             map: new TextureLoader().load(this._baseImagePath + '/close.png'),
             transparent: true,
             side: DoubleSide
         }));
+        button.translateZ(1.5);
 
         buttonGroup.add(buttonContainerMargin);
         buttonGroup.add(buttonContainer);
         buttonGroup.add(button);
 
         buttonGroup.position.y = ((dialogHeight/2)-(this._padding/2))*-1;
-        buttonGroup.translateZ((this._depth+2)*1);
+        buttonGroup.translateZ(0.5);
 
         return buttonGroup;
     }

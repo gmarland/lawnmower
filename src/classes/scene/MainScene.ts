@@ -10,10 +10,13 @@ import {
 
 import { Camera } from '../scene/Camera';
 import { Renderer } from '../scene/Renderer';
-import { SceneElement } from '../components/SceneElement';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
+import { Controller } from './Controller';
+import { ControllerPositionType } from './ControllerPosition';
+
+import { SceneElement } from '../components/SceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
 
@@ -40,6 +43,8 @@ export class MainScene {
 
     private _camera: Camera;
     private _renderer: Renderer;
+
+    private _controllers: Controller[] = new Array<Controller>();
 
     private _selectedLayout?: string = null;
 
@@ -82,7 +87,7 @@ export class MainScene {
         this._id = value;
     }
 
-    public init(vrEnabled: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
+    public init(vrEnabled: boolean, controllerGuides: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
         this._vrEnabled = vrEnabled;
 
         this._parentElement = parentElement;
@@ -97,7 +102,15 @@ export class MainScene {
         this._lighting = new Lighting(this._scene, this._camera);
 
         this._renderer = new Renderer(this._vrEnabled, this._parentElement, this._skyboxColor, this._skyboxOpacity);
-        
+
+        if (this._vrEnabled) {
+            const leftController = this._renderer.getController(0);
+            if (leftController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Left, controllerGuides, leftController, this._renderer.getControllerGrip(0)));
+
+            const rightController = this._renderer.getController(1);
+            if (rightController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Right, controllerGuides, rightController, this._renderer.getControllerGrip(1)));
+        }
+
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
 
@@ -323,6 +336,24 @@ export class MainScene {
             }
         }
 
+        if (this._vrEnabled) {
+            for (let i=0; i<this._controllers.length; i++) {
+                this.updateController(this._controllers[i]);
+            }
+        }
+
         if (this._camera) this._camera.Update();
+    }
+
+    private updateController(controller: Controller) {
+        controller.update();
+        
+        if (controller.selectClicked) {
+            controller.selectClicked = false;
+
+            for (let i=0; i<this._childElements.length; i++) {
+                this._childElements[i].clicked(controller.hoveredElementId)
+            }
+        }
     }
 }

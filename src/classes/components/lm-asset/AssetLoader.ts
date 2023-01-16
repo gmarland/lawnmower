@@ -2,7 +2,8 @@ import {
     Group
 } from 'three';
 
-import { GLTFLoader } from '../../../utils/GLTFLoader.js';
+import { GLTFLoader } from '../../../loaders/GLTFLoader.js';
+
 import { LoadedAssetDetail } from './LoadedAssetDetail.js';
 
 export class AssetLoader {

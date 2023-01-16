@@ -62,4 +62,12 @@ export class Renderer {
     public render(scene: Scene, camera: Camera): void {
         this._renderer.render(scene, camera.getCamera());
     }
+
+    public getController(controllerNumber: number): any {
+        return this._renderer.xr.getController(controllerNumber);
+    }
+
+    public getControllerGrip(controllerNumber: number): any {
+        return this._renderer.xr.getControllerGrip(controllerNumber);
+    }
 }
