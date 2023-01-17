@@ -21,7 +21,7 @@ export class LmLayout {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public depth: number;
 
@@ -60,22 +60,22 @@ export class LmLayout {
   componentWillLoad() {
     this.sceneElement = new LMLayout(this.parent, this.id);
 
-    let position = 1;
+    let sequenceNo = 1;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
         element["depth"] = this.depth;
-        element["position"] = position;
+        element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
 
-        position++;
+        sequenceNo++;
       }
     });
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
 
   render() {

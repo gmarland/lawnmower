@@ -28,7 +28,7 @@ export class LmDiv {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public depth: number;
 
@@ -277,22 +277,21 @@ export class LmDiv {
     if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.parent, this.id, config);
     else this.sceneElement = new RowVRDiv(this.parent, this.id, config);
     
-    let position = 0;
+    let sequenceNo = 0;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
-        element["position"] = position;
-        element["depth"] = this.depth+1;
+        element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
 
-        position++;
+        sequenceNo++;
       }
     });
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
 
   render() {
@@ -302,5 +301,4 @@ export class LmDiv {
       </Host>
     );
   }
-
 }

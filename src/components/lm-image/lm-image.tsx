@@ -23,7 +23,7 @@ export class LmImage {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public depth: number;
 
@@ -167,7 +167,7 @@ export class LmImage {
   componentDidLoad() {
     if (this._modalDialog) this._modalDialog.parent = this.sceneElement;
 
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
   
   render() {

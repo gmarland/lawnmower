@@ -23,7 +23,7 @@ export class Lm360Video {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public depth: number;
 

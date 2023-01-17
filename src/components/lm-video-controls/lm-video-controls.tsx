@@ -23,7 +23,7 @@ export class LmVideoControls {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public depth: number;
 

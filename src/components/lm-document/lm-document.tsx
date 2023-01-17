@@ -158,16 +158,16 @@ export class LmDocument {
   componentWillLoad() {
     this._mainScene = new MainScene(this._mousePoint);
 
-    let position = 1;
+    let sequenceNo = 1;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this._mainScene;
         element["depth"] = 1;
-        element["position"] = position;
+        element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
 
-        position++;
+        sequenceNo++;
       }
     });
   }

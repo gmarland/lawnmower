@@ -213,15 +213,15 @@ export class LmModal {
       this.hidden.emit();
     }
     
-    let position = 1;
+    let sequenceNo = 1;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
-        element["position"] = position;
+        element["sequenceNo"] = sequenceNo;
         element["depth"] = 2;
 
-        position++;
+        sequenceNo++;
       }
     });
 
