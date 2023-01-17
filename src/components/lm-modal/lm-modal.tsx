@@ -219,7 +219,6 @@ export class LmModal {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
         element["sequenceNo"] = sequenceNo;
-        element["depth"] = 2;
 
         sequenceNo++;
       }

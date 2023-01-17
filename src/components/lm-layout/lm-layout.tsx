@@ -23,8 +23,6 @@ export class LmLayout {
 
   @Prop() public sequenceNo: number;
 
-  @Prop() public depth: number;
-
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
@@ -65,7 +63,6 @@ export class LmLayout {
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
-        element["depth"] = this.depth;
         element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
 

@@ -30,8 +30,6 @@ export class LmDiv {
 
   @Prop() public sequenceNo: number;
 
-  @Prop() public depth: number;
-
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
@@ -208,8 +206,7 @@ export class LmDiv {
   public async append(element: any): Promise<void> {
     return new Promise(async (resolve) => {
       element["parent"] = this.sceneElement;
-      element["position"] = this.el.children.length;
-      element["depth"] = this.depth+1;
+      element["sequenceNo"] = this.el.children.length;
       element["vrEnabled"] = this.vrEnabled;
 
       this.el.appendChild(element);
@@ -222,8 +219,7 @@ export class LmDiv {
   public async prepend(element: any): Promise<void> {
     return new Promise(async (resolve) => {
       element["parent"] = this.sceneElement;
-      element["position"] = 0;
-      element["depth"] = this.depth+1;
+      element["sequenceNo"] = 0;
       element["vrEnabled"] = this.vrEnabled;
       
       this.el.insertBefore(element, this.el.firstChild);

@@ -25,8 +25,6 @@ export class LmVideo {
 
   @Prop() public sequenceNo: number;
 
-  @Prop() public depth: number;
-
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
@@ -215,7 +213,6 @@ export class LmVideo {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
         element["sequenceNo"] = sequenceNo;
-        element["depth"] = this.depth+1;
 
         sequenceNo++;
       }

@@ -17,7 +17,6 @@ import { LMVideo } from "./classes/components/lm-video/LMVideo";
 export namespace Components {
     interface Lm360video {
         "close": () => Promise<void>;
-        "depth": number;
         "destroy": () => Promise<void>;
         "id": string;
         "parent": SceneElement;
@@ -34,7 +33,6 @@ export namespace Components {
     }
     interface LmAsset {
         "activeAnimation": string;
-        "depth": number;
         "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
         "id": string;
@@ -56,7 +54,6 @@ export namespace Components {
         "append": (element: any) => Promise<void>;
         "backgroundColor": string;
         "borderRadius": number;
-        "depth": number;
         "destroy": () => Promise<void>;
         "height"?: number;
         "horizontalAlign": string;
@@ -96,7 +93,6 @@ export namespace Components {
     }
     interface LmImage {
         "borderRadius": number;
-        "depth": number;
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
@@ -110,7 +106,6 @@ export namespace Components {
         "width": number;
     }
     interface LmLayout {
-        "depth": number;
         "destroy": () => Promise<void>;
         "id": string;
         "parent": SceneElement;
@@ -140,7 +135,6 @@ export namespace Components {
     interface LmText {
         "backgroundColor": string;
         "borderRadius": number;
-        "depth": number;
         "destroy": () => Promise<void>;
         "fontColor": string;
         "fontFamily": string;
@@ -158,7 +152,6 @@ export namespace Components {
         "width"?: number;
     }
     interface LmVideo {
-        "depth": number;
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
@@ -177,7 +170,6 @@ export namespace Components {
     }
     interface LmVideoControls {
         "backgroundColor": string;
-        "depth": number;
         "getVisible": () => Promise<boolean>;
         "height": number;
         "hide": () => Promise<void>;
@@ -299,7 +291,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface Lm360video {
-        "depth"?: number;
         "id"?: string;
         "onAddElementToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
         "onClick"?: (event: Lm360videoCustomEvent<any>) => void;
@@ -317,7 +308,6 @@ declare namespace LocalJSX {
     }
     interface LmAsset {
         "activeAnimation"?: string;
-        "depth"?: number;
         "id"?: string;
         "onClick"?: (event: LmAssetCustomEvent<any>) => void;
         "parent"?: SceneElement;
@@ -337,7 +327,6 @@ declare namespace LocalJSX {
     interface LmDiv {
         "backgroundColor"?: string;
         "borderRadius"?: number;
-        "depth"?: number;
         "height"?: number;
         "horizontalAlign"?: string;
         "id"?: string;
@@ -371,7 +360,6 @@ declare namespace LocalJSX {
     }
     interface LmImage {
         "borderRadius"?: number;
-        "depth"?: number;
         "height"?: number;
         "id"?: string;
         "modal"?: boolean;
@@ -386,7 +374,6 @@ declare namespace LocalJSX {
         "width"?: number;
     }
     interface LmLayout {
-        "depth"?: number;
         "id"?: string;
         "parent"?: SceneElement;
         "sceneElement"?: LMLayout;
@@ -415,7 +402,6 @@ declare namespace LocalJSX {
     interface LmText {
         "backgroundColor"?: string;
         "borderRadius"?: number;
-        "depth"?: number;
         "fontColor"?: string;
         "fontFamily"?: string;
         "fontSize"?: number;
@@ -433,7 +419,6 @@ declare namespace LocalJSX {
         "width"?: number;
     }
     interface LmVideo {
-        "depth"?: number;
         "height"?: number;
         "id"?: string;
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
@@ -450,7 +435,6 @@ declare namespace LocalJSX {
     }
     interface LmVideoControls {
         "backgroundColor"?: string;
-        "depth"?: number;
         "height"?: number;
         "id"?: string;
         "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;

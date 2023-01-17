@@ -25,8 +25,6 @@ export class Lm360Video {
 
   @Prop() public sequenceNo: number;
 
-  @Prop() public depth: number;
-
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific

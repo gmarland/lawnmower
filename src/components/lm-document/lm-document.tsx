@@ -163,7 +163,6 @@ export class LmDocument {
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this._mainScene;
-        element["depth"] = 1;
         element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
 
