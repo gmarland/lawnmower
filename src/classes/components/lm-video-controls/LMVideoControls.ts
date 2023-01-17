@@ -65,8 +65,10 @@ export class LMVideoControls implements SceneElement {
     public onPause?: Function = null;
     public onClose?: Function = null;
 
-    constructor(parent: SceneElement, id: string, config: LMVideoControlsConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, config: LMVideoControlsConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._vrEnabled = config.vrEnabled;
         
