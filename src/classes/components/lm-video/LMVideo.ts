@@ -29,6 +29,8 @@ export class LMVideo implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _src: string;
 
     private _initialWidth?: number = null; //Defined width from the HTML tag
@@ -89,6 +91,10 @@ export class LMVideo implements SceneElement {
     public get uuid(): string {
         return this._content.uuid;
     }
+    
+    public get position(): Vector3 {
+        return this._position;
+    }
 
     public get src(): string {
         return this._src;
@@ -126,6 +132,10 @@ export class LMVideo implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set src(value: string) {

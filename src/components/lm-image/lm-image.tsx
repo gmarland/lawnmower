@@ -31,6 +31,8 @@ export class LmImage {
 
   @Element() el: HTMLElement
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LMImage;
 
   @Prop({ reflect: true }) public id: string = "";

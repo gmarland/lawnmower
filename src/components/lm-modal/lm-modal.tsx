@@ -30,6 +30,8 @@ export class LmModal {
 
   @Element() el: HTMLElement
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LMModal;
 
   @Prop({ reflect: true }) public id: string = "";

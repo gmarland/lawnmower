@@ -29,6 +29,8 @@ export class LmLayout {
   
   @Element() el: HTMLElement
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LMLayout;
 
   @Prop({ reflect: true }) id: string = "index";

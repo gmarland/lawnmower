@@ -31,6 +31,8 @@ export class Lm360Video {
 
   @Element() el: HTMLElement;
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LM360Video;
 
   @Prop({ reflect: true }) public id: string = "";

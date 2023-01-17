@@ -28,6 +28,8 @@ export class LMDiv implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _initialWidth?: number = null; 
     private _initialHeight?: number = null;
     private _borderRadius: number = 0;
@@ -105,6 +107,10 @@ export class LMDiv implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get dynamicWidth(): boolean {
@@ -193,6 +199,10 @@ export class LMDiv implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set width(value: number) {

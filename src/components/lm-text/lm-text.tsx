@@ -31,6 +31,8 @@ export class LmText {
 
   @Element() el: HTMLElement
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LMText;
 
   @Prop({ reflect: true }) public id: string = "";

@@ -31,6 +31,8 @@ export class LmVideo {
 
   @Element() el: HTMLElement
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LMVideo;
 
   @Prop({ reflect: true }) public id: string = "";

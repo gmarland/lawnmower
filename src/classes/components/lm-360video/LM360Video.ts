@@ -26,6 +26,8 @@ export class LM360Video implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _src: string;
 
     private _videoRadius: number;
@@ -75,6 +77,10 @@ export class LM360Video implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get src(): string {
@@ -174,6 +180,10 @@ export class LM360Video implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set src(value: string) {

@@ -36,6 +36,8 @@ export class LmDiv {
 
   @Element() el: HTMLElement
 
+  @Prop() public position: string;
+
   @Prop({ mutable: true }) public sceneElement: LMDiv;
 
   @Prop({ reflect: true }) public id: string = "";

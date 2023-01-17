@@ -15,6 +15,8 @@ export class LMLayout implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _content?: Group = new Group();
 
     private _initialized: boolean = false;
@@ -41,6 +43,10 @@ export class LMLayout implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
     
     public get dynamicWidth(): boolean {
@@ -147,6 +153,10 @@ export class LMLayout implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
     
     public set width(value: number) {

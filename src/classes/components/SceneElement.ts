@@ -9,6 +9,8 @@ import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 export interface SceneElement {
     id: string;
 
+    position: Vector3;
+
     uuid: string;
 
     dynamicWidth: boolean;
