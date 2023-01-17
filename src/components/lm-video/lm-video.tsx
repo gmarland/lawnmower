@@ -208,16 +208,6 @@ export class LmVideo {
 
       this.click.emit();
     };
-    
-    if (this.playback == "modal") {
-      this._modalDialog.addEventListener("shown", () => {
-        this._videoInlineElement.play();
-      });
-      
-      this._modalDialog.addEventListener("shown", () => {
-        this._videoInlineElement.reset();
-      });
-    }
 
     let position = 1;
 
@@ -232,7 +222,17 @@ export class LmVideo {
     });
   }
 
-  componentDidLoad() {
+  componentDidLoad() {    
+    if (this.playback == "modal") {
+      this._modalDialog.addEventListener("shown", () => {
+        this._videoInlineElement.play();
+      });
+      
+      this._modalDialog.addEventListener("hidden", () => {
+        this._videoInlineElement.reset();
+      });
+    }
+
     this.parent.addChildElement(this.position, this.sceneElement);
   }
 

@@ -166,8 +166,6 @@ export class LmModal {
   public async show(): Promise<void> {
     return new Promise((resolve) => {
       this.sceneElement.visible = true;
-      
-      this.shown.emit();
 
       resolve();
     });
@@ -177,8 +175,6 @@ export class LmModal {
   public async hide(): Promise<void> {
     return new Promise((resolve) => {
       this.sceneElement.visible = false;
-      
-      this.hidden.emit();
 
       resolve();
     });
@@ -208,6 +204,14 @@ export class LmModal {
         borderWidth: this.borderWidth,
         closeButtonWidth: this.closeButtonWidth
     });
+
+    this.sceneElement.modalShown = () => {
+      this.shown.emit();
+    }
+
+    this.sceneElement.modalHidden = () => {
+      this.hidden.emit();
+    }
     
     let position = 1;
 

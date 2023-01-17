@@ -94,7 +94,7 @@ export class LMDiv implements SceneElement {
         this._yRotation = config.yRotation;
         this._zRotation = config.zRotation;
         
-        this._content.translateZ(0.5);
+        this._content.translateZ(1);
     }
 
     ////////// Getters
