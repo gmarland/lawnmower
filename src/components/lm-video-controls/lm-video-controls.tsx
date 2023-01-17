@@ -178,6 +178,7 @@ export class LmVideoControls {
 
   componentWillLoad() {
     this._videoControls = new LMVideoControls(this.parent, this.id, {
+      vrEnabled: this.vrEnabled,
       baseImagePath: getAssetPath('assets'),
       backgroundColor: this.backgroundColor,
       width: this.width,

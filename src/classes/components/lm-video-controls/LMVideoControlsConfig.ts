@@ -1,4 +1,6 @@
 export interface LMVideoControlsConfig {
+    vrEnabled: boolean;
+
     baseImagePath: string;
 
     x: number;

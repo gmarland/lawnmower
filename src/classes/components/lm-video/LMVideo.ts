@@ -81,7 +81,7 @@ export class LMVideo implements SceneElement {
 
         this._placeholderTimestamp = config.placeholderTimestamp;
         
-        this._content.translateZ(0.5);
+        this._content.translateZ(1);
     }
 
     ////////// Getters
@@ -475,10 +475,11 @@ export class LMVideo implements SceneElement {
 
         const playMeshBox = new Box3().setFromObject(playMesh);
 
-        playMesh.position.y -= (playMeshBox.max.y-playMeshBox.min.y)/2;
-        playMesh.position.x -= (playMeshBox.max.x-playMeshBox.min.x)/2;
-        playMesh.position.z += 1;
-        this._content.translateZ(this._depth+1);
+        playMesh.position.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
+        playMesh.position.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
+        playMesh.translateZ(1);
+        
+        this._content.translateZ(1);
 
         return playMesh;
     }

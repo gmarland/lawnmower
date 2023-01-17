@@ -18,6 +18,7 @@ import { SceneElementPlacement } from "../../scene/SceneElementPlacement";
 import { SceneElement } from "../SceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LMModalConfig } from "./LMModalConfig";
+import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class LMModal implements SceneElement {
     private _depth: number;
@@ -59,6 +60,10 @@ export class LMModal implements SceneElement {
     private _redraw: boolean = false;
 
     private  _childElement: SceneElement = null;
+
+    private _modalShown: Function = null;
+
+    private _modalHidden: Function = null;
 
     constructor(depth: number, parent: SceneElement, id: string, config: LMModalConfig) {
         this._depth = depth;
@@ -146,10 +151,6 @@ export class LMModal implements SceneElement {
         this._setWidth = value;
     }
 
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
     public set borderRadius(value: number) {
         this._borderRadius = value;
     }
@@ -172,6 +173,25 @@ export class LMModal implements SceneElement {
 
     public set closeButtonWidth(value: number) {
         this._closeButtonWidth = value;
+    }
+
+    public set modalShown(value: Function) {
+        this._modalShown = value;
+    }
+
+    public set modalHidden(value: Function) {
+        this._modalHidden = value;
+    }
+
+    public set visible(value: boolean) {
+        const updated = (this._content.visible !== value)
+
+        this._content.visible = value;
+
+        if (updated) {
+            if ((value) && (this._modalShown)) this._modalShown();
+            else if (this._modalHidden) this._modalHidden();
+        }
     }
 
     ////////// Public Methods
@@ -297,7 +317,7 @@ export class LMModal implements SceneElement {
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
             if (this._closeButtonMesh && (MeshUtils.ObjectContainsUid(meshId, this._closeButtonMesh))) {
-                this._content.visible = false;
+                this.visible = false;
             }
 
             resolve();
@@ -420,7 +440,7 @@ export class LMModal implements SceneElement {
         buttonGroup.add(buttonContainer);
         buttonGroup.add(button);
 
-        buttonGroup.position.y = ((dialogHeight/2)-(this._padding/2))*-1;
+        buttonGroup.translateY(((dialogHeight/2)*-1) - (GeometryUtils.getDimensions(buttonGroup).height/2) - 5);
         buttonGroup.translateZ(0.5);
 
         return buttonGroup;

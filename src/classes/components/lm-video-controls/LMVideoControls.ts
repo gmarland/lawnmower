@@ -20,6 +20,8 @@ import { LMVideoControlsConfig } from './LMVideoControlsConfig';
 export class LMVideoControls implements SceneElement {
     private _parent: SceneElement;
 
+    private _vrEnabled: boolean;
+
     private _id: string;
 
     private _mesh: Mesh;
@@ -63,6 +65,8 @@ export class LMVideoControls implements SceneElement {
 
     constructor(parent: SceneElement, id: string, config: LMVideoControlsConfig) {
         this._parent = parent;
+
+        this._vrEnabled = config.vrEnabled;
         
         this._id = id;
 
@@ -163,7 +167,8 @@ export class LMVideoControls implements SceneElement {
     // --- Data Methods
 
     public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.AttachedToCamera;
+        if (this._vrEnabled) return SceneElementPlacement.PlacedAtCamera;
+        else return SceneElementPlacement.AttachedToCamera;
     }
     
     public getDimensions(): Dimensions {

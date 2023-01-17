@@ -61,7 +61,7 @@ export class LMImage implements SceneElement {
 
         this._borderRadius = config.borderRadius;
         
-        this._content.translateZ(0.5);
+        this._content.translateZ(1);
     }
 
     ////////// Getters

@@ -54,6 +54,10 @@ export class LmModal {
 
   @Event() public click: EventEmitter;
 
+  @Event() public shown: EventEmitter;
+
+  @Event() public hidden: EventEmitter;
+
   @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
   @Watch('id')
@@ -200,6 +204,14 @@ export class LmModal {
         borderWidth: this.borderWidth,
         closeButtonWidth: this.closeButtonWidth
     });
+
+    this.sceneElement.modalShown = () => {
+      this.shown.emit();
+    }
+
+    this.sceneElement.modalHidden = () => {
+      this.hidden.emit();
+    }
     
     let position = 1;
 
