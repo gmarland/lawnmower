@@ -141,6 +141,8 @@ export class LmImage {
       this.el.remove();
 
       await this.sceneElement.destroy();
+
+      if (this._modalDialog) this._modalDialog.destroy();
       
       resolve();
     });

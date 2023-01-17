@@ -163,9 +163,12 @@ export namespace Components {
         "height": number;
         "id": string;
         "parent": SceneElement;
+        "pause": () => Promise<void>;
         "placeholder": number;
-        "play": string;
+        "play": () => Promise<void>;
+        "playback": string;
         "position": number;
+        "reset": () => Promise<void>;
         "sceneElement": LMVideo;
         "src": string;
         "visible": boolean;
@@ -401,6 +404,8 @@ declare namespace LocalJSX {
         "offset"?: number;
         "onAddElementToRoot"?: (event: LmModalCustomEvent<SceneElement>) => void;
         "onClick"?: (event: LmModalCustomEvent<any>) => void;
+        "onHidden"?: (event: LmModalCustomEvent<any>) => void;
+        "onShown"?: (event: LmModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
         "sceneElement"?: LMModal;
@@ -432,9 +437,10 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
+        "onShowModalDialog"?: (event: LmVideoCustomEvent<string>) => void;
         "parent"?: SceneElement;
         "placeholder"?: number;
-        "play"?: string;
+        "playback"?: string;
         "position"?: number;
         "sceneElement"?: LMVideo;
         "src"?: string;

@@ -54,6 +54,10 @@ export class LmModal {
 
   @Event() public click: EventEmitter;
 
+  @Event() public shown: EventEmitter;
+
+  @Event() public hidden: EventEmitter;
+
   @Event() public addElementToRoot: EventEmitter<SceneElement>;
 
   @Watch('id')
@@ -162,6 +166,8 @@ export class LmModal {
   public async show(): Promise<void> {
     return new Promise((resolve) => {
       this.sceneElement.visible = true;
+      
+      this.shown.emit();
 
       resolve();
     });
@@ -171,6 +177,8 @@ export class LmModal {
   public async hide(): Promise<void> {
     return new Promise((resolve) => {
       this.sceneElement.visible = false;
+      
+      this.hidden.emit();
 
       resolve();
     });
