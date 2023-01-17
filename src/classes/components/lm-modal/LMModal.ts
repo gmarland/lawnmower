@@ -21,8 +21,6 @@ import { LMModalConfig } from "./LMModalConfig";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class LMModal implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _id: string;
@@ -65,9 +63,7 @@ export class LMModal implements SceneElement {
 
     private _modalHidden: Function = null;
 
-    constructor(depth: number, parent: SceneElement, id: string, config: LMModalConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, id: string, config: LMModalConfig) {
         this._parent = parent;
 
         this._id = id;
