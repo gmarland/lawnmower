@@ -23,8 +23,6 @@ import { LMLayout } from '../lm-layout/LMLayout';
 import { LMVideoConfig } from './LMVideoConfig';
 
 export class LMVideo implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _vrEnabled: boolean;
@@ -63,9 +61,7 @@ export class LMVideo implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, id: string, src: string, config: LMVideoConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, id: string, src: string, config: LMVideoConfig) {
         this._parent = parent;
 
         this._vrEnabled = config.vrEnabled;
@@ -475,8 +471,8 @@ export class LMVideo implements SceneElement {
 
         const playMeshBox = new Box3().setFromObject(playMesh);
 
-        playMesh.position.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
-        playMesh.position.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
+        playMesh.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
+        playMesh.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
         playMesh.translateZ(1);
         
         this._content.translateZ(1);

@@ -24,8 +24,6 @@ import { MainScene } from '../../scene/MainScene';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class LMDiv implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _id: string;
@@ -65,9 +63,7 @@ export class LMDiv implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, id: string, config: LMDivConfig) {
-        this._depth = depth;
-        
+    constructor(parent: SceneElement, id: string, config: LMDivConfig) {
         this._parent = parent;
 
         this._id = id;
@@ -187,10 +183,6 @@ export class LMDiv implements SceneElement {
     
             resolve(this._content.position);
         });
-    }
-
-    public getDepth(): number {
-        return this._depth;
     }
 
     ////////// Setters

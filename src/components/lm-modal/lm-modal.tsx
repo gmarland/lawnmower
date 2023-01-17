@@ -192,7 +192,7 @@ export class LmModal {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMModal(1, this.parent, this.id, { 
+    this.sceneElement = new LMModal(this.parent, this.id, { 
         baseImagePath: getAssetPath('assets'),
         width: this.width, 
         height: this.height,

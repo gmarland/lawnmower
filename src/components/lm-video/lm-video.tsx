@@ -186,7 +186,7 @@ export class LmVideo {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMVideo(this.depth, this.parent, this.id, this.src, { 
+    this.sceneElement = new LMVideo(this.parent, this.id, this.src, { 
       vrEnabled: this.vrEnabled,
       width: this.width, 
       height: this.height,

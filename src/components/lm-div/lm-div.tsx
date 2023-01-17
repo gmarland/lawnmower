@@ -274,8 +274,8 @@ export class LmDiv {
       zRotation: this.zRotation
     };
 
-    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.depth, this.parent, this.id, config);
-    else this.sceneElement = new RowVRDiv(this.depth, this.parent, this.id, config);
+    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.parent, this.id, config);
+    else this.sceneElement = new RowVRDiv(this.parent, this.id, config);
     
     let position = 0;
 
