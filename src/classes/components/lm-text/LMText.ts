@@ -515,10 +515,7 @@ export class LMText implements SceneElement {
         context.fillStyle = this._fontColor;
 
         for (let i = 0; i<lines.length; i++) {
-            let writePosition;
-            
-            if (i === 0) writePosition = this._padding + (lineHeight*(i+1)) - textDimensions.actualBoundingBoxDescent;
-            else writePosition = this._padding + (lineHeight*(i+1));
+            const writePosition = this._padding + (lineHeight*(i+1)) - textDimensions.actualBoundingBoxDescent;
 
             context.fillText(lines[i], this._padding, writePosition);
         }
