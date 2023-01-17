@@ -13,6 +13,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMModal } from '../../classes/components/lm-modal/LMModal';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-modal',
@@ -29,6 +30,8 @@ export class LmModal {
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMModal;
 
@@ -192,7 +195,7 @@ export class LmModal {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMModal(1, this.parent, this.id, { 
+    this.sceneElement = new LMModal(this.parent, GeometryUtils.parsePositionString(this.position), this.id, { 
         baseImagePath: getAssetPath('assets'),
         width: this.width, 
         height: this.height,
@@ -213,15 +216,14 @@ export class LmModal {
       this.hidden.emit();
     }
     
-    let position = 1;
+    let sequenceNo = 1;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
-        element["position"] = position;
-        element["depth"] = 2;
+        element["sequenceNo"] = sequenceNo;
 
-        position++;
+        sequenceNo++;
       }
     });
 

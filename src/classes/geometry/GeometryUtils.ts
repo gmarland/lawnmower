@@ -1,7 +1,8 @@
 import { 
     Mesh,
     Object3D,
-    Box3
+    Box3,
+    Vector3
 } from 'three';
 
 import { Dimensions } from './Dimensions';
@@ -18,6 +19,27 @@ export class GeometryUtils {
     public static roundNumber(num: number): number {
         if (num % 1 != 0) return parseInt(num.toFixed(2));
         else return num;
+    }
+
+    public static parsePositionString(postionString): Vector3 {
+        if (postionString && (postionString.length > 0)) {
+            const parts = postionString.split(',');
+
+            if (parts.length === 3) {
+                try {
+                    return new Vector3(parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2]))
+                }
+                catch (err) {
+                    console.log("Error parsing position string: " + postionString, err);
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            return null;
+        }
     }
 
     public static normalizePosition(rads: number): number {

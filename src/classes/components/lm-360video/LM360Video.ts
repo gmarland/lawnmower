@@ -26,6 +26,8 @@ export class LM360Video implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _src: string;
 
     private _videoRadius: number;
@@ -51,18 +53,21 @@ export class LM360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(parent: SceneElement, id: string, src: string, config: LM360VideoConfig) {
-        this._videoRadius = config.videoRadius;
-        this._videoWidthSegments = config.videoWidthSegments;
-        this._videoHeightSegments = config.videoHeightSegments;
-
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
+        
         this._parent = parent;
+
+        this._position = position;
 
         this._vrEnabled = config.vrEnabled;
 
         this._id = id;
 
         this._src = src;
+        
+        this._videoRadius = config.videoRadius;
+        this._videoWidthSegments = config.videoWidthSegments;
+        this._videoHeightSegments = config.videoHeightSegments;
         
         this._content.visible = false;
     }
@@ -75,6 +80,10 @@ export class LM360Video implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get src(): string {
@@ -174,6 +183,10 @@ export class LM360Video implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set src(value: string) {

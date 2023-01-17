@@ -1,7 +1,8 @@
 import { 
     Object3D,
     Box3,
-    Group
+    Group,
+    Vector3
 } from 'three';
 
 import { ItemVerticalAlign } from '../../geometry/ItemVerticalAlign';
@@ -12,8 +13,8 @@ import { LMDiv } from './LMDiv';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class ColumnLMDiv extends LMDiv {
-    constructor(depth: number, parent: SceneElement, id: string, config: LMDivConfig) {
-        super(depth, parent, id, config);
+    constructor(parent: SceneElement, position: Vector3, id: string, config: LMDivConfig) {
+        super(parent, position, id, config);
     }
 
     public layoutChildrenItems(childLayoutContainer: Object3D): void {

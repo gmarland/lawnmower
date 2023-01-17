@@ -21,11 +21,11 @@ import { LMModalConfig } from "./LMModalConfig";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class LMModal implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _id: string;
+
+    private _position?: Vector3;
 
     private _baseImagePath: string;
 
@@ -65,10 +65,10 @@ export class LMModal implements SceneElement {
 
     private _modalHidden: Function = null;
 
-    constructor(depth: number, parent: SceneElement, id: string, config: LMModalConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, position: Vector3, id: string, config: LMModalConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
 
@@ -102,6 +102,10 @@ export class LMModal implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get dynamicWidth(): boolean {
@@ -145,6 +149,10 @@ export class LMModal implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set width(value: number) {

@@ -24,6 +24,8 @@ export class LMVideoControls implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _mesh: Mesh;
 
     private _closeMesh: Mesh;
@@ -63,8 +65,10 @@ export class LMVideoControls implements SceneElement {
     public onPause?: Function = null;
     public onClose?: Function = null;
 
-    constructor(parent: SceneElement, id: string, config: LMVideoControlsConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, config: LMVideoControlsConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._vrEnabled = config.vrEnabled;
         
@@ -92,6 +96,10 @@ export class LMVideoControls implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get dynamicWidth(): boolean {
@@ -132,6 +140,10 @@ export class LMVideoControls implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set width(value: number) {

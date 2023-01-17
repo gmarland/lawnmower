@@ -12,6 +12,7 @@ import { Method } from '@stencil/sass/dist/declarations';
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMVideoControls } from '../../classes/components/lm-video-controls/LMVideoControls';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-video-controls',
@@ -23,13 +24,13 @@ export class LmVideoControls {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
+
+  @Prop() public position: string;
 
   @Prop({ reflect: true }) public id: string = "";
 
@@ -177,7 +178,7 @@ export class LmVideoControls {
   }
 
   componentWillLoad() {
-    this._videoControls = new LMVideoControls(this.parent, this.id, {
+    this._videoControls = new LMVideoControls(this.parent, GeometryUtils.parsePositionString(this.position), this.id, {
       vrEnabled: this.vrEnabled,
       baseImagePath: getAssetPath('assets'),
       backgroundColor: this.backgroundColor,

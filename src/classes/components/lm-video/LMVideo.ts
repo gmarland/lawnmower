@@ -23,13 +23,13 @@ import { LMLayout } from '../lm-layout/LMLayout';
 import { LMVideoConfig } from './LMVideoConfig';
 
 export class LMVideo implements SceneElement {
-    private _depth: number;
-
     private _parent: SceneElement;
 
     private _vrEnabled: boolean;
 
     private _id: string;
+
+    private _position?: Vector3;
 
     private _src: string;
 
@@ -63,10 +63,10 @@ export class LMVideo implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(depth: number, parent: SceneElement, id: string, src: string, config: LMVideoConfig) {
-        this._depth = depth;
-
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LMVideoConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._vrEnabled = config.vrEnabled;
         
@@ -92,6 +92,10 @@ export class LMVideo implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get src(): string {
@@ -130,6 +134,10 @@ export class LMVideo implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set src(value: string) {
@@ -475,8 +483,8 @@ export class LMVideo implements SceneElement {
 
         const playMeshBox = new Box3().setFromObject(playMesh);
 
-        playMesh.position.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
-        playMesh.position.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
+        playMesh.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
+        playMesh.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
         playMesh.translateZ(1);
         
         this._content.translateZ(1);

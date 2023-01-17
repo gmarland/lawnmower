@@ -22,6 +22,8 @@ export class LMText implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _fontSize: number;
     private _fontFamily: string;
 
@@ -58,8 +60,10 @@ export class LMText implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, text: string, config: LMTextConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, text: string, config: LMTextConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
         
@@ -96,6 +100,10 @@ export class LMText implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get dynamicWidth(): boolean {
@@ -221,6 +229,10 @@ export class LMText implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set width(value: number) {
@@ -421,90 +433,61 @@ export class LMText implements SceneElement {
         const context = textContainer.getContext('2d', {alpha: false});
         context.font = textDecoration + this._fontSize + "px " + this._fontFamily;
 
-        const words = this._text.split(" ");
-        const lines = Array<string>();
+        const allLines = [];
+        
+        this._text.split("\n\r").forEach((nrline) => {
+            nrline.split("\n").forEach((nline) => {
+                allLines.push(nline.trim());
+            });
+        });
+        
+        let lines = Array<string>();
 
-        if (words.length > 0) {
-            let currentLine = "";
-
+        if (allLines.length > 0) {
             if (width) {
                 this._calculatedWidth = width;
 
-                if (words.length > 0) {
-                    for (let i=0; i<words.length; i++) {
-                        if (words[i].trim().length > 0) {
-                            let word = words[i];
+                for (let i=0; i<allLines.length; i++) {
+                    let currentLine = "";
 
-                            let breakAfter = false;
-
-                            if (word.startsWith("\n\r") || word.startsWith("\n")) {
-                                lines.push("");
-                            }
-
-                            if (word.endsWith("\n\r") || word.endsWith("\n")) {
-                                breakAfter = true;
-                            }
-                            
-                            word = word.replace(/[\n\r]/g, '');
-
-                            const newTextLenth = context.measureText(currentLine + " " + word).width + (this._padding*2);
-                            
-                            if (newTextLenth < width) {
-                                currentLine += " " + word;
-                            }
-                            else {
-                                lines.push(currentLine.trim());
-
-                                currentLine = word;
-                            }
-
-                            if (breakAfter) {
-                                if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-                                lines.push("");
-
-                                currentLine = "";
-                            }
+                    const words = allLines[i].split(" ");
+                    
+                    if (words.length > 0) {
+                        if (words.length === 1) {
+                            lines.push(words[0]);
                         }
+                        else if (words.length > 1) {
+                            for (let j=0; j<words.length; j++) {
+                                let word = words[j];
+
+                                if (word.trim().length > 0) {
+                                    const newTextLenth = context.measureText(currentLine + " " + word).width + (this._padding*2);
+                                    
+                                    if (newTextLenth < width) {
+                                        currentLine += " " + word;
+                                    }
+                                    else {
+                                        lines.push(currentLine.trim());
+
+                                        currentLine = word;
+                                    }
+                                }
+                            }
+
+                            if (currentLine.trim().length > 0) lines.push(currentLine.trim());
+                        }
+                    }
+                    else {
+                        lines.push("");
                     }
                 }
-
-                if (currentLine.trim().length > 0) lines.push(currentLine.trim());
             }
             else {
-                if (words.length > 1) {
-                    for (let i=0; i<words.length; i++) {
-                        if (words[i].trim().length > 0) {
-                            let word = words[i];
-
-                            let breakAfter = false;
-
-                            if (word.startsWith("\n\r") || word.startsWith("\n")) {
-                                lines.push("");
-                            }
-
-                            if (word.endsWith("\n\r") || word.endsWith("\n")) {
-                                breakAfter = true;
-                            }
-                            
-                            currentLine += " " + word.replace(/[\n\r]/g, '');
-
-                            if (breakAfter) {
-                                if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-                                lines.push("");
-
-                                currentLine = "";
-                            }
-                        }
-                    }
-
-                    if (currentLine.trim().length > 0) lines.push(currentLine.trim());
-        
-                    this._calculatedWidth = 0;
-
-                    for (let i=0; i<lines.length; i++) {
-                        const newTextLenth = context.measureText(lines[i]).width + (this._padding*2);
-                        if (newTextLenth > this._calculatedWidth) this._calculatedWidth = newTextLenth;
-                    }
+                lines = allLines;
+            
+                for (let i=0; i<lines.length; i++) {
+                    const newTextLenth = context.measureText(lines[i]).width + (this._padding*2);
+                    if (newTextLenth > this._calculatedWidth) this._calculatedWidth = newTextLenth;
                 }
             }
         }
@@ -532,10 +515,7 @@ export class LMText implements SceneElement {
         context.fillStyle = this._fontColor;
 
         for (let i = 0; i<lines.length; i++) {
-            let writePosition;
-            
-            if (i === 0) writePosition = this._padding + (lineHeight*(i+1)) - textDimensions.actualBoundingBoxDescent;
-            else writePosition = this._padding + (lineHeight*(i+1));
+            const writePosition = this._padding + (lineHeight*(i+1)) - textDimensions.actualBoundingBoxDescent;
 
             context.fillText(lines[i], this._padding, writePosition);
         }

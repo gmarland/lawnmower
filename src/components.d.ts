@@ -17,15 +17,15 @@ import { LMVideo } from "./classes/components/lm-video/LMVideo";
 export namespace Components {
     interface Lm360video {
         "close": () => Promise<void>;
-        "depth": number;
         "destroy": () => Promise<void>;
         "id": string;
         "parent": SceneElement;
         "pause": () => Promise<void>;
         "play": () => Promise<void>;
-        "position": number;
+        "position": string;
         "reset": () => Promise<void>;
         "sceneElement": LM360Video;
+        "sequenceNo": number;
         "src": string;
         "videoHeightSegments": number;
         "videoRadius": number;
@@ -34,14 +34,14 @@ export namespace Components {
     }
     interface LmAsset {
         "activeAnimation": string;
-        "depth": number;
         "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
         "id": string;
         "parent": SceneElement;
-        "position": number;
+        "position": string;
         "radius": number;
         "sceneElement": LMAsset;
+        "sequenceNo": number;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -56,7 +56,6 @@ export namespace Components {
         "append": (element: any) => Promise<void>;
         "backgroundColor": string;
         "borderRadius": number;
-        "depth": number;
         "destroy": () => Promise<void>;
         "height"?: number;
         "horizontalAlign": string;
@@ -68,10 +67,11 @@ export namespace Components {
         "opacity"?: number;
         "padding"?: number;
         "parent": SceneElement;
-        "position": number;
+        "position": string;
         "prepend": (element: any) => Promise<void>;
         "removeElement": (element: any) => Promise<void>;
         "sceneElement": LMDiv;
+        "sequenceNo": number;
         "verticalAlign": string;
         "vrEnabled": boolean;
         "width": number;
@@ -96,26 +96,26 @@ export namespace Components {
     }
     interface LmImage {
         "borderRadius": number;
-        "depth": number;
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
         "modal": boolean;
         "parent": SceneElement;
-        "position": number;
+        "position": string;
         "sceneElement": LMImage;
+        "sequenceNo": number;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
         "width": number;
     }
     interface LmLayout {
-        "depth": number;
         "destroy": () => Promise<void>;
         "id": string;
         "parent": SceneElement;
-        "position": number;
+        "position": string;
         "sceneElement": LMLayout;
+        "sequenceNo": number;
         "vrEnabled": boolean;
     }
     interface LmModal {
@@ -132,6 +132,7 @@ export namespace Components {
         "offset": number;
         "padding": number;
         "parent": SceneElement;
+        "position": string;
         "sceneElement": LMModal;
         "show": () => Promise<void>;
         "vrEnabled": boolean;
@@ -140,7 +141,6 @@ export namespace Components {
     interface LmText {
         "backgroundColor": string;
         "borderRadius": number;
-        "depth": number;
         "destroy": () => Promise<void>;
         "fontColor": string;
         "fontFamily": string;
@@ -149,8 +149,9 @@ export namespace Components {
         "id": string;
         "padding"?: number;
         "parent": SceneElement;
-        "position": number;
+        "position": string;
         "sceneElement": LMText;
+        "sequenceNo": number;
         "text": string;
         "textDecoration": string;
         "visible": boolean;
@@ -158,7 +159,6 @@ export namespace Components {
         "width"?: number;
     }
     interface LmVideo {
-        "depth": number;
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
@@ -167,9 +167,10 @@ export namespace Components {
         "placeholder": number;
         "play": () => Promise<void>;
         "playback": string;
-        "position": number;
+        "position": string;
         "reset": () => Promise<void>;
         "sceneElement": LMVideo;
+        "sequenceNo": number;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -177,7 +178,6 @@ export namespace Components {
     }
     interface LmVideoControls {
         "backgroundColor": string;
-        "depth": number;
         "getVisible": () => Promise<boolean>;
         "height": number;
         "hide": () => Promise<void>;
@@ -186,7 +186,8 @@ export namespace Components {
         "onPause": Function;
         "onPlay": Function;
         "parent": SceneElement;
-        "position": number;
+        "position": string;
+        "sequenceNo": number;
         "show": (isPlaying: boolean) => Promise<void>;
         "vrEnabled": boolean;
         "width": number;
@@ -299,7 +300,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface Lm360video {
-        "depth"?: number;
         "id"?: string;
         "onAddElementToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
         "onClick"?: (event: Lm360videoCustomEvent<any>) => void;
@@ -307,8 +307,9 @@ declare namespace LocalJSX {
         "onShowCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "onViewCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
         "sceneElement"?: LM360Video;
+        "sequenceNo"?: number;
         "src"?: string;
         "videoHeightSegments"?: number;
         "videoRadius"?: number;
@@ -317,13 +318,13 @@ declare namespace LocalJSX {
     }
     interface LmAsset {
         "activeAnimation"?: string;
-        "depth"?: number;
         "id"?: string;
         "onClick"?: (event: LmAssetCustomEvent<any>) => void;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
         "radius"?: number;
         "sceneElement"?: LMAsset;
+        "sequenceNo"?: number;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -337,7 +338,6 @@ declare namespace LocalJSX {
     interface LmDiv {
         "backgroundColor"?: string;
         "borderRadius"?: number;
-        "depth"?: number;
         "height"?: number;
         "horizontalAlign"?: string;
         "id"?: string;
@@ -348,8 +348,9 @@ declare namespace LocalJSX {
         "opacity"?: number;
         "padding"?: number;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
         "sceneElement"?: LMDiv;
+        "sequenceNo"?: number;
         "verticalAlign"?: string;
         "vrEnabled"?: boolean;
         "width"?: number;
@@ -371,26 +372,26 @@ declare namespace LocalJSX {
     }
     interface LmImage {
         "borderRadius"?: number;
-        "depth"?: number;
         "height"?: number;
         "id"?: string;
         "modal"?: boolean;
         "onClick"?: (event: LmImageCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmImageCustomEvent<string>) => void;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
         "sceneElement"?: LMImage;
+        "sequenceNo"?: number;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
         "width"?: number;
     }
     interface LmLayout {
-        "depth"?: number;
         "id"?: string;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
         "sceneElement"?: LMLayout;
+        "sequenceNo"?: number;
         "vrEnabled"?: boolean;
     }
     interface LmModal {
@@ -408,6 +409,7 @@ declare namespace LocalJSX {
         "onShown"?: (event: LmModalCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
+        "position"?: string;
         "sceneElement"?: LMModal;
         "vrEnabled"?: boolean;
         "width"?: number;
@@ -415,7 +417,6 @@ declare namespace LocalJSX {
     interface LmText {
         "backgroundColor"?: string;
         "borderRadius"?: number;
-        "depth"?: number;
         "fontColor"?: string;
         "fontFamily"?: string;
         "fontSize"?: number;
@@ -424,8 +425,9 @@ declare namespace LocalJSX {
         "onClick"?: (event: LmTextCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
         "sceneElement"?: LMText;
+        "sequenceNo"?: number;
         "text"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
@@ -433,7 +435,6 @@ declare namespace LocalJSX {
         "width"?: number;
     }
     interface LmVideo {
-        "depth"?: number;
         "height"?: number;
         "id"?: string;
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
@@ -441,8 +442,9 @@ declare namespace LocalJSX {
         "parent"?: SceneElement;
         "placeholder"?: number;
         "playback"?: string;
-        "position"?: number;
+        "position"?: string;
         "sceneElement"?: LMVideo;
+        "sequenceNo"?: number;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -450,7 +452,6 @@ declare namespace LocalJSX {
     }
     interface LmVideoControls {
         "backgroundColor"?: string;
-        "depth"?: number;
         "height"?: number;
         "id"?: string;
         "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
@@ -459,7 +460,8 @@ declare namespace LocalJSX {
         "onPlay"?: Function;
         "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
         "parent"?: SceneElement;
-        "position"?: number;
+        "position"?: string;
+        "sequenceNo"?: number;
         "vrEnabled"?: boolean;
         "width"?: number;
         "x"?: number;

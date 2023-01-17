@@ -12,6 +12,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMVideo } from '../../classes/components/lm-video/LMVideo';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-video',
@@ -23,15 +24,15 @@ export class LmVideo {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMVideo;
 
@@ -186,7 +187,7 @@ export class LmVideo {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMVideo(this.depth, this.parent, this.id, this.src, { 
+    this.sceneElement = new LMVideo(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
       vrEnabled: this.vrEnabled,
       width: this.width, 
       height: this.height,
@@ -209,15 +210,14 @@ export class LmVideo {
       this.click.emit();
     };
 
-    let position = 1;
+    let sequenceNo = 1;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
-        element["position"] = position;
-        element["depth"] = this.depth+1;
+        element["sequenceNo"] = sequenceNo;
 
-        position++;
+        sequenceNo++;
       }
     });
   }
@@ -233,7 +233,7 @@ export class LmVideo {
       });
     }
 
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
 
   render() {

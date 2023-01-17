@@ -12,6 +12,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMImage } from '../../classes/components/lm-image/LMImage';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-image',
@@ -23,15 +24,15 @@ export class LmImage {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMImage;
 
@@ -149,7 +150,7 @@ export class LmImage {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMImage(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMImage(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
         width: this.width, 
         height: this.height,
         borderRadius: this.borderRadius
@@ -167,7 +168,7 @@ export class LmImage {
   componentDidLoad() {
     if (this._modalDialog) this._modalDialog.parent = this.sceneElement;
 
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
   
   render() {

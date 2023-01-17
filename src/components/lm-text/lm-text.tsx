@@ -12,6 +12,7 @@ import {
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMText } from '../../classes/components/lm-text/LMText';
 import { Method } from '@stencil/core/internal';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-text',
@@ -23,15 +24,15 @@ export class LmText {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMText;
 
@@ -266,7 +267,7 @@ export class LmText {
       }
     }
 
-    this.sceneElement = new LMText(this.parent, this.id, this.text, { 
+    this.sceneElement = new LMText(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,
@@ -285,7 +286,7 @@ export class LmText {
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
   
   render() {

@@ -13,6 +13,7 @@ import {
 import { SceneElement } from '../../classes/components/SceneElement';
 
 import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-asset',
@@ -24,15 +25,15 @@ export class LmAsset {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMAsset;
 
@@ -190,7 +191,7 @@ export class LmAsset {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMAsset(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMAsset(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
       activeAnimation: this.activeAnimation,
       radius: this.radius, 
       xRotation: this.xRotation,
@@ -207,7 +208,7 @@ export class LmAsset {
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
 
   render() {

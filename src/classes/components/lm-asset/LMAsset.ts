@@ -24,6 +24,8 @@ export class LMAsset implements SceneElement {
 
     private _id: string;
 
+    private _position?: Vector3;
+
     private _src: string;
     private _reloadSrc: boolean = true;
 
@@ -56,8 +58,10 @@ export class LMAsset implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, src: string, assetConfig: LMAssetConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
 
@@ -84,6 +88,10 @@ export class LMAsset implements SceneElement {
     
     public get uuid(): string {
         return this._content.uuid;
+    }
+    
+    public get position(): Vector3 {
+        return this._position;
     }
 
     public get dynamicWidth(): boolean {
@@ -213,6 +221,10 @@ export class LMAsset implements SceneElement {
 
     public set id(value: string) {
         this._id = value;
+    }
+    
+    public set position(value: Vector3) {
+        this._position = value;
     }
 
     public set src(value: string) {

@@ -12,6 +12,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LM360Video } from '../../classes/components/lm-360video/LM360Video';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-360video',
@@ -23,15 +24,15 @@ export class Lm360Video {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 
   @Element() el: HTMLElement;
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LM360Video;
 
@@ -185,7 +186,7 @@ export class Lm360Video {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LM360Video(this.parent, this.id, this.src, { 
+    this.sceneElement = new LM360Video(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
       vrEnabled: this.vrEnabled,
       videoRadius: this.videoRadius,
       videoWidthSegments: this.videoWidthSegments,

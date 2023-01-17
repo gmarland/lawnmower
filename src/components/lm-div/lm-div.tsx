@@ -17,6 +17,7 @@ import { ColumnLMDiv } from '../../classes/components/lm-div/ColumnLMDiv';
 import { LMDiv } from '../../classes/components/lm-div/LMDiv';
 import { RowVRDiv } from '../../classes/components/lm-div/RowLMDiv';
 import { Method } from '@stencil/core/internal';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-div',
@@ -28,15 +29,15 @@ export class LmDiv {
 
   @Prop() public parent: SceneElement;
 
-  @Prop() public position: number;
-
-  @Prop() public depth: number;
+  @Prop() public sequenceNo: number;
 
   @Prop() public vrEnabled: boolean = true;
 
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMDiv;
 
@@ -208,8 +209,7 @@ export class LmDiv {
   public async append(element: any): Promise<void> {
     return new Promise(async (resolve) => {
       element["parent"] = this.sceneElement;
-      element["position"] = this.el.children.length;
-      element["depth"] = this.depth+1;
+      element["sequenceNo"] = this.el.children.length;
       element["vrEnabled"] = this.vrEnabled;
 
       this.el.appendChild(element);
@@ -222,8 +222,7 @@ export class LmDiv {
   public async prepend(element: any): Promise<void> {
     return new Promise(async (resolve) => {
       element["parent"] = this.sceneElement;
-      element["position"] = 0;
-      element["depth"] = this.depth+1;
+      element["sequenceNo"] = 0;
       element["vrEnabled"] = this.vrEnabled;
       
       this.el.insertBefore(element, this.el.firstChild);
@@ -274,25 +273,24 @@ export class LmDiv {
       zRotation: this.zRotation
     };
 
-    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.depth, this.parent, this.id, config);
-    else this.sceneElement = new RowVRDiv(this.depth, this.parent, this.id, config);
+    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.parent, GeometryUtils.parsePositionString(this.position), this.id, config);
+    else this.sceneElement = new RowVRDiv(this.parent, GeometryUtils.parsePositionString(this.position), this.id, config);
     
-    let position = 0;
+    let sequenceNo = 0;
 
     this.el.childNodes.forEach(element => {
       if (!(element instanceof Text)) {
         element["parent"] = this.sceneElement;
-        element["position"] = position;
-        element["depth"] = this.depth+1;
+        element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
 
-        position++;
+        sequenceNo++;
       }
     });
   }
 
   componentDidLoad() {
-    this.parent.addChildElement(this.position, this.sceneElement);
+    this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
 
   render() {
@@ -302,5 +300,4 @@ export class LmDiv {
       </Host>
     );
   }
-
 }
