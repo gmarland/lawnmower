@@ -53,18 +53,21 @@ export class LM360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(parent: SceneElement, id: string, src: string, config: LM360VideoConfig) {
-        this._videoRadius = config.videoRadius;
-        this._videoWidthSegments = config.videoWidthSegments;
-        this._videoHeightSegments = config.videoHeightSegments;
-
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
+        
         this._parent = parent;
+
+        this._position = position;
 
         this._vrEnabled = config.vrEnabled;
 
         this._id = id;
 
         this._src = src;
+        
+        this._videoRadius = config.videoRadius;
+        this._videoWidthSegments = config.videoWidthSegments;
+        this._videoHeightSegments = config.videoHeightSegments;
         
         this._content.visible = false;
     }

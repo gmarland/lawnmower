@@ -13,6 +13,7 @@ import {
 import { SceneElement } from '../../classes/components/SceneElement';
 
 import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-asset',
@@ -190,7 +191,7 @@ export class LmAsset {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMAsset(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMAsset(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
       activeAnimation: this.activeAnimation,
       radius: this.radius, 
       xRotation: this.xRotation,

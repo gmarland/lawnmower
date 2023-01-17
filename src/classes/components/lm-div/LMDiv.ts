@@ -65,8 +65,10 @@ export class LMDiv implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, config: LMDivConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, config: LMDivConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
 

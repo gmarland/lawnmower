@@ -60,8 +60,10 @@ export class LMText implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, text: string, config: LMTextConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, text: string, config: LMTextConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
         

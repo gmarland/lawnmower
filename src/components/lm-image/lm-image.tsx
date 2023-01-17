@@ -12,6 +12,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMImage } from '../../classes/components/lm-image/LMImage';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-image',
@@ -149,7 +150,7 @@ export class LmImage {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMImage(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMImage(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
         width: this.width, 
         height: this.height,
         borderRadius: this.borderRadius

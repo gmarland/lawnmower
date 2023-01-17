@@ -17,6 +17,7 @@ import { ColumnLMDiv } from '../../classes/components/lm-div/ColumnLMDiv';
 import { LMDiv } from '../../classes/components/lm-div/LMDiv';
 import { RowVRDiv } from '../../classes/components/lm-div/RowLMDiv';
 import { Method } from '@stencil/core/internal';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-div',
@@ -272,8 +273,8 @@ export class LmDiv {
       zRotation: this.zRotation
     };
 
-    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.parent, this.id, config);
-    else this.sceneElement = new RowVRDiv(this.parent, this.id, config);
+    if (LMDivLayout[this.layout] == LMDivLayout.Column) this.sceneElement = new ColumnLMDiv(this.parent, GeometryUtils.parsePositionString(this.position), this.id, config);
+    else this.sceneElement = new RowVRDiv(this.parent, GeometryUtils.parsePositionString(this.position), this.id, config);
     
     let sequenceNo = 0;
 

@@ -58,8 +58,10 @@ export class LMAsset implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, src: string, assetConfig: LMAssetConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
 

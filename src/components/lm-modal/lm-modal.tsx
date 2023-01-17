@@ -13,6 +13,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMModal } from '../../classes/components/lm-modal/LMModal';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-modal',
@@ -194,7 +195,7 @@ export class LmModal {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMModal(this.parent, this.id, { 
+    this.sceneElement = new LMModal(this.parent, GeometryUtils.parsePositionString(this.position), this.id, { 
         baseImagePath: getAssetPath('assets'),
         width: this.width, 
         height: this.height,

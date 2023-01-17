@@ -12,6 +12,7 @@ import {
 
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMVideo } from '../../classes/components/lm-video/LMVideo';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-video',
@@ -186,7 +187,7 @@ export class LmVideo {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMVideo(this.parent, this.id, this.src, { 
+    this.sceneElement = new LMVideo(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
       vrEnabled: this.vrEnabled,
       width: this.width, 
       height: this.height,

@@ -26,8 +26,10 @@ export class LMLayout implements SceneElement {
 
     private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
 
-    constructor(parent: SceneElement, id: string) {
+    constructor(parent: SceneElement, position: Vector3, id: string) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
         

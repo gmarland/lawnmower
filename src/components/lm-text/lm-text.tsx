@@ -12,6 +12,7 @@ import {
 import { SceneElement } from '../../classes/components/SceneElement';
 import { LMText } from '../../classes/components/lm-text/LMText';
 import { Method } from '@stencil/core/internal';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-text',
@@ -266,7 +267,7 @@ export class LmText {
       }
     }
 
-    this.sceneElement = new LMText(this.parent, this.id, this.text, { 
+    this.sceneElement = new LMText(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,

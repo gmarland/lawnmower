@@ -51,8 +51,10 @@ export class LMImage implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, src: string, config: LMImageConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LMImageConfig) {
         this._parent = parent;
+
+        this._position = position;
         
         this._id = id;
         

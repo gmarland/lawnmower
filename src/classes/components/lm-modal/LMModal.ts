@@ -65,8 +65,10 @@ export class LMModal implements SceneElement {
 
     private _modalHidden: Function = null;
 
-    constructor(parent: SceneElement, id: string, config: LMModalConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, config: LMModalConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._id = id;
 

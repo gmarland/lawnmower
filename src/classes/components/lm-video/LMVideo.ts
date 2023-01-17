@@ -63,8 +63,10 @@ export class LMVideo implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, id: string, src: string, config: LMVideoConfig) {
+    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LMVideoConfig) {
         this._parent = parent;
+
+        this._position = position;
 
         this._vrEnabled = config.vrEnabled;
         

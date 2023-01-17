@@ -10,6 +10,7 @@ import {
 import { SceneElement } from '../../classes/components/SceneElement';
 
 import { LMLayout } from '../../classes/components/lm-layout/LMLayout';
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-layout',
@@ -58,7 +59,7 @@ export class LmLayout {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMLayout(this.parent, this.id);
+    this.sceneElement = new LMLayout(this.parent, GeometryUtils.parsePositionString(this.position), this.id);
 
     let sequenceNo = 1;
 
