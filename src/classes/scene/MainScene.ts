@@ -176,7 +176,7 @@ export class MainScene {
     public async addChildElement(position: number, childElement: SceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             this._childElements.push(childElement);
-            
+
             if (this._isInitialized) await this.attachToScene(childElement);
 
             resolve();
@@ -206,7 +206,13 @@ export class MainScene {
                 await childElement.enableLayout(currentLayout);
 
                 const content = await childElement.getContent();
-                content.translateZ(this._defaultSceneRadius*-1);
+                
+                if (childElement.position == null) {
+                    content.translateZ(this._defaultSceneRadius*-1);
+                }
+                else {
+                    content.position.set(childElement.position.x, childElement.position.y, childElement.position.z*-1);
+                }
 
                 this._mainObjectContainer.add(content);  
             }
