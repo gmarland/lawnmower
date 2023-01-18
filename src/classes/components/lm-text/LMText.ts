@@ -12,18 +12,13 @@ import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
+import { BaseSceneElement } from '../BaseSceneElement';
 
 import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LMTextConfig } from './LMTextConfig';
 
-export class LMText implements ISceneElement {
-    private _parent: ISceneElement;
-
-    private _id: string;
-
-    private _position?: Vector3;
-
+export class LMText extends BaseSceneElement implements ISceneElement {
     private _fontSize: number;
     private _fontFamily: string;
 
@@ -51,9 +46,6 @@ export class LMText implements ISceneElement {
     private _padding: number = 0;
 
     private _mesh?: Mesh = null;
-    private _content?: Group = new Group();
-
-    private _initialized: boolean = false;
 
     private _drawing: boolean = false;
     private _redraw: boolean = false;
@@ -61,12 +53,8 @@ export class LMText implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, text: string, config: LMTextConfig) {
-        this._parent = parent;
+        super(parent, position, id);
 
-        this._position = position;
-
-        this._id = id;
-        
         this._text = text;
         
         this._fontFamily = config.fontFamily;
@@ -88,22 +76,21 @@ export class LMText implements ISceneElement {
 
         if (config.padding) this._padding = config.padding;
         
-        this._content.name = "text"
-        this._content.translateZ(1);
+        this.content.name = "text"
+        this.content.translateZ(1);
     }
 
     ////////// Getters
     
-    public get id(): string {
-        return this._id;
+    public get placementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Main;
     }
-    
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+
+    public get dimensions(): Dimensions {
+        return {
+            width: this.width,
+            height: this.height
+        }
     }
 
     public get dynamicWidth(): boolean {
@@ -157,83 +144,7 @@ export class LMText implements ISceneElement {
         return this._padding;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
-    }
-    
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Main;
-    }
-
-    public async getContent(): Promise<Group> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
-            
-            resolve(this._content);
-        });
-    }
-
-    public getDimensions(): Dimensions {
-        return {
-            width: this.width,
-            height: this.height
-        }
-    }
-    
-    public async getPosition(): Promise<Vector3> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
-    
-            resolve(this._content.position);
-        });
-    }
-    
-    public getChildSceneElements(): ISceneElement[] {
-        return [];
-    }
-
-    public getIsChildElement(uuid: string): boolean {
-        return uuid === this.uuid;
-    }
-    
-    public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
-        }
-        else {
-            return false;
-        }
-    }
-
-    public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
-                    return true;
-            }
-            else if (this._parent instanceof MainScene) {
-                return false
-            }
-            else {
-                return this._parent.isLayoutChild(layoutId);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
     ////////// Setters
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
 
     public set width(value: number) {
         this._setWidth = value;
@@ -279,9 +190,9 @@ export class LMText implements ISceneElement {
         this._padding = value;
     }
 
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
+    ////////// Public Methods
+
+    // --- Layout Managment
 
     public enableLayout(layoutId: string): Promise<void> {
         return new Promise((resolve) => {
@@ -295,9 +206,40 @@ export class LMText implements ISceneElement {
         });
     }
 
-    ////////// Public Methods
+    public isPartOfLayout(): boolean {
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
 
-    // --- Data Methods
+    public isLayoutChild(layoutId: string): boolean {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
+                    return true;
+            }
+            else if (this.parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this.parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    // --- Child Management
+    
+    public getChildSceneElements(): ISceneElement[] {
+        return [];
+    }
 
     public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
@@ -312,16 +254,37 @@ export class LMText implements ISceneElement {
     }
     
     // --- Rendering Methods
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.draw();
+    
+            resolve(this.content.position);
+        });
+    }
+
+    public async getContent(): Promise<Group> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.draw();
+            
+            resolve(this.content);
+        });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
+    }
 
     public async draw(): Promise<boolean> {
-        this._initialized = true;
+        this.initialized = true;
 
         return new Promise(async (resolve) => {
             if (!this._drawing) {
                 this._drawing = true;
                 this._redraw = false;
 
-                const currentDimensions = GeometryUtils.getDimensions(this._content);
+                const currentDimensions = GeometryUtils.getDimensions(this.content);
 
                 this._calculatedWidth = null;
                 this._calculatedHeight = null;
@@ -333,12 +296,12 @@ export class LMText implements ISceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
@@ -349,11 +312,6 @@ export class LMText implements ISceneElement {
                 resolve(false);
             }
         });
-    }
-
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -370,11 +328,11 @@ export class LMText implements ISceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             }
 
             this.destroyMesh();
@@ -387,13 +345,13 @@ export class LMText implements ISceneElement {
 
     private async generateContent(width: number, height: number): Promise<void> {
         return new Promise(async (resolve) => {
-            this._content.clear();
+            this.content.clear();
 
             this.destroyMesh();
             
             this._mesh = this.buildMesh(width, height);
                     
-            this._content.add(this._mesh);
+            this.content.add(this._mesh);
 
             resolve();
         });

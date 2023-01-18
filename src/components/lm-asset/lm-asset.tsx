@@ -176,7 +176,7 @@ export class LmAsset {
 
   @Method()
   public async getAnimationNames(): Promise<Array<string>> {
-    return new Promise((resolve) => resolve(this.sceneElement.getAnimationNames()));
+    return new Promise((resolve) => resolve(this.sceneElement.animationNames));
   }
 
   @Method()

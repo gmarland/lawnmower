@@ -84,7 +84,7 @@ export class Camera {
             var vFOV = MathUtils.degToRad(this._camera.fov);
             var height = 2 * Math.tan( vFOV / 2 ) * elementPosition.z;
 
-            elementContent.translateY(((height/2)*-1) + (element.getDimensions().height/2) + elementPosition.y);
+            elementContent.translateY(((height/2)*-1) + (element.dimensions.height/2) + elementPosition.y);
             
             resolve();
         });

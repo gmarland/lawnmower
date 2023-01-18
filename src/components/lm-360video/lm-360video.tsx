@@ -46,7 +46,7 @@ export class Lm360Video {
 
   @Event() public click: EventEmitter;
 
-  @Event() public addElementToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<ISceneElement>;
 
   @Event() public hideCurrentLayout: EventEmitter;
 
@@ -196,7 +196,7 @@ export class Lm360Video {
     this.sceneElement.onClick = () => {
       this._controls.getVisible().then((visible) => {
         if (visible) this._controls.hide();
-        else this._controls.show(this.sceneElement.getIsPlaying());
+        else this._controls.show(this.sceneElement.isPlaying);
       });
 
       this.click.emit();

@@ -301,7 +301,7 @@ declare global {
 declare namespace LocalJSX {
     interface Lm360video {
         "id"?: string;
-        "onAddElementToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: Lm360videoCustomEvent<ISceneElement>) => void;
         "onClick"?: (event: Lm360videoCustomEvent<any>) => void;
         "onHideCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "onShowCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;

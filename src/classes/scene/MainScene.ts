@@ -202,7 +202,7 @@ export class MainScene {
                 }
             }
             
-            if (childElement.getPlacementLocation() == SceneElementPlacement.Main) {
+            if (childElement.placementLocation == SceneElementPlacement.Main) {
                 await childElement.enableLayout(currentLayout);
 
                 const content = await childElement.getContent();
@@ -216,7 +216,7 @@ export class MainScene {
 
                 this._mainObjectContainer.add(content);  
             }
-            else if (childElement.getPlacementLocation() == SceneElementPlacement.Modal) {
+            else if (childElement.placementLocation == SceneElementPlacement.Modal) {
                 this._modalElements.push(childElement as LMModal);
 
                 const modalDialog = await childElement.getContent();
@@ -224,10 +224,10 @@ export class MainScene {
 
                 this._modalContainer.add(modalDialog);
             }
-            if (childElement.getPlacementLocation() == SceneElementPlacement.AttachedToCamera) {
+            if (childElement.placementLocation == SceneElementPlacement.AttachedToCamera) {
                 await this._camera.addElementToCamera(childElement);
             }
-            if (childElement.getPlacementLocation() == SceneElementPlacement.PlacedAtCamera) {
+            if (childElement.placementLocation == SceneElementPlacement.PlacedAtCamera) {
                 await this._camera.addElementAtCamera(childElement);
             }
 

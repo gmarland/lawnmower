@@ -188,7 +188,6 @@ export class LmVideo {
 
   componentWillLoad() {
     this.sceneElement = new LMVideo(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
-      vrEnabled: this.vrEnabled,
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,

@@ -8,47 +8,33 @@ import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
+import { BaseSceneElement } from '../BaseSceneElement';
 import { ISceneElement } from '../ISceneElement';
 
-export class LMLayout implements ISceneElement {
-    private _parent: ISceneElement;
-
-    private _id: string;
-
-    private _position?: Vector3;
-
-    private _content?: Group = new Group();
-
-    private _initialized: boolean = false;
-    
+export class LMLayout extends BaseSceneElement implements ISceneElement {
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
     private _childElements: Map<number, ISceneElement> = new Map<number, ISceneElement>();
 
     constructor(parent: ISceneElement, position: Vector3, id: string) {
-        this._parent = parent;
+        super(parent, position, id);
 
-        this._position = position;
-
-        this._id = id;
-        
-        this._content.name = "layout";
-        this._content.visible = false;
+        this.content.name = "layout";
+        this.content.visible = false;
     }
 
     ////////// Getters
 
-    public get id() {
-        return this._id;
+    public get placementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Main;
     }
-    
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+
+    public get dimensions(): Dimensions {
+        return {
+            width: 0,
+            height: 0
+        }
     }
     
     public get dynamicWidth(): boolean {
@@ -56,31 +42,125 @@ export class LMLayout implements ISceneElement {
     }
     
     public get width(): number {
-        const contentBox = new Box3().setFromObject(this._content);
+        const contentBox = new Box3().setFromObject(this.content);
 
         return (contentBox.max.x - contentBox.min.x);
     }
 
-    public get visible(): boolean {
-        return (this._content == null) || this._content.visible;
-    }
+    ////////// Setters
+    
+    public set width(value: number) {
+        let keys = Array.from(this._childElements.keys());
+        keys.sort(function(a, b){return a-b});
+        
+        for (let i=0; i< keys.length; i++) {
+            const childElement = this._childElements.get(keys[i]);
 
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Main;
-    }
-
-    public getDimensions(): Dimensions {
-        return {
-            width: 0,
-            height: 0
+            if (childElement.dynamicWidth) {
+                childElement.width = value;
+                childElement.draw();
+            }
         }
     }
     
-    public async getPosition(): Promise<Vector3> {
+    ////////// Public Methods
+
+    // --- Layout Managment
+
+    public enableLayout(layoutId: string): Promise<void> {
         return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw(); 
+            if (this.id == layoutId) this.visible = true;
+            else this.visible = false;
     
-            resolve(this._content.position);
+            let keys = Array.from(this._childElements.keys());
+    
+            for (let i=0; i< keys.length; i++) {
+                await this._childElements.get(keys[i]).enableLayout(layoutId);
+            }
+    
+            await this.drawParent();
+
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise(async (resolve) => {
+            this.visible = false;;
+
+            let keys = Array.from(this._childElements.keys());
+
+            for (let i=0; i< keys.length; i++) {
+                await this._childElements.get(keys[i]).disableLayouts();
+            }
+            
+            await this.drawParent();
+
+            resolve();
+        });
+    }
+
+    public isPartOfLayout(): boolean {
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
+                    return true;
+            }
+            else if (this.parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this.parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    
+    // --- Child Management
+
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
+        return new Promise(async (resolve) => {
+            if (this._childElements.has(position)) {
+                let keys = Array.from(this._childElements.keys());
+                keys.sort(function(a, b){return a-b});
+                
+                for (let i=(keys.length-1); i>=position; i--) {
+                    if (keys[i] >= position) {
+                        const childElement = this._childElements.get(keys[i]);
+    
+                        this._childElements.set((keys[i]+1), childElement);
+                        this._childElements.delete(keys[i]);
+                    }
+                }
+            }
+    
+            this._childElements.set(position, childElement);
+    
+            if (this.initialized) { 
+                const sizeUpdated = await this.draw();
+                if (this.visible && sizeUpdated) await this.drawParent();
+            }
+
+            resolve();
+        });
+    }
+
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
         });
     }
 
@@ -114,154 +194,40 @@ export class LMLayout implements ISceneElement {
         }
     }
 
+    // --- Rendering Methods
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.draw(); 
+    
+            resolve(this.content.position);
+        });
+    }
+
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
+            if (!this.initialized) await this.draw();
 
-            resolve(this._content);
-        });
-    }
-    
-    public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
-        }
-        else {
-            return false;
-        }
-    }
-
-    public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
-                    return true;
-            }
-            else if (this._parent instanceof MainScene) {
-                return false
-            }
-            else {
-                return this._parent.isLayoutChild(layoutId);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
-    ////////// Setters
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
-    
-    public set width(value: number) {
-        let keys = Array.from(this._childElements.keys());
-        keys.sort(function(a, b){return a-b});
-        
-        for (let i=0; i< keys.length; i++) {
-            const childElement = this._childElements.get(keys[i]);
-
-            if (childElement.dynamicWidth) {
-                childElement.width = value;
-                childElement.draw();
-            }
-        }
-    }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise(async (resolve) => {
-            if (this._id == layoutId) this.visible = true;
-            else this.visible = false;
-    
-            let keys = Array.from(this._childElements.keys());
-    
-            for (let i=0; i< keys.length; i++) {
-                await this._childElements.get(keys[i]).enableLayout(layoutId);
-            }
-    
-            await this.drawParent();
-
-            resolve();
+            resolve(this.content);
         });
     }
 
-    public disableLayouts(): Promise<void> {
-        return new Promise(async (resolve) => {
-            this.visible = false;;
-
-            let keys = Array.from(this._childElements.keys());
-
-            for (let i=0; i< keys.length; i++) {
-                await this._childElements.get(keys[i]).disableLayouts();
-            }
-            
-            await this.drawParent();
-
-            resolve();
-        });
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
     }
-    
-    ////////// Public Methods
-
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
-        return new Promise(async (resolve) => {
-            if (this._childElements.has(position)) {
-                let keys = Array.from(this._childElements.keys());
-                keys.sort(function(a, b){return a-b});
-                
-                for (let i=(keys.length-1); i>=position; i--) {
-                    if (keys[i] >= position) {
-                        const childElement = this._childElements.get(keys[i]);
-    
-                        this._childElements.set((keys[i]+1), childElement);
-                        this._childElements.delete(keys[i]);
-                    }
-                }
-            }
-    
-            this._childElements.set(position, childElement);
-    
-            if (this._initialized) { 
-                const sizeUpdated = await this.draw();
-                if (this.visible && sizeUpdated) await this.drawParent();
-            }
-
-            resolve();
-        });
-    }
-
-    public removeChildElement(childElement: ISceneElement): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-    
-    // --- Rendering Methods
 
     public async draw(): Promise<boolean> {
-        this._initialized = true;
+        this.initialized = true;
 
         return new Promise(async (resolve) => {
             if (!this._drawing) {
                 this._drawing = true;
                 this._redraw = false;
 
-                const currentDimensions = GeometryUtils.getDimensions(this._content);
+                const currentDimensions = GeometryUtils.getDimensions(this.content);
 
-                this._content.clear();
+                this.content.clear();
 
                 let keys = Array.from(this._childElements.keys());
                 keys.sort(function(a, b){return a-b});
@@ -269,7 +235,7 @@ export class LMLayout implements ISceneElement {
                 for (let i=0; i< keys.length; i++) {
                     const childElement = this._childElements.get(keys[i]);
 
-                    if (childElement.visible) this._content.add(await childElement.getContent());
+                    if (childElement.visible) this.content.add(await childElement.getContent());
                 }
                 
                 this._drawing = false;
@@ -277,12 +243,12 @@ export class LMLayout implements ISceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
@@ -293,11 +259,6 @@ export class LMLayout implements ISceneElement {
                 resolve(false);
             }
         });
-    }
-
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -322,11 +283,11 @@ export class LMLayout implements ISceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             }
             
             resolve();

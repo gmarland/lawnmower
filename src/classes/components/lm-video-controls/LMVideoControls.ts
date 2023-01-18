@@ -13,18 +13,13 @@ import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
+import { BaseSceneElement } from '../BaseSceneElement';
 import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LMVideoControlsConfig } from './LMVideoControlsConfig';
 
-export class LMVideoControls implements ISceneElement {
-    private _parent: ISceneElement;
-
+export class LMVideoControls extends BaseSceneElement implements ISceneElement {
     private _vrEnabled: boolean;
-
-    private _id: string;
-
-    private _position?: Vector3;
 
     private _mesh: Mesh;
 
@@ -53,10 +48,6 @@ export class LMVideoControls implements ISceneElement {
     private _y: number;
     
     private _z: number;
-
-    private _content: Group = new Group();
-
-    private _initialized: boolean = false;
     
     private _drawing: boolean = false;
     private _redraw: boolean = false;
@@ -66,14 +57,10 @@ export class LMVideoControls implements ISceneElement {
     public onClose?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, config: LMVideoControlsConfig) {
-        this._parent = parent;
-
-        this._position = position;
-
+        super(parent, position, id);
+        
         this._vrEnabled = config.vrEnabled;
         
-        this._id = id;
-
         this._baseImagePath = config.baseImagePath;
 
         this._backgroundColor = config.backgroundColor;
@@ -85,21 +72,21 @@ export class LMVideoControls implements ISceneElement {
         this._y = config.y;
         this._z = config.z;
         
-        this._content.visible = false;
+        this.content.visible = false;
     }
 
     ////////// Getters
-    
-    public get id(): string {
-        return this._id;
+
+    public get placementLocation(): SceneElementPlacement {
+        if (this._vrEnabled) return SceneElementPlacement.PlacedAtCamera;
+        else return SceneElementPlacement.AttachedToCamera;
     }
     
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+    public get dimensions(): Dimensions {
+        return {
+            width: this.width,
+            height: this._initialHeight
+        }
     }
 
     public get dynamicWidth(): boolean {
@@ -132,19 +119,7 @@ export class LMVideoControls implements ISceneElement {
         return this.z;
     }
 
-    public get visible(): boolean {
-        return (this._content == null) || this._content.visible;
-    }
-
     ////////// Setters
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
 
     public set width(value: number) {
         this._setWidth = value;
@@ -169,34 +144,53 @@ export class LMVideoControls implements ISceneElement {
     public set z(value: number) {
         this._z = value;
     }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
     
     ////////// Public Methods
 
-    // --- Data Methods
-
-    public getPlacementLocation(): SceneElementPlacement {
-        if (this._vrEnabled) return SceneElementPlacement.PlacedAtCamera;
-        else return SceneElementPlacement.AttachedToCamera;
-    }
+    // --- Layout Managment
     
-    public getDimensions(): Dimensions {
-        return {
-            width: this.width,
-            height: this._initialHeight
-        }
-    }
-    
-    public async getPosition(): Promise<Vector3> {
-        return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
-    
-            resolve(new Vector3(this._x, this._y, this._z));
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
         });
     }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public isPartOfLayout(): boolean {
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
+                    return true;
+            }
+            else if (this.parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this.parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    // --- Child Management
 
     public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
@@ -214,58 +208,38 @@ export class LMVideoControls implements ISceneElement {
         return [];
     }
 
-    public getIsChildElement(uuid: string): boolean {
-        return uuid === this.uuid;
-    }
-    
-    public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
-        }
-        else {
-            return false;
-        }
-    }
-
-    public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
-                    return true;
-            }
-            else if (this._parent instanceof MainScene) {
-                return false
-            }
-            else {
-                return this._parent.isLayoutChild(layoutId);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
     // --- Rendering Methods
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.content) await this.getContent(); 
+    
+            resolve(new Vector3(this._x, this._y, this._z));
+        });
+    }
     
     public getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
+            if (!this.initialized) await this.draw();
 
-            resolve(this._content);
+            resolve(this.content);
         });
     }
 
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
+    }
+
     public draw(): Promise<boolean> {
-        this._initialized = true;
+        this.initialized = true;
         
         return new Promise(async (resolve) => {
             if (!this._drawing) {
                 this._drawing = true;
                 this._redraw = false;
                 
-                const currentDimensions = GeometryUtils.getDimensions(this._content);
+                const currentDimensions = GeometryUtils.getDimensions(this.content);
 
                 await this.generateContent(this.width, this.height);
                     
@@ -274,12 +248,12 @@ export class LMVideoControls implements ISceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
@@ -290,11 +264,6 @@ export class LMVideoControls implements ISceneElement {
                 resolve(false);
             }
         });
-    }
-
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -337,25 +306,13 @@ export class LMVideoControls implements ISceneElement {
     public update(delta: number): void {
     }
 
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             }
 
             this.destroyMesh();
@@ -370,7 +327,7 @@ export class LMVideoControls implements ISceneElement {
         return new Promise((resolve) => {
             // Clean up existing layout
 
-            this._content.clear();
+            this.content.clear();
 
             this.destroyMesh();
 
@@ -419,7 +376,7 @@ export class LMVideoControls implements ISceneElement {
             this._mesh.add(this._playMesh);
             this._mesh.add(this._pauseMesh);
 
-            this._content.add(this._mesh);
+            this.content.add(this._mesh);
 
             resolve();
         });

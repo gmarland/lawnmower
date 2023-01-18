@@ -4,6 +4,7 @@ import {
 } from 'three';
 
 import { Dimensions } from '../geometry/Dimensions';
+
 import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 
 export interface ISceneElement {
@@ -19,13 +20,13 @@ export interface ISceneElement {
 
     visible: boolean;
 
-    getPlacementLocation(): SceneElementPlacement;
+    placementLocation: SceneElementPlacement;
 
     getContent(): Promise<Group>;
 
     getPosition(): Promise<Vector3>;
 
-    getDimensions(): Dimensions;
+    dimensions: Dimensions;
     
     getChildSceneElements(): Array<ISceneElement>;
 
