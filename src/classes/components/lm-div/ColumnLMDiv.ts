@@ -7,13 +7,13 @@ import {
 
 import { ItemVerticalAlign } from '../../geometry/ItemVerticalAlign';
 
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMDivConfig } from './LMDivConfig';
 import { LMDiv } from './LMDiv';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class ColumnLMDiv extends LMDiv {
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMDivConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMDivConfig) {
         super(parent, position, id, config);
     }
 

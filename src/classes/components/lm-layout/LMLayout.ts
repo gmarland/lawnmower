@@ -8,10 +8,10 @@ import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
-import { SceneElement } from '../SceneElement';
+import { ISceneElement } from '../ISceneElement';
 
-export class LMLayout implements SceneElement {
-    private _parent: SceneElement;
+export class LMLayout implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _id: string;
 
@@ -24,9 +24,9 @@ export class LMLayout implements SceneElement {
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
-    private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
+    private _childElements: Map<number, ISceneElement> = new Map<number, ISceneElement>();
 
-    constructor(parent: SceneElement, position: Vector3, id: string) {
+    constructor(parent: ISceneElement, position: Vector3, id: string) {
         this._parent = parent;
 
         this._position = position;
@@ -84,7 +84,7 @@ export class LMLayout implements SceneElement {
         });
     }
 
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         let keys = Array.from(this._childElements.keys());
         keys.sort(function(a, b){return a-b});
 
@@ -216,7 +216,7 @@ export class LMLayout implements SceneElement {
 
     // --- Data Methods
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             if (this._childElements.has(position)) {
                 let keys = Array.from(this._childElements.keys());
@@ -243,7 +243,7 @@ export class LMLayout implements SceneElement {
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });

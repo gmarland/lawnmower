@@ -12,7 +12,7 @@ import { HorizontalAlign } from '../../geometry/HorizontalAlign';
 import { ItemHorizontalAlign } from '../../geometry/ItemHorizontalAlign';
 import { ItemVerticalAlign } from '../../geometry/ItemVerticalAlign';
 
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { VerticalAlign } from '../../geometry/VerticalAlign';
 import { LMDivConfig } from './LMDivConfig';
 import { Dimensions } from '../../geometry/Dimensions';
@@ -23,8 +23,8 @@ import { LMLayout } from '../lm-layout/LMLayout';
 import { MainScene } from '../../scene/MainScene';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
-export class LMDiv implements SceneElement {
-    private _parent: SceneElement;
+export class LMDiv implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _id: string;
 
@@ -61,11 +61,11 @@ export class LMDiv implements SceneElement {
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
-    private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
+    private _childElements: Map<number, ISceneElement> = new Map<number, ISceneElement>();
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMDivConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMDivConfig) {
         this._parent = parent;
 
         this._position = position;
@@ -133,7 +133,7 @@ export class LMDiv implements SceneElement {
         return this._borderRadius;
     }
 
-    public get childElements(): Map<number, SceneElement> {
+    public get childElements(): Map<number, ISceneElement> {
         return this._childElements;
     }
 
@@ -265,7 +265,7 @@ export class LMDiv implements SceneElement {
         return SceneElementPlacement.Main;
     }
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             if (this._childElements.has(position)) {
                 let keys = Array.from(this._childElements.keys());
@@ -292,7 +292,7 @@ export class LMDiv implements SceneElement {
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             let keys = Array.from(this._childElements.keys());
             keys.sort(function(a, b){return a-b});
@@ -325,7 +325,7 @@ export class LMDiv implements SceneElement {
         });
     }
     
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         let keys = Array.from(this._childElements.keys());
         keys.sort(function(a, b){return a-b});
 

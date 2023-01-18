@@ -9,7 +9,7 @@ import {
   Watch
 } from '@stencil/core';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMText } from '../../classes/components/lm-text/LMText';
 import { Method } from '@stencil/core/internal';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
@@ -22,7 +22,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class LmText {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public sequenceNo: number;
 

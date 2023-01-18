@@ -15,12 +15,12 @@ import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LM360VideoConfig } from './LM360VideoConfig';
 
-export class LM360Video implements SceneElement {
-    private _parent: SceneElement;
+export class LM360Video implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _vrEnabled: boolean;
 
@@ -53,7 +53,7 @@ export class LM360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
         
         this._parent = parent;
 
@@ -142,7 +142,7 @@ export class LM360Video implements SceneElement {
         });
     }
     
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         return [];
     }
 
@@ -213,13 +213,13 @@ export class LM360Video implements SceneElement {
 
     // --- Data Methods
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });

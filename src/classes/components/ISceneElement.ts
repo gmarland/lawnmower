@@ -6,7 +6,7 @@ import {
 import { Dimensions } from '../geometry/Dimensions';
 import { SceneElementPlacement } from '../scene/SceneElementPlacement';
 
-export interface SceneElement {
+export interface ISceneElement {
     id: string;
 
     position: Vector3;
@@ -27,13 +27,13 @@ export interface SceneElement {
 
     getDimensions(): Dimensions;
     
-    getChildSceneElements(): Array<SceneElement>;
+    getChildSceneElements(): Array<ISceneElement>;
 
     getIsChildElement(uuid: string): boolean;
 
-    addChildElement(position: number, childElement: SceneElement): Promise<void>;
+    addChildElement(position: number, childElement: ISceneElement): Promise<void>;
 
-    removeChildElement(childElement: SceneElement): Promise<void>;
+    removeChildElement(childElement: ISceneElement): Promise<void>;
 
     isPartOfLayout(): boolean;
 

@@ -10,7 +10,7 @@ import {
 import { Dimensions } from "../../geometry/Dimensions";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMAssetConfig } from './LMAssetConfig';
 import { AssetLoader } from './AssetLoader';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
@@ -19,8 +19,8 @@ import { LMLayout } from '../lm-layout/LMLayout';
 import { MainScene } from '../../scene/MainScene';
 import { AssetUtils } from './AssetUtils';
 
-export class LMAsset implements SceneElement {
-    private _parent: SceneElement;
+export class LMAsset implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _id: string;
 
@@ -58,7 +58,7 @@ export class LMAsset implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
         this._parent = parent;
 
         this._position = position;
@@ -180,7 +180,7 @@ export class LMAsset implements SceneElement {
         });
     }
 
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         return [];
     }
 
@@ -294,13 +294,13 @@ export class LMAsset implements SceneElement {
 
     // --- Data Methods
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });

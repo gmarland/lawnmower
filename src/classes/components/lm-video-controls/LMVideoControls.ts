@@ -13,12 +13,12 @@ import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LMVideoControlsConfig } from './LMVideoControlsConfig';
 
-export class LMVideoControls implements SceneElement {
-    private _parent: SceneElement;
+export class LMVideoControls implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _vrEnabled: boolean;
 
@@ -65,7 +65,7 @@ export class LMVideoControls implements SceneElement {
     public onPause?: Function = null;
     public onClose?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMVideoControlsConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMVideoControlsConfig) {
         this._parent = parent;
 
         this._position = position;
@@ -198,19 +198,19 @@ export class LMVideoControls implements SceneElement {
         });
     }
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
     
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         return [];
     }
 

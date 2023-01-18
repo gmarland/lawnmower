@@ -10,7 +10,7 @@ import {
   Watch
 } from '@stencil/core';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 
 import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
@@ -23,7 +23,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class LmAsset {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public sequenceNo: number;
 

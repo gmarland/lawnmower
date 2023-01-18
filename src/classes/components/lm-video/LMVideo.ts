@@ -18,12 +18,12 @@ import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LMVideoConfig } from './LMVideoConfig';
 
-export class LMVideo implements SceneElement {
-    private _parent: SceneElement;
+export class LMVideo implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _vrEnabled: boolean;
 
@@ -63,7 +63,7 @@ export class LMVideo implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LMVideoConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LMVideoConfig) {
         this._parent = parent;
 
         this._position = position;
@@ -172,13 +172,13 @@ export class LMVideo implements SceneElement {
         return SceneElementPlacement.Main;
     }
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
@@ -199,7 +199,7 @@ export class LMVideo implements SceneElement {
         });
     }
 
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         return [];
     }
 

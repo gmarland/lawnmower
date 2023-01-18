@@ -16,7 +16,7 @@ import { SceneElementPlacement } from './SceneElementPlacement';
 import { Controller } from './Controller';
 import { ControllerPositionType } from './ControllerPosition';
 
-import { SceneElement } from '../components/SceneElement';
+import { ISceneElement } from '../components/ISceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
 
@@ -48,7 +48,7 @@ export class MainScene {
 
     private _selectedLayout?: string = null;
 
-    private _childElements: SceneElement[] = new Array<SceneElement>();
+    private _childElements: ISceneElement[] = new Array<ISceneElement>();
     private _modalElements: LMModal[] = new Array<LMModal>();
 
     private _isInitialized: boolean = false;
@@ -173,7 +173,7 @@ export class MainScene {
         }
     }
 
-    public async addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public async addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             this._childElements.push(childElement);
 
@@ -183,7 +183,7 @@ export class MainScene {
         });
     }
 
-    public async updateRootElementPosition(childElement: SceneElement): Promise<void> {
+    public async updateRootElementPosition(childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             await this._camera.updateCameraElementPosition(childElement);
 
@@ -191,7 +191,7 @@ export class MainScene {
         });
     }
 
-    public async attachToScene(childElement: SceneElement): Promise<void> {
+    public async attachToScene(childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             let currentLayout = this.getCurrentLayout();
 
@@ -243,7 +243,7 @@ export class MainScene {
         this._mainObjectContainer.visible = true;
     }
 
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         return this._childElements;
     }
 

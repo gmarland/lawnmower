@@ -15,13 +15,13 @@ import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 
 import { SceneElementPlacement } from "../../scene/SceneElementPlacement";
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LMModalConfig } from "./LMModalConfig";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
-export class LMModal implements SceneElement {
-    private _parent: SceneElement;
+export class LMModal implements ISceneElement {
+    private _parent: ISceneElement;
 
     private _id: string;
 
@@ -59,13 +59,13 @@ export class LMModal implements SceneElement {
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
-    private  _childElement: SceneElement = null;
+    private  _childElement: ISceneElement = null;
 
     private _modalShown: Function = null;
 
     private _modalHidden: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMModalConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMModalConfig) {
         this._parent = parent;
 
         this._position = position;
@@ -233,7 +233,7 @@ export class LMModal implements SceneElement {
         });
     }
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             this._childElement  = childElement;
 
@@ -241,13 +241,13 @@ export class LMModal implements SceneElement {
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
 
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         return [];
     }
 
