@@ -1,9 +1,7 @@
 import { 
     Scene,
-    PointLight,
     DirectionalLight,
-    AmbientLight,
-    Object3D
+    AmbientLight
 } from 'three';
 import { Camera } from './Camera';
 
@@ -22,11 +20,16 @@ export class Lighting {
         this._camera =  camera; 
 
         this._ambientLight = new AmbientLight(0xffffff, 0.2);  
-        //this._scene.add(this._ambientLight);
+        this._scene.add(this._ambientLight);
 
         this._light = new DirectionalLight(0xffffff, 0.8); 
-        this._light.position.set(0, 0, 500);
         this._light.castShadow = true;
+        this._light.shadow.camera.top = this._camera.far;
+        this._light.shadow.camera.bottom = this._camera.far*-1;
+        this._light.shadow.camera.left = this._camera.far*-1;
+        this._light.shadow.camera.right = this._camera.far;
+        this._light.shadow.camera.near = this._camera.near;
+        this._light.shadow.camera.far = this._camera.far;
 
         this._camera.addLightToCamera(this._light)
     }

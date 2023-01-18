@@ -344,7 +344,7 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
             
             const mesh = new Mesh(geometry, material);
             mesh.cast = true;
-            mesh.recieveShadow = true;
+            mesh.receiveShadow = true;
             
             if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
     

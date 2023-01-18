@@ -21,6 +21,11 @@ export class Camera {
     private _placeElements: Array<ISceneElement> = new Array<ISceneElement>();
     private _attachedElements: Array<ISceneElement> = new Array<ISceneElement>();
 
+    private _fov: number = 75;
+    private _aspect: number;
+    private _near: number = 0.1;
+    private _far: number;
+
     constructor(container: HTMLDivElement, scene: Scene, basePlaneWidth: number) {
         this._scene = scene;
 
@@ -30,10 +35,30 @@ export class Camera {
 
         this.buildCamera();
     }
+ 
+    public get fov(): number {
+        return this._fov;
+    }
+ 
+    public get aspect(): number {
+        return this._aspect;
+    }
+ 
+    public get near(): number {
+        return this._near
+    }
+ 
+    public get far(): number {
+        return this._far;
+    }
 
     public addLightToCamera(light: DirectionalLight) {
         this._light = light;
-        this._camera.add(light);
+
+        this._camera.add(this._light);
+
+        this._light.position.set(0,0,1);
+        this._light.target = this._camera;
     }
 
     // Elements that are actually placed at the camera
@@ -112,16 +137,16 @@ export class Camera {
     }
 
     private buildCamera(): void {
-        const fov = 75;
-        const aspect = (this._container.clientWidth/this._container.clientHeight);
-        const far = this._basePlaneWidth*3;
+        this._fov = 75;
+        this._aspect = (this._container.clientWidth/this._container.clientHeight);
+        this._far = this._basePlaneWidth*3;
         
-        this._camera = new PerspectiveCamera(fov, aspect, 0.1, far);
+        this._camera = new PerspectiveCamera(this._fov, this._aspect, this._near, this._far);
 
         this._scene.add(this._camera);
     }
 
     public Update(): void {
-        this._light.lookAt(this._camera.lookAt)
+        //if (this._light) this._light.lookAt(this._camera.lookAt)
     }
 }

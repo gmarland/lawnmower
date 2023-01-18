@@ -471,8 +471,7 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
 
         if ((this._backgroundColor) && (this._backgroundColor.length > 0)) {
             materialOptions = {
-                color: new Color(this._backgroundColor),
-                side: DoubleSide
+                color: new Color(this._backgroundColor)
             };
 
             if (this._opacity < 1) {
@@ -494,7 +493,7 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
 
         const main = new Mesh(geometry, material);
         main.castShadow = true;
-        main.recieveShadow = true;
+        main.receiveShadow = true;
         main.name = "body";
 
         return main;

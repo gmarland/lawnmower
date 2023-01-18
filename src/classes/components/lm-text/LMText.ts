@@ -372,7 +372,7 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         
         const mesh = new Mesh(geometry, material);
         mesh.castShadow = true;
-        mesh.recieveShadow = true;
+        mesh.receiveShadow = true;
     
         if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
 
