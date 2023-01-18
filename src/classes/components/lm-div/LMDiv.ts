@@ -471,8 +471,7 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
 
         if ((this._backgroundColor) && (this._backgroundColor.length > 0)) {
             materialOptions = {
-                color: new Color(this._backgroundColor),
-                side: DoubleSide
+                color: new Color(this._backgroundColor)
             };
 
             if (this._opacity < 1) {
