@@ -377,8 +377,8 @@ export class LMAsset extends BaseSceneElement implements ISceneElement {
                 await new Promise<void>((resolve): void => {
                     new AssetLoader().load(this._src).then((loadedAssetDetail) => {
                         this._loadedAsset = loadedAssetDetail.element;
-                        this._loadedAsset.recieveShadow = true;
-                        this._loadedAsset.recieveShadow = true;
+                        this._loadedAsset.receiveShadow = true;
+                        this._loadedAsset.receiveShadow = true;
     
                         this._animations = loadedAssetDetail.animations;
 

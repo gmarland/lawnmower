@@ -407,7 +407,7 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
             
             const mesh = new Mesh(geometry, material);
             mesh.castShadow = true;
-            mesh.recieveShadow = true;
+            mesh.receiveShadow = true;
             
             resolve(mesh);
         });

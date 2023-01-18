@@ -494,7 +494,7 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
 
         const main = new Mesh(geometry, material);
         main.castShadow = true;
-        main.recieveShadow = true;
+        main.receiveShadow = true;
         main.name = "body";
 
         return main;

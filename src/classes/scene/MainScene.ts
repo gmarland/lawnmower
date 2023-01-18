@@ -206,7 +206,7 @@ export class MainScene {
                 await childElement.enableLayout(currentLayout);
 
                 const content = await childElement.getContent();
-                
+                console.log(content)
                 if (childElement.position == null) {
                     content.translateZ(this._defaultSceneRadius*-1);
                 }

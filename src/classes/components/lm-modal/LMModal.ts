@@ -375,7 +375,7 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         }));
 
         innerMesh.castShadow = true;
-        innerMesh.recieveShadow = true;
+        innerMesh.receiveShadow = true;
         
         dialogGroup.add(outerMesh);
         dialogGroup.add(innerMesh);

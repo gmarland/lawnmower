@@ -300,7 +300,7 @@ export class LM360Video extends BaseSceneElement implements ISceneElement {
             this.destroyMesh();
             
             this._mesh = await this.buildMesh(videoRadius);
-            this._mesh.recieveShadow = true;
+            this._mesh.receiveShadow = true;
             
             this.content.add(this._mesh);
 
