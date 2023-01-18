@@ -15,18 +15,13 @@ import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
-import { SceneElement } from "../SceneElement";
+import { BaseSceneElement } from '../BaseSceneElement';
+import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
 import { LM360VideoConfig } from './LM360VideoConfig';
 
-export class LM360Video implements SceneElement {
-    private _parent: SceneElement;
-
+export class LM360Video extends BaseSceneElement implements ISceneElement {
     private _vrEnabled: boolean;
-
-    private _id: string;
-
-    private _position?: Vector3;
 
     private _src: string;
 
@@ -41,10 +36,6 @@ export class LM360Video implements SceneElement {
     private _isVideoPlaying: boolean = false;
 
     private _mesh?: Object3D = null;
-
-    private _content: Object3D = new Group();
-    
-    private _initialized: boolean = false;
     
     private _drawing: boolean = false;
     private _redraw: boolean = false;
@@ -53,15 +44,10 @@ export class LM360Video implements SceneElement {
 
     public onPlay?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
-        
-        this._parent = parent;
-
-        this._position = position;
+    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
+        super(parent, position, id);
 
         this._vrEnabled = config.vrEnabled;
-
-        this._id = id;
 
         this._src = src;
         
@@ -69,21 +55,20 @@ export class LM360Video implements SceneElement {
         this._videoWidthSegments = config.videoWidthSegments;
         this._videoHeightSegments = config.videoHeightSegments;
         
-        this._content.visible = false;
+        this.content.visible = false;
     }
 
     ////////// Getters
     
-    public get id(): string {
-        return this._id;
+    public get placementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.PlacedAtCamera;
     }
-    
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+
+    public get dimensions(): Dimensions {
+        return {
+            width: -1,
+            height: -1
+        };
     }
 
     public get src(): string {
@@ -107,87 +92,11 @@ export class LM360Video implements SceneElement {
         return this._videoHeightSegments;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
-    }
-    
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.PlacedAtCamera;
-    }
-
-    public async getContent(): Promise<Group> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
-
-            resolve(this._content);
-        });
-    }
-
-    public getIsPlaying(): boolean {
+    public get isPlaying(): boolean {
         return this._isVideoPlaying;
     }
 
-    public getDimensions(): Dimensions {
-        return {
-            width: -1,
-            height: -1
-        };
-    }
-    
-    public async getPosition(): Promise<Vector3> {
-        return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
-    
-            resolve(this._content.position);
-        });
-    }
-    
-    public getChildSceneElements(): SceneElement[] {
-        return [];
-    }
-
-    public getIsChildElement(uuid: string): boolean {
-        return uuid === this.uuid;
-    }
-    
-    public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
-        }
-        else {
-            return false;
-        }
-    }
-
-    public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
-                    return true;
-            }
-            else if (this._parent instanceof MainScene) {
-                return false
-            }
-            else {
-                return this._parent.isLayoutChild(layoutId);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
     ////////// Setters
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
 
     public set src(value: string) {
         this._src = value;
@@ -205,37 +114,9 @@ export class LM360Video implements SceneElement {
         this._videoHeightSegments = value;
     }
 
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
     ////////// Public Methods
 
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public removeChildElement(childElement: SceneElement): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
+    // --- Video management
 
     public play(): void {
         if (!this._videoStarted) {
@@ -246,7 +127,7 @@ export class LM360Video implements SceneElement {
         this._video.play();
         
         this._isVideoPlaying = true;
-        this._content.visible = true;
+        this.content.visible = true;
 
         if (this.onPlay) this.onPlay();
     }
@@ -262,17 +143,99 @@ export class LM360Video implements SceneElement {
         this._videoStarted = false;
     }
 
-    // --- Rendering Methods
+    // --- Layout management
+
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public isPartOfLayout(): boolean {
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
+                    return true;
+            }
+            else if (this.parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this.parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    // --- Child management
+    
+    public getChildSceneElements(): ISceneElement[] {
+        return [];
+    }
+
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    // --- Content Methods
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.content) await this.getContent(); 
+    
+            resolve(this.content.position);
+        });
+    }
+
+    public async getContent(): Promise<Group> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.draw();
+
+            resolve(this.content);
+        });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
+    }
 
     public draw(): Promise<boolean> {
-        this._initialized = true;
+        this.initialized = true;
         
         return new Promise(async (resolve) => {
             if (!this._drawing) {
                 this._drawing = true;
                 this._redraw = false;
                 
-                const currentDimensions = GeometryUtils.getDimensions(this._content);
+                const currentDimensions = GeometryUtils.getDimensions(this.content);
 
                 if (this._setVideoRadius !== null) await this.generateContent(this._setVideoRadius);
                 else await this.generateContent(this._videoRadius);
@@ -282,12 +245,12 @@ export class LM360Video implements SceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
@@ -298,11 +261,6 @@ export class LM360Video implements SceneElement {
                 resolve(false);
             }
         });
-    }
-
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
     
     public clicked(meshId: string): Promise<void> {
@@ -320,11 +278,11 @@ export class LM360Video implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             }
 
             this.destroyMesh();
@@ -337,14 +295,14 @@ export class LM360Video implements SceneElement {
 
     private async generateContent(videoRadius: number): Promise<void> {
         return new Promise(async (resolve) => {
-            this._content.clear();
+            this.content.clear();
 
             this.destroyMesh();
             
             this._mesh = await this.buildMesh(videoRadius);
             this._mesh.recieveShadow = true;
             
-            this._content.add(this._mesh);
+            this.content.add(this._mesh);
 
             resolve();
         });

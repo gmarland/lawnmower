@@ -7,7 +7,7 @@ import {
   Watch
 } from '@stencil/core';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMDivLayout } from '../../classes/components/lm-div/LMDivLayout';
 import { ItemVerticalAlign } from '../../classes/geometry/ItemVerticalAlign';
 import { VerticalAlign } from '../../classes/geometry/VerticalAlign';
@@ -27,7 +27,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class LmDiv {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public sequenceNo: number;
 

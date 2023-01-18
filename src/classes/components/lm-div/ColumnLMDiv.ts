@@ -7,13 +7,13 @@ import {
 
 import { ItemVerticalAlign } from '../../geometry/ItemVerticalAlign';
 
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMDivConfig } from './LMDivConfig';
 import { LMDiv } from './LMDiv';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
 export class ColumnLMDiv extends LMDiv {
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMDivConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMDivConfig) {
         super(parent, position, id, config);
     }
 
@@ -154,13 +154,13 @@ export class ColumnLMDiv extends LMDiv {
                 this.centerContentBox(childLayoutContainer);
             }
 
-            this.contentObject.rotation.set(GeometryUtils.degToRad(this.xRotation,), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
+            this.content.rotation.set(GeometryUtils.degToRad(this.xRotation,), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
             
             if ((this.xRotation) || (this.yRotation) || (this.zRotation)) {
-                this.contentObject.rotation.set(GeometryUtils.degToRad(this.xRotation), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
+                this.content.rotation.set(GeometryUtils.degToRad(this.xRotation), GeometryUtils.degToRad(this.yRotation), GeometryUtils.degToRad(this.zRotation));
                 
-                const rotatedElement = new Box3().setFromObject(this.contentObject);
-                this.contentObject.position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
+                const rotatedElement = new Box3().setFromObject(this.content);
+                this.content.position.z += ((rotatedElement.max.z-rotatedElement.min.z)/2);
             }
 
             resolve();

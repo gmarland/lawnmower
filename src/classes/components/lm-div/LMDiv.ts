@@ -12,24 +12,19 @@ import { HorizontalAlign } from '../../geometry/HorizontalAlign';
 import { ItemHorizontalAlign } from '../../geometry/ItemHorizontalAlign';
 import { ItemVerticalAlign } from '../../geometry/ItemVerticalAlign';
 
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { VerticalAlign } from '../../geometry/VerticalAlign';
 import { LMDivConfig } from './LMDivConfig';
 import { Dimensions } from '../../geometry/Dimensions';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
+import { GeometryUtils } from '../../geometry/GeometryUtils';
+import { BaseSceneElement } from '../BaseSceneElement';
 import { LMLayout } from '../lm-layout/LMLayout';
 import { MainScene } from '../../scene/MainScene';
-import { GeometryUtils } from '../../geometry/GeometryUtils';
 
-export class LMDiv implements SceneElement {
-    private _parent: SceneElement;
-
-    private _id: string;
-
-    private _position?: Vector3;
-
+export class LMDiv extends BaseSceneElement implements ISceneElement {
     private _initialWidth?: number = null; 
     private _initialHeight?: number = null;
     private _borderRadius: number = 0;
@@ -53,24 +48,16 @@ export class LMDiv implements SceneElement {
     private _xRotation: number; 
     private _yRotation: number; 
     private _zRotation: number;
-
-    private _content: Group = new Group();
-    
-    private _initialized: boolean = false;
     
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
-    private _childElements: Map<number, SceneElement> = new Map<number, SceneElement>();
+    private _childElements: Map<number, ISceneElement> = new Map<number, ISceneElement>();
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMDivConfig) {
-        this._parent = parent;
-
-        this._position = position;
-
-        this._id = id;
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMDivConfig) {
+        super(parent, position, id);
 
         this._verticalAlign = config.verticalAlign;
         this._horizontalAlign = config.horizontalAlign;
@@ -94,25 +81,20 @@ export class LMDiv implements SceneElement {
         this._yRotation = config.yRotation;
         this._zRotation = config.zRotation;
         
-        this._content.translateZ(1);
+        this.content.translateZ(1);
     }
 
     ////////// Getters
+    
+    public get placementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Main;
+    }
 
-    public get initialized(): boolean {
-        return this._initialized;
-    }
-    
-    public get id(): string {
-        return this._id;
-    }
-    
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+    public get dimensions(): Dimensions {
+        return {
+            width: this.width,
+            height: this.height
+        }
     }
 
     public get dynamicWidth(): boolean {
@@ -133,7 +115,7 @@ export class LMDiv implements SceneElement {
         return this._borderRadius;
     }
 
-    public get childElements(): Map<number, SceneElement> {
+    public get childElements(): Map<number, ISceneElement> {
         return this._childElements;
     }
 
@@ -165,10 +147,6 @@ export class LMDiv implements SceneElement {
         return this._itemVerticalAlign;
     }
 
-    public get contentObject(): Object3D {
-        return this._content;
-    }
-
     public get xRotation(): number {
         return this._xRotation;
     }
@@ -181,31 +159,7 @@ export class LMDiv implements SceneElement {
         return this._zRotation;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
-    }
-     
-    public async getPosition(): Promise<Vector3> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.getContent(); 
-    
-            resolve(this._content.position);
-        });
-    }
-
     ////////// Setters
-
-    public set initialized(initialized: boolean) {
-        this._initialized = initialized;
-    }
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
 
     public set width(value: number) {
         this._setWidth = value;
@@ -246,26 +200,66 @@ export class LMDiv implements SceneElement {
         this._itemVerticalAlign = value;
     }
 
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
-
     ////////// Public Methods
 
-    // --- Data Methods
+    // --- Layout management
 
-    public getDimensions(): Dimensions {
-        return {
-            width: this.width,
-            height: this.height
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise(async (resolve) => {
+            const childElements = this.getChildSceneElements();
+    
+            for (let i=0; i<childElements.length; i++) {
+                await childElements[i].enableLayout(layoutId);
+            }
+            
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise(async (resolve) => {
+            const childElements = this.getChildSceneElements();
+    
+            for (let i=0; i<childElements.length; i++) {
+                await childElements[i].disableLayouts();
+            }
+
+            resolve();
+        });
+    }
+
+    public isPartOfLayout(): boolean {
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
+        }
+        else {
+            return false;
         }
     }
-    
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Main;
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
+                    return true;
+            }
+            else if (this.parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this.parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
     }
 
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
+    // --- Child management
+
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             if (this._childElements.has(position)) {
                 let keys = Array.from(this._childElements.keys());
@@ -292,7 +286,7 @@ export class LMDiv implements SceneElement {
         });
     }
 
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             let keys = Array.from(this._childElements.keys());
             keys.sort(function(a, b){return a-b});
@@ -325,7 +319,7 @@ export class LMDiv implements SceneElement {
         });
     }
     
-    public getChildSceneElements(): SceneElement[] {
+    public getChildSceneElements(): ISceneElement[] {
         let keys = Array.from(this._childElements.keys());
         keys.sort(function(a, b){return a-b});
 
@@ -354,50 +348,16 @@ export class LMDiv implements SceneElement {
             return false;
         }
     }
+
+    // --- Content Methods
+     
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.getContent(); 
     
-    public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
-        }
-        else {
-            return false;
-        }
+            resolve(this.content.position);
+        });
     }
-
-    public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
-                    return true;
-            }
-            else if (this._parent instanceof MainScene) {
-                return false
-            }
-            else {
-                return this._parent.isLayoutChild(layoutId);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
-    private getBodyContent(): Mesh {
-        let body = null;
-
-        for (let i=0; i<this._content.children.length; i++) {
-            if (this._content.children[i].name == "body") {
-                body = this._content.children[i];
-                break;
-            }
-        }
-
-        return body;
-    }
-
-    // --- Rendering Methods
 
     public async getContent(): Promise<Group> {
         return new Promise(async (resolve) => {
@@ -413,8 +373,8 @@ export class LMDiv implements SceneElement {
 
                 const body = this.buildPanelMesh();
 
-                this.contentObject.add(body);
-                this.contentObject.add(childLayoutContainer);
+                this.content.add(body);
+                this.content.add(childLayoutContainer);
                 
                 await this.generateContent(childLayoutContainer);
 
@@ -423,8 +383,13 @@ export class LMDiv implements SceneElement {
                 this.repositionContainer(body, childLayoutContainer);
             }
 
-            resolve(this.contentObject);
+            resolve(this.content);
         });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
     }
 
     public async draw(): Promise<boolean> {
@@ -433,7 +398,7 @@ export class LMDiv implements SceneElement {
                 this._drawing = true;
                 this._redraw = false;
 
-                const currentDimensions = GeometryUtils.getDimensions(this._content);
+                const currentDimensions = GeometryUtils.getDimensions(this.content);
 
                 if (this._setWidth !== null) await this.updateContent(this._setWidth);
                 else await this.updateContent(this._initialWidth);   
@@ -443,12 +408,12 @@ export class LMDiv implements SceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
@@ -466,49 +431,25 @@ export class LMDiv implements SceneElement {
             let body = null;
             let child = null;
 
-            for (let i=0; i<this._content.children.length; i++) {
-                if (this._content.children[i].name == "body") body = this._content.children[i];
-                else if (this._content.children[i].name == "child") child = this._content.children[i];
+            for (let i=0; i<this.content.children.length; i++) {
+                if (this.content.children[i].name == "body") body = this.content.children[i];
+                else if (this.content.children[i].name == "child") child = this.content.children[i];
             }
 
             if (body && child) {
                 child.clear();
-                this._content.remove(child);
+                this.content.remove(child);
                 
                 const childLayoutContainer = new Object3D();
                 childLayoutContainer.name = "child";
                 
-                this._content.add(childLayoutContainer);
+                this.content.add(childLayoutContainer);
     
                 await this.generateContent(childLayoutContainer);
 
                 this.resizePanelBody(body, childLayoutContainer);
 
                 this.repositionContainer(body, childLayoutContainer);
-            }
-            
-            resolve();
-        });
-    }
-
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
-    }
-    
-    public clicked(meshId: string): Promise<void> {
-        return new Promise((resolve) => {
-            let keys = Array.from(this.childElements.keys());
-
-            for (let i=0; i< keys.length; i++) {
-                const childElement = this.childElements.get(keys[i]);
-                childElement.clicked(meshId);
-            }
-            
-            let body = this.getBodyContent();
-
-            if (body && (body.uuid === meshId) && (this.onClick)) {
-                this.onClick();
             }
             
             resolve();
@@ -606,6 +547,25 @@ export class LMDiv implements SceneElement {
         }
     }
 
+    public clicked(meshId: string): Promise<void> {
+        return new Promise((resolve) => {
+            let keys = Array.from(this.childElements.keys());
+
+            for (let i=0; i< keys.length; i++) {
+                const childElement = this.childElements.get(keys[i]);
+                childElement.clicked(meshId);
+            }
+            
+            let body = this.getBodyContent();
+
+            if (body && (body.uuid === meshId) && (this.onClick)) {
+                this.onClick();
+            }
+            
+            resolve();
+        });
+    }
+
     public update(delta: number): void {
         const childElements = this.getChildSceneElements();
 
@@ -614,40 +574,16 @@ export class LMDiv implements SceneElement {
         }
     }
 
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise(async (resolve) => {
-            const childElements = this.getChildSceneElements();
-    
-            for (let i=0; i<childElements.length; i++) {
-                await childElements[i].enableLayout(layoutId);
-            }
-            
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise(async (resolve) => {
-            const childElements = this.getChildSceneElements();
-    
-            for (let i=0; i<childElements.length; i++) {
-                await childElements[i].disableLayouts();
-            }
-
-            resolve();
-        });
-    }
-
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
             let body = null;
             let child = null;
 
-            for (let i=0; i<this._content.children.length; i++) {
-                if (this._content.children[i].name == "body") body = this._content.children[i];
-                else if (this._content.children[i].name == "child") child = this._content.children[i];
+            for (let i=0; i<this.content.children.length; i++) {
+                if (this.content.children[i].name == "body") body = this.content.children[i];
+                else if (this.content.children[i].name == "child") child = this.content.children[i];
             }
 
             if (body) {
@@ -662,13 +598,28 @@ export class LMDiv implements SceneElement {
                 child.clear();
             }
             
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             }
 
             resolve();
         });
+    }
+
+    ////////// Private Methods
+
+    private getBodyContent(): Mesh {
+        let body = null;
+
+        for (let i=0; i<this.content.children.length; i++) {
+            if (this.content.children[i].name == "body") {
+                body = this.content.children[i];
+                break;
+            }
+        }
+
+        return body;
     }
 
     ////////// Virtual Methods

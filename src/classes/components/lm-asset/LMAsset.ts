@@ -10,23 +10,19 @@ import {
 import { Dimensions } from "../../geometry/Dimensions";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
-import { SceneElement } from "../SceneElement";
+import { ISceneElement } from "../ISceneElement";
 import { LMAssetConfig } from './LMAssetConfig';
 import { AssetLoader } from './AssetLoader';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
+import { AssetUtils } from './AssetUtils';
+import { BaseSceneElement } from '../BaseSceneElement';
 import { LMLayout } from '../lm-layout/LMLayout';
 import { MainScene } from '../../scene/MainScene';
-import { AssetUtils } from './AssetUtils';
 
-export class LMAsset implements SceneElement {
-    private _parent: SceneElement;
-
-    private _id: string;
-
-    private _position?: Vector3;
-
+export class LMAsset extends BaseSceneElement implements ISceneElement {
     private _src: string;
+
     private _reloadSrc: boolean = true;
 
     private _loadedAsset?: Group = null;
@@ -40,7 +36,6 @@ export class LMAsset implements SceneElement {
     private _action;
 
     private _loadedAssetContainer?: Group =new Group();
-    private _content: Group = new Group();
 
     private _xRotation: number; 
     private _yRotation: number; 
@@ -58,12 +53,8 @@ export class LMAsset implements SceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
-        this._parent = parent;
-
-        this._position = position;
-
-        this._id = id;
+    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
+        super(parent, position, id);
 
         this._src = src;
 
@@ -81,19 +72,18 @@ export class LMAsset implements SceneElement {
     }
 
     ////////// Getters
-    
-    public get id(): string {
-        return this._id;
-    }
-    
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+
+    public get placementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Main;
     }
 
+    public get dimensions(): Dimensions {
+        return {
+            width: this._radius,
+            height: this._radius
+        };
+    }
+    
     public get dynamicWidth(): boolean {
         return false;
     }
@@ -135,27 +125,7 @@ export class LMAsset implements SceneElement {
         return this._activeAnimation;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
-    }
-    
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Main;
-    }
-
-    public getContent(): Promise<Group> {
-        return new Promise(async (resolve) => {
-            await this.draw();
-
-            resolve(this._content);
-        });
-    }
-
-    public getActiveAnimationName(): string {
-        return this._activeAnimation;
-    }
-
-    public getAnimationNames(): Array<string> {
+    public get animationNames(): Array<string> {
         const animationNames = new Array<string>();
 
         for (let i=0; i<this._animations.length; i++) {
@@ -165,67 +135,7 @@ export class LMAsset implements SceneElement {
         return animationNames;
     }
 
-    public getDimensions(): Dimensions {
-        return {
-            width: this._radius,
-            height: this._radius
-        };
-    }
-    
-    public async getPosition(): Promise<Vector3> {
-        return new Promise(async (resolve) => {
-            if (!this._content) await this.getContent(); 
-    
-            resolve(this._content.position);
-        });
-    }
-
-    public getChildSceneElements(): SceneElement[] {
-        return [];
-    }
-
-    public getIsChildElement(uuid: string): boolean {
-        return uuid === this.uuid;
-    }
-    
-    public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
-        }
-        else {
-            return false;
-        }
-    }
-
-    public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
-                    return true;
-            }
-            else if (this._parent instanceof MainScene) {
-                return false
-            }
-            else {
-                return this._parent.isLayoutChild(layoutId);
-            }
-        }
-        else {
-            return false;
-        }
-    }
-
     ////////// Setters
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
 
     public set src(value: string) {
         this._src = value;
@@ -270,41 +180,10 @@ export class LMAsset implements SceneElement {
         this._action = this._animationMixer.clipAction(AnimationClip.findByName(this._animations, this._activeAnimation));
         this.startAnimation();
     }
-
-    public set visible(value: boolean) {
-        this._content.visible = value;
-    }
     
-    public setRotation(x: number, y: number, z: number): void {
-        this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(x), GeometryUtils.degToRad(y), GeometryUtils.degToRad(z));
-    }
-
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
     ////////// Public Methods
 
-    // --- Data Methods
-
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public removeChildElement(childElement: SceneElement): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
+    // --- Animation Methods
 
     public startAnimation(): void {
         if (this._animationMixer) {
@@ -317,8 +196,94 @@ export class LMAsset implements SceneElement {
             this._action.stop();
         }
     }
+    
+    public setRotation(x: number, y: number, z: number): void {
+        this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(x), GeometryUtils.degToRad(y), GeometryUtils.degToRad(z));
+    }
 
-    // --- Rendering Methods
+    // --- Layout management
+
+    public enableLayout(layoutId: string): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public isPartOfLayout(): boolean {
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
+        }
+        else {
+            return false;
+        }
+    }
+
+    public isLayoutChild(layoutId: string): boolean {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
+                    return true;
+            }
+            else if (this.parent instanceof MainScene) {
+                return false
+            }
+            else {
+                return this.parent.isLayoutChild(layoutId);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    // --- Child management
+
+    public getChildSceneElements(): ISceneElement[] {
+        return [];
+    }
+
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    // --- Content Methods
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.content) await this.getContent(); 
+    
+            resolve(this.content.position);
+        });
+    }
+
+    public getContent(): Promise<Group> {
+        return new Promise(async (resolve) => {
+            await this.draw();
+
+            resolve(this.content);
+        });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
+    }
 
     public async draw(): Promise<boolean> {
         return new Promise(async (resolve) => {
@@ -326,7 +291,7 @@ export class LMAsset implements SceneElement {
                 this._drawing = true;
                 this._redraw = false;
 
-                const currentDimensions = GeometryUtils.getDimensions(this._content);
+                const currentDimensions = GeometryUtils.getDimensions(this.content);
 
                 await this.generateContent(this.width);
                     
@@ -335,12 +300,12 @@ export class LMAsset implements SceneElement {
                 if (this._redraw) {
                     await this.draw();
                     
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
                 else {
-                    const newDimensions = GeometryUtils.getDimensions(this._content);
+                    const newDimensions = GeometryUtils.getDimensions(this.content);
 
                     resolve(((currentDimensions.width !== newDimensions.width) || (currentDimensions.height !== newDimensions.height)));
                 }
@@ -351,11 +316,6 @@ export class LMAsset implements SceneElement {
                 resolve(false);
             }
         });
-    }
-
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
     }
 
     public clicked(meshId: string): Promise<void> {
@@ -380,7 +340,7 @@ export class LMAsset implements SceneElement {
 
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
             if (this._loadedAsset) {
                 this._loadedAsset.clear();
@@ -391,9 +351,9 @@ export class LMAsset implements SceneElement {
                 this._loadedAssetContainer.clear();
                 this._loadedAssetContainer = null;
             }
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             } 
 
             resolve();
@@ -404,7 +364,7 @@ export class LMAsset implements SceneElement {
 
     private generateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
-            this._content.clear();
+            this.content.clear();
             this._loadedAssetContainer.clear();
 
             if ((!this._loadedAsset)|| (this._reloadSrc)) {
@@ -447,8 +407,8 @@ export class LMAsset implements SceneElement {
             
             this._loadedAssetContainer.rotation.set(GeometryUtils.degToRad(this._xRotation), GeometryUtils.degToRad(this._yRotation), GeometryUtils.degToRad(this._zRotation));
             
-            this._content.add(this._loadedAssetContainer);
-            this._content.add(this.drawShapingCube(width));
+            this.content.add(this._loadedAssetContainer);
+            this.content.add(this.drawShapingCube(width));
             
             resolve();
         });

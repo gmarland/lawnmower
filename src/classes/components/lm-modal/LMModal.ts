@@ -12,21 +12,16 @@ import { Dimensions } from '../../geometry/Dimensions';
 import { MaterialUtils } from '../../geometry/MaterialUtils';
 import { MeshUtils } from '../../geometry/MeshUtils';
 import { PlaneUtils } from '../../geometry/PlaneUtils';
-import { MainScene } from '../../scene/MainScene';
 
 import { SceneElementPlacement } from "../../scene/SceneElementPlacement";
-import { SceneElement } from "../SceneElement";
-import { LMLayout } from '../lm-layout/LMLayout';
+import { ISceneElement } from "../ISceneElement";
 import { LMModalConfig } from "./LMModalConfig";
 import { GeometryUtils } from '../../geometry/GeometryUtils';
+import { BaseSceneElement } from '../BaseSceneElement';
+import { LMLayout } from '../lm-layout/LMLayout';
+import { MainScene } from '../../scene/MainScene';
 
-export class LMModal implements SceneElement {
-    private _parent: SceneElement;
-
-    private _id: string;
-
-    private _position?: Vector3;
-
+export class LMModal extends BaseSceneElement implements ISceneElement {
     private _baseImagePath: string;
 
     private _initialWidth: number; //Defined width from the HTML tag
@@ -51,26 +46,18 @@ export class LMModal implements SceneElement {
     
     private _mesh?: Mesh = null;
     private _closeButtonMesh?: Mesh = null;
-
-    private _content?: Object3D = new Object3D();
-
-    private _initialized: boolean = false;
     
     private _drawing: boolean = false;
     private _redraw: boolean = false;
 
-    private  _childElement: SceneElement = null;
+    private  _childElement: ISceneElement = null;
 
     private _modalShown: Function = null;
 
     private _modalHidden: Function = null;
 
-    constructor(parent: SceneElement, position: Vector3, id: string, config: LMModalConfig) {
-        this._parent = parent;
-
-        this._position = position;
-
-        this._id = id;
+    constructor(parent: ISceneElement, position: Vector3, id: string, config: LMModalConfig) {
+        super(parent, position, id);
 
         this._baseImagePath = config.baseImagePath;
 
@@ -90,22 +77,21 @@ export class LMModal implements SceneElement {
         
         this._backgroundColor = config.backgroundColor;
 
-        this._content.visible = false;
-        this._content.position.z = this._offset;
+        this.content.visible = false;
+        this.content.position.z = this._offset;
     }
 
     ////////// Getters
-    
-    public get id(): string {
-        return this._id;
+
+    public get placementLocation(): SceneElementPlacement {
+        return SceneElementPlacement.Modal;
     }
-    
-    public get uuid(): string {
-        return this._content.uuid;
-    }
-    
-    public get position(): Vector3 {
-        return this._position;
+
+    public get dimensions(): Dimensions {
+        return {
+            width: this._initialWidth,
+            height: this._calculatedHeight
+        };
     }
 
     public get dynamicWidth(): boolean {
@@ -141,19 +127,7 @@ export class LMModal implements SceneElement {
         return this._closeButtonWidth;
     }
 
-    public get visible(): boolean {
-        return this._content.visible;
-    }
-
     ////////// Setters
-
-    public set id(value: string) {
-        this._id = value;
-    }
-    
-    public set position(value: Vector3) {
-        this._position = value;
-    }
 
     public set width(value: number) {
         this._setWidth = value;
@@ -192,9 +166,9 @@ export class LMModal implements SceneElement {
     }
 
     public set visible(value: boolean) {
-        const updated = (this._content.visible !== value)
+        const updated = (this.content.visible !== value)
 
-        this._content.visible = value;
+        this.content.visible = value;
 
         if (updated) {
             if ((value) && (this._modalShown)) this._modalShown();
@@ -204,62 +178,25 @@ export class LMModal implements SceneElement {
 
     ////////// Public Methods
 
-    // --- Data Methods
+    // --- Layout Managment
 
-    public getPlacementLocation(): SceneElementPlacement {
-        return SceneElementPlacement.Modal;
-    }
-
-    public async getContent(): Promise<Object3D> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw();
-            
-            resolve(this._content);
-        });
-    }
-
-    public getDimensions(): Dimensions {
-        return {
-            width: this._initialWidth,
-            height: this._calculatedHeight
-        };
-    }
-    
-    public async getPosition(): Promise<Vector3> {
-        return new Promise(async (resolve) => {
-            if (!this._initialized) await this.draw(); 
-    
-            resolve(new Vector3(0,0,this._offset));
-        });
-    }
-
-    public addChildElement(position: number, childElement: SceneElement): Promise<void> {
-        return new Promise((resolve) => {
-            this._childElement  = childElement;
-
-            resolve();
-        });
-    }
-
-    public removeChildElement(childElement: SceneElement): Promise<void> {
+    public enableLayout(layoutId: string): Promise<void> {
         return new Promise((resolve) => {
             resolve();
         });
     }
 
-    public getChildSceneElements(): SceneElement[] {
-        return [];
+    public disableLayouts(): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
     }
 
-    public getIsChildElement(uuid: string): boolean {
-        return uuid === this.uuid;
-    }
-    
     public isPartOfLayout(): boolean {
-        if (this._parent) {
-            if (this._parent instanceof LMLayout) return true;
-            if (this._parent instanceof MainScene) return false;
-            else return this._parent.isPartOfLayout();
+        if (this.parent) {
+            if (this.parent instanceof LMLayout) return true;
+            if (this.parent instanceof MainScene) return false;
+            else return this.parent.isPartOfLayout();
         }
         else {
             return false;
@@ -267,16 +204,16 @@ export class LMModal implements SceneElement {
     }
 
     public isLayoutChild(layoutId: string): boolean {
-        if (this._parent) {
-            if ((this._parent instanceof LMLayout) && 
-                ((this._parent as LMLayout).id == layoutId)) {
+        if (this.parent) {
+            if ((this.parent instanceof LMLayout) && 
+                ((this.parent as LMLayout).id == layoutId)) {
                     return true;
             }
-            else if (this._parent instanceof MainScene) {
+            else if (this.parent instanceof MainScene) {
                 return false
             }
             else {
-                return this._parent.isLayoutChild(layoutId);
+                return this.parent.isLayoutChild(layoutId);
             }
         }
         else {
@@ -284,10 +221,51 @@ export class LMModal implements SceneElement {
         }
     }
 
+    // --- Child Management
+
+    public addChildElement(position: number, childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            this._childElement  = childElement;
+
+            resolve();
+        });
+    }
+
+    public removeChildElement(childElement: ISceneElement): Promise<void> {
+        return new Promise((resolve) => {
+            resolve();
+        });
+    }
+
+    public getChildSceneElements(): ISceneElement[] {
+        return [];
+    }
+
     // --- Rendering Methods
+    
+    public async getPosition(): Promise<Vector3> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.draw(); 
+    
+            resolve(new Vector3(0,0,this._offset));
+        });
+    }
+
+    public async getContent(): Promise<Object3D> {
+        return new Promise(async (resolve) => {
+            if (!this.initialized) await this.draw();
+            
+            resolve(this.content);
+        });
+    }
+
+    public async drawParent(): Promise<void> {
+        const updatedDimensions = await this.parent.draw();
+        if (updatedDimensions || (this.parent instanceof LMLayout)) await this.parent.drawParent();
+    }
 
     public async draw(): Promise<boolean> {
-        this. _initialized = true;
+        this. initialized = true;
         
         return new Promise(async (resolve) => {
             if (!this._drawing) {
@@ -317,11 +295,6 @@ export class LMModal implements SceneElement {
         });
     }
 
-    public async drawParent(): Promise<void> {
-        const updatedDimensions = await this._parent.draw();
-        if (updatedDimensions || (this._parent instanceof LMLayout)) await this._parent.drawParent();
-    }
-
     public clicked(meshId: string): Promise<void> {
         return new Promise((resolve) => {
             if (this._closeButtonMesh && (MeshUtils.ObjectContainsUid(meshId, this._closeButtonMesh))) {
@@ -335,25 +308,13 @@ export class LMModal implements SceneElement {
     public update(delta: number): void {
     }
 
-    public enableLayout(layoutId: string): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
-    public disableLayouts(): Promise<void> {
-        return new Promise((resolve) => {
-            resolve();
-        });
-    }
-
     public destroy(): Promise<void> {
         return new Promise((resolve) => {
-            if (this._parent && this._parent.removeChildElement) this._parent.removeChildElement(this);
+            if (this.parent && this.parent.removeChildElement) this.parent.removeChildElement(this);
 
-            if (this._content) {
-                this._content.clear();
-                this._content = null;
+            if (this.content) {
+                this.content.clear();
+                this.content = null;
             }
 
             this.destroyMesh();
@@ -366,7 +327,7 @@ export class LMModal implements SceneElement {
 
     private async generateContent(width: number): Promise<void> {
         return new Promise(async (resolve) => {
-            this._content.clear();
+            this.content.clear();
 
             this.destroyMesh();
             
@@ -384,9 +345,9 @@ export class LMModal implements SceneElement {
                 childContent.translateX(((dimensions.max.x+dimensions.min.x)/2)*-1);
                 childContent.translateY(((dimensions.max.y+dimensions.min.y)/2)*-1);
 
-                this._content.add(childContent);
+                this.content.add(childContent);
             
-                const updatedDimensions = new Box3().setFromObject(this._content);
+                const updatedDimensions = new Box3().setFromObject(this.content);
     
                 dialogWidth = (updatedDimensions.max.x-updatedDimensions.min.x)+(this._padding*2);
                 dialogHeight = (updatedDimensions.max.y-updatedDimensions.min.y)+(this._padding*2);
@@ -395,8 +356,8 @@ export class LMModal implements SceneElement {
             this._mesh = this.buildDialogMesh(dialogWidth, dialogHeight);
             this._closeButtonMesh = this.buildCloseMesh(dialogWidth, dialogHeight);
 
-            this._content.add(this._mesh);
-            this._content.add(this._closeButtonMesh);
+            this.content.add(this._mesh);
+            this.content.add(this._closeButtonMesh);
 
             resolve();
         });

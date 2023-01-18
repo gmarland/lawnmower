@@ -11,7 +11,7 @@ import {
   Watch
 } from '@stencil/core';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMModal } from '../../classes/components/lm-modal/LMModal';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
@@ -23,7 +23,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class LmModal {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public vrEnabled: boolean = true;
 

@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { SceneElement } from "./classes/components/SceneElement";
+import { ISceneElement } from "./classes/components/ISceneElement";
 import { LM360Video } from "./classes/components/lm-360video/LM360Video";
 import { LMAsset } from "./classes/components/lm-asset/LMAsset";
 import { LMDiv } from "./classes/components/lm-div/LMDiv";
@@ -19,7 +19,7 @@ export namespace Components {
         "close": () => Promise<void>;
         "destroy": () => Promise<void>;
         "id": string;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "pause": () => Promise<void>;
         "play": () => Promise<void>;
         "position": string;
@@ -37,7 +37,7 @@ export namespace Components {
         "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
         "id": string;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "radius": number;
         "sceneElement": LMAsset;
@@ -66,7 +66,7 @@ export namespace Components {
         "margin"?: number;
         "opacity"?: number;
         "padding"?: number;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "prepend": (element: any) => Promise<void>;
         "removeElement": (element: any) => Promise<void>;
@@ -100,7 +100,7 @@ export namespace Components {
         "height": number;
         "id": string;
         "modal": boolean;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "sceneElement": LMImage;
         "sequenceNo": number;
@@ -112,7 +112,7 @@ export namespace Components {
     interface LmLayout {
         "destroy": () => Promise<void>;
         "id": string;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "sceneElement": LMLayout;
         "sequenceNo": number;
@@ -131,7 +131,7 @@ export namespace Components {
         "id": string;
         "offset": number;
         "padding": number;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "sceneElement": LMModal;
         "show": () => Promise<void>;
@@ -148,7 +148,7 @@ export namespace Components {
         "height"?: number;
         "id": string;
         "padding"?: number;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "sceneElement": LMText;
         "sequenceNo": number;
@@ -162,7 +162,7 @@ export namespace Components {
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "pause": () => Promise<void>;
         "placeholder": number;
         "play": () => Promise<void>;
@@ -185,7 +185,7 @@ export namespace Components {
         "onClose": Function;
         "onPause": Function;
         "onPlay": Function;
-        "parent": SceneElement;
+        "parent": ISceneElement;
         "position": string;
         "sequenceNo": number;
         "show": (isPlaying: boolean) => Promise<void>;
@@ -301,12 +301,12 @@ declare global {
 declare namespace LocalJSX {
     interface Lm360video {
         "id"?: string;
-        "onAddElementToRoot"?: (event: Lm360videoCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: Lm360videoCustomEvent<ISceneElement>) => void;
         "onClick"?: (event: Lm360videoCustomEvent<any>) => void;
         "onHideCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "onShowCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
         "onViewCurrentLayout"?: (event: Lm360videoCustomEvent<any>) => void;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LM360Video;
         "sequenceNo"?: number;
@@ -320,7 +320,7 @@ declare namespace LocalJSX {
         "activeAnimation"?: string;
         "id"?: string;
         "onClick"?: (event: LmAssetCustomEvent<any>) => void;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "radius"?: number;
         "sceneElement"?: LMAsset;
@@ -347,7 +347,7 @@ declare namespace LocalJSX {
         "margin"?: number;
         "opacity"?: number;
         "padding"?: number;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMDiv;
         "sequenceNo"?: number;
@@ -377,7 +377,7 @@ declare namespace LocalJSX {
         "modal"?: boolean;
         "onClick"?: (event: LmImageCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmImageCustomEvent<string>) => void;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMImage;
         "sequenceNo"?: number;
@@ -388,7 +388,7 @@ declare namespace LocalJSX {
     }
     interface LmLayout {
         "id"?: string;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMLayout;
         "sequenceNo"?: number;
@@ -408,7 +408,7 @@ declare namespace LocalJSX {
         "onHidden"?: (event: LmModalCustomEvent<any>) => void;
         "onShown"?: (event: LmModalCustomEvent<any>) => void;
         "padding"?: number;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMModal;
         "vrEnabled"?: boolean;
@@ -424,7 +424,7 @@ declare namespace LocalJSX {
         "id"?: string;
         "onClick"?: (event: LmTextCustomEvent<any>) => void;
         "padding"?: number;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMText;
         "sequenceNo"?: number;
@@ -439,7 +439,7 @@ declare namespace LocalJSX {
         "id"?: string;
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmVideoCustomEvent<string>) => void;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "placeholder"?: number;
         "playback"?: string;
         "position"?: string;
@@ -459,7 +459,7 @@ declare namespace LocalJSX {
         "onPause"?: Function;
         "onPlay"?: Function;
         "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
-        "parent"?: SceneElement;
+        "parent"?: ISceneElement;
         "position"?: string;
         "sequenceNo"?: number;
         "vrEnabled"?: boolean;

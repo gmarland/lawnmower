@@ -10,7 +10,7 @@ import {
 } from '@stencil/core';
 import { Method } from '@stencil/sass/dist/declarations';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMVideoControls } from '../../classes/components/lm-video-controls/LMVideoControls';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
@@ -22,7 +22,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class LmVideoControls {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public sequenceNo: number;
 

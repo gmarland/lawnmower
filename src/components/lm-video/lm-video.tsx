@@ -10,7 +10,7 @@ import {
   Method
 } from '@stencil/core';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMVideo } from '../../classes/components/lm-video/LMVideo';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
@@ -22,7 +22,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class LmVideo {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public sequenceNo: number;
 
@@ -188,7 +188,6 @@ export class LmVideo {
 
   componentWillLoad() {
     this.sceneElement = new LMVideo(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
-      vrEnabled: this.vrEnabled,
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,

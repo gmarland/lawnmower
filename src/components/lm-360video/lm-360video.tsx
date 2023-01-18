@@ -10,7 +10,7 @@ import {
   Watch
 } from '@stencil/core';
 
-import { SceneElement } from '../../classes/components/SceneElement';
+import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LM360Video } from '../../classes/components/lm-360video/LM360Video';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
@@ -22,7 +22,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 export class Lm360Video {
   // *** Required for positioning ***
 
-  @Prop() public parent: SceneElement;
+  @Prop() public parent: ISceneElement;
 
   @Prop() public sequenceNo: number;
 
@@ -46,7 +46,7 @@ export class Lm360Video {
 
   @Event() public click: EventEmitter;
 
-  @Event() public addElementToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<ISceneElement>;
 
   @Event() public hideCurrentLayout: EventEmitter;
 
@@ -196,7 +196,7 @@ export class Lm360Video {
     this.sceneElement.onClick = () => {
       this._controls.getVisible().then((visible) => {
         if (visible) this._controls.hide();
-        else this._controls.show(this.sceneElement.getIsPlaying());
+        else this._controls.show(this.sceneElement.isPlaying);
       });
 
       this.click.emit();

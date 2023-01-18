@@ -5,7 +5,8 @@ import {
     Scene,
     DirectionalLight
 } from 'three';
-import { SceneElement } from '../components/SceneElement';
+
+import { ISceneElement } from '../components/ISceneElement';
 
 export class Camera {
     private _scene: Scene;
@@ -17,8 +18,8 @@ export class Camera {
     private _camera: PerspectiveCamera;
     private _light: DirectionalLight;
 
-    private _placeElements: Array<SceneElement> = new Array<SceneElement>();
-    private _attachedElements: Array<SceneElement> = new Array<SceneElement>();
+    private _placeElements: Array<ISceneElement> = new Array<ISceneElement>();
+    private _attachedElements: Array<ISceneElement> = new Array<ISceneElement>();
 
     constructor(container: HTMLDivElement, scene: Scene, basePlaneWidth: number) {
         this._scene = scene;
@@ -36,7 +37,7 @@ export class Camera {
     }
 
     // Elements that are actually placed at the camera
-    public async addElementAtCamera(element: SceneElement): Promise<void> {
+    public async addElementAtCamera(element: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             this._placeElements.push(element);
 
@@ -53,7 +54,7 @@ export class Camera {
     }
 
     // Elements that are actually attached to the camera
-    public async addElementToCamera(element: SceneElement): Promise<void> {
+    public async addElementToCamera(element: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             this._attachedElements.push(element);
 
@@ -70,7 +71,7 @@ export class Camera {
         });
     }
 
-    public async updateCameraElementPosition(element: SceneElement): Promise<void> {
+    public async updateCameraElementPosition(element: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
             const elementContent = await element.getContent();
             const elementPosition = await element.getPosition();
@@ -83,7 +84,7 @@ export class Camera {
             var vFOV = MathUtils.degToRad(this._camera.fov);
             var height = 2 * Math.tan( vFOV / 2 ) * elementPosition.z;
 
-            elementContent.translateY(((height/2)*-1) + (element.getDimensions().height/2) + elementPosition.y);
+            elementContent.translateY(((height/2)*-1) + (element.dimensions.height/2) + elementPosition.y);
             
             resolve();
         });
