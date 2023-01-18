@@ -552,6 +552,7 @@ export class LMDiv implements SceneElement {
         const geometry = PlaneUtils.getPlane(width, height, this._borderRadius);
 
         const main = new Mesh(geometry, material);
+        main.castShadow = true;
         main.recieveShadow = true;
         main.name = "body";
 

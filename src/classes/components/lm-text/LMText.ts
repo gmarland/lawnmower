@@ -413,6 +413,7 @@ export class LMText implements SceneElement {
         });
         
         const mesh = new Mesh(geometry, material);
+        mesh.castShadow = true;
         mesh.recieveShadow = true;
     
         if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);

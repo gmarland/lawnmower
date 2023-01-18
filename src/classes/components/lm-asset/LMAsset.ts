@@ -418,6 +418,7 @@ export class LMAsset implements SceneElement {
                     new AssetLoader().load(this._src).then((loadedAssetDetail) => {
                         this._loadedAsset = loadedAssetDetail.element;
                         this._loadedAsset.recieveShadow = true;
+                        this._loadedAsset.recieveShadow = true;
     
                         this._animations = loadedAssetDetail.animations;
 

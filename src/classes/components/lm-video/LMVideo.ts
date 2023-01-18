@@ -453,6 +453,7 @@ export class LMVideo implements SceneElement {
             });
             
             const mesh = new Mesh(geometry, material);
+            mesh.castShadow = true;
             mesh.recieveShadow = true;
             
             resolve(mesh);
