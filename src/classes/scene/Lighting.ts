@@ -22,7 +22,7 @@ export class Lighting {
         this._camera =  camera; 
 
         this._ambientLight = new AmbientLight(0xffffff, 0.2);  
-        this._scene.add(this._ambientLight);
+        //this._scene.add(this._ambientLight);
 
         this._light = new DirectionalLight(0xffffff, 0.8); 
         this._light.position.set(0, 0, 500);
