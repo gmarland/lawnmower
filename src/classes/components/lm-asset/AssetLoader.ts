@@ -16,6 +16,13 @@ export class AssetLoader {
     public load(src: string): Promise<LoadedAssetDetail> {
         return new Promise((resolve) =>{
             this._loader.load(src, function(gltf: Group) {
+                gltf.scene.traverse((child) => {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+
                 resolve({
                     element: gltf.scene, 
                     animations: gltf.animations

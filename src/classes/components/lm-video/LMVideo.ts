@@ -8,7 +8,6 @@ import {
     VideoTexture,
     PolyhedronGeometry,
     Color,
-    DoubleSide,
     Group,
     LinearFilter
 } from 'three';
@@ -401,8 +400,7 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
             const geometry = new PlaneGeometry(this._calculatedWidth, this._calculatedHeight);
             const material = new MeshBasicMaterial({
                 map: imageTexture,
-                transparent: false,
-                side: DoubleSide
+                transparent: false
             });
             
             const mesh = new Mesh(geometry, material);
@@ -428,8 +426,7 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
         
         const material = new MeshBasicMaterial({
             color: new Color("#ffffff"),
-            transparent: false,
-            side: DoubleSide
+            transparent: false
         });
 
         const playMesh =  new Mesh(geometry, material);

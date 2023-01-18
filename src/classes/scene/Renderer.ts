@@ -16,7 +16,7 @@ export class Renderer {
     private _skyboxColor: number;
     private _skyboxOpacity: number;
 
-    constructor(vrEnabled: boolean, container: HTMLDivElement, skyboxColor: number, skyboxOpacity: number) {
+    constructor(vrEnabled: boolean, camera: Camera, container: HTMLDivElement, skyboxColor: number, skyboxOpacity: number) {
         this._vrEnabled = vrEnabled;
 
         this._container = container;
@@ -40,9 +40,13 @@ export class Renderer {
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
         this._renderer.setClearColor(this._skyboxColor, this._skyboxOpacity);
         this._renderer.setPixelRatio(window.devicePixelRatio);
+
         this._renderer.shadowMap.enabled = true;
         this._renderer.shadowMapSoft = true;
         this._renderer.shadowMap.type = PCFSoftShadowMap;
+        this._renderer.shadowCameraNear = 3;
+        this._renderer.shadowCameraFar = camera.far;
+        this._renderer.shadowCameraFov = camera.fov;
 
         this._container.appendChild(this._renderer.domElement);
     }

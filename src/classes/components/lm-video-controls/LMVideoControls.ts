@@ -3,7 +3,6 @@ import {
     Vector3,
     Mesh,
     Color,
-    DoubleSide,
     TextureLoader
 } from 'three';
 
@@ -336,8 +335,7 @@ export class LMVideoControls extends BaseSceneElement implements ISceneElement {
             const geometry = PlaneUtils.getPlane(width, height, this._borderRadius);
     
             const material = MaterialUtils.getBasicMaterial({
-                color: new Color(this._backgroundColor),
-                side: DoubleSide
+                color: new Color(this._backgroundColor)
             });
             
             this._mesh = new Mesh(geometry, material);
@@ -346,20 +344,17 @@ export class LMVideoControls extends BaseSceneElement implements ISceneElement {
             
             this._closeMesh = new Mesh(PlaneUtils.getSquaredPlane(height-(this._padding*2), height-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/close.png'),
-                transparent: true,
-                side: DoubleSide
+                transparent: true
             }));
 
             this._playMesh = new Mesh(PlaneUtils.getSquaredPlane(height-(this._padding*2), height-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/play.png'),
-                transparent: true,
-                side: DoubleSide
+                transparent: true
             }));
 
             this._pauseMesh = new Mesh(PlaneUtils.getSquaredPlane(height-(this._padding*2), height-(this._padding*2)), MaterialUtils.getBasicMaterial({
                 map: new TextureLoader().load(this._baseImagePath + '/pause.png'),
-                transparent: true,
-                side: DoubleSide
+                transparent: true
             }));
             this._pauseMesh.visible = false;
 

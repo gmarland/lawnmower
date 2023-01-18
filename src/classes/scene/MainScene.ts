@@ -97,11 +97,10 @@ export class MainScene {
 
         this._camera = new Camera(this._parentElement, this._scene, this._defaultSceneRadius);
         this._camera.setPosition(0, 0, 0);
-        this._camera.setLookAt(0, 0, 0);
 
         this._lighting = new Lighting(this._scene, this._camera);
 
-        this._renderer = new Renderer(this._vrEnabled, this._parentElement, this._skyboxColor, this._skyboxOpacity);
+        this._renderer = new Renderer(this._vrEnabled, this._camera, this._parentElement, this._skyboxColor, this._skyboxOpacity);
 
         if (this._vrEnabled) {
             const leftController = this._renderer.getController(0);
@@ -206,7 +205,7 @@ export class MainScene {
                 await childElement.enableLayout(currentLayout);
 
                 const content = await childElement.getContent();
-                console.log(content)
+                
                 if (childElement.position == null) {
                     content.translateZ(this._defaultSceneRadius*-1);
                 }
