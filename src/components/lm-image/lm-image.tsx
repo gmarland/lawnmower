@@ -16,7 +16,7 @@ import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 
 @Component({
   tag: 'lm-image',
-  styleUrl: 'lm-image.css',
+  styleUrl: 'lm-image.scss',
   shadow: false
 })
 export class LmImage {
