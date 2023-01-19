@@ -45,7 +45,10 @@ export class LM360Video extends BaseSceneElement implements ISceneElement {
     public onPlay?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LM360VideoConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, position, id, offset);
 
         this._vrEnabled = config.vrEnabled;
 

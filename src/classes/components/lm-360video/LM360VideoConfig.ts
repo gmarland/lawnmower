@@ -1,4 +1,6 @@
-export interface LM360VideoConfig {
+import { BaseConfig } from "../BaseConfig";
+
+export interface LM360VideoConfig extends BaseConfig {
     vrEnabled: boolean;
 
     videoRadius: number;

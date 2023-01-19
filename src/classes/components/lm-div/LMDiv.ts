@@ -57,7 +57,10 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, config: LMDivConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+
+        super(parent, position, id, offset);
 
         this._verticalAlign = config.verticalAlign;
         this._horizontalAlign = config.horizontalAlign;
@@ -80,8 +83,6 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
         this._xRotation = config.xRotation;
         this._yRotation = config.yRotation;
         this._zRotation = config.zRotation;
-        
-        this.content.translateZ(1);
     }
 
     ////////// Getters
@@ -486,6 +487,8 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
                 opacity: 0
             };
         }
+
+        if (this.offset) materialOptions["side"] = DoubleSide;
 
         const material = MaterialUtils.getBasicMaterial(materialOptions);
 

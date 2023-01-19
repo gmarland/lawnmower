@@ -32,6 +32,8 @@ export class LmImage {
 
   @Element() el: HTMLElement
 
+  @Prop() public offset: number;
+
   @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMImage;
@@ -153,7 +155,8 @@ export class LmImage {
     this.sceneElement = new LMImage(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
         width: this.width, 
         height: this.height,
-        borderRadius: this.borderRadius
+        borderRadius: this.borderRadius,
+        offset: this.offset
     });
 
     this.sceneElement.onClick =async  () => {

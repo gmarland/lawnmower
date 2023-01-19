@@ -32,6 +32,8 @@ export class LmVideo {
 
   @Element() el: HTMLElement
 
+  @Prop() public offset: number;
+
   @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMVideo;
@@ -188,6 +190,7 @@ export class LmVideo {
 
   componentWillLoad() {
     this.sceneElement = new LMVideo(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
+      offset: this.offset,
       width: this.width, 
       height: this.height,
       placeholderTimestamp: this.placeholder,

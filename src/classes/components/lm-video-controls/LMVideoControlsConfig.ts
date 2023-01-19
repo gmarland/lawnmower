@@ -1,4 +1,6 @@
-export interface LMVideoControlsConfig {
+import { BaseConfig } from "../BaseConfig";
+
+export interface LMVideoControlsConfig extends BaseConfig {
     vrEnabled: boolean;
 
     baseImagePath: string;

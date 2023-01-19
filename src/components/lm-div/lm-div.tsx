@@ -39,6 +39,8 @@ export class LmDiv {
 
   @Prop() public position: string;
 
+  @Prop() public offset: number;
+
   @Prop({ mutable: true }) public sceneElement: LMDiv;
 
   @Prop({ reflect: true }) public id: string = "";
@@ -257,6 +259,7 @@ export class LmDiv {
 
   componentWillLoad() {
     const config = {
+      offset: this.offset,
       verticalAlign: VerticalAlign[this.verticalAlign],
       horizontalAlign: HorizontalAlign[this.horizontalAlign],
       itemVerticalAlign: ItemVerticalAlign[this.itemVerticalAlign],

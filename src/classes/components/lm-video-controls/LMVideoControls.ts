@@ -56,7 +56,10 @@ export class LMVideoControls extends BaseSceneElement implements ISceneElement {
     public onClose?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, config: LMVideoControlsConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, position, id, offset);
         
         this._vrEnabled = config.vrEnabled;
         

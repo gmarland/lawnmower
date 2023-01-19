@@ -32,6 +32,8 @@ export class LmText {
 
   @Element() el: HTMLElement
 
+  @Prop() public offset: number;
+
   @Prop() public position: string;
 
   @Prop({ mutable: true }) public sceneElement: LMText;
@@ -277,7 +279,8 @@ export class LmText {
       height: this.height, 
       borderRadius: this.borderRadius,
       backgroundColor: this.backgroundColor,
-      padding: this.padding
+      padding: this.padding,
+      offset: this.offset
     });
 
     this.sceneElement.onClick = () => {

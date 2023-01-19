@@ -16,7 +16,9 @@ export class BaseSceneElement {
 
     private _content: Group;
 
-    constructor(parent: ISceneElement, position: Vector3, id: string) {
+    private _offset?: number;
+
+    constructor(parent: ISceneElement, position: Vector3, id: string, offset?: number) {
         this._initialized = false;
 
         this._parent = parent;
@@ -25,13 +27,22 @@ export class BaseSceneElement {
         
         this._id = id;
 
+        this._offset = offset;
+
         this._content = new Group();
+
+        if (this._offset) this.content.translateZ(this._offset);
+        else this.content.translateZ(1);
     }
 
     ////////// Getters
 
     public get initialized(): boolean {
         return this._initialized;
+    }
+
+    public get offset(): number {
+        return this._offset
     }
     
     public get parent(): Group {
@@ -62,6 +73,10 @@ export class BaseSceneElement {
 
     public set initialized(value: boolean) {
         this._initialized = value;
+    }
+    
+    public set offset(value: number) {
+        this._offset = value;
     }
     
     public set content(value: Group) {

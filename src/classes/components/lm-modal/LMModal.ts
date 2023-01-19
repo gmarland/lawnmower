@@ -35,8 +35,6 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
 
     private _calculatedHeight: number;
 
-    private _offset: number;
-
     private _backgroundColor: string;
 
     private _borderColor: string;
@@ -57,7 +55,10 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
     private _modalHidden: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, config: LMModalConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, position, id, offset);
 
         this._baseImagePath = config.baseImagePath;
 
@@ -73,12 +74,9 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         this._borderColor = config.borderColor;
         this._borderWidth = config.borderWidth;
         
-        this._offset = config.offset;
-        
         this._backgroundColor = config.backgroundColor;
 
         this.content.visible = false;
-        this.content.position.z = this._offset;
     }
 
     ////////// Getters
@@ -247,7 +245,7 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         return new Promise(async (resolve) => {
             if (!this.initialized) await this.draw(); 
     
-            resolve(new Vector3(0,0,this._offset));
+            resolve(new Vector3(0,0,this.offset));
         });
     }
 

@@ -64,6 +64,7 @@ export namespace Components {
         "itemVerticalAlign": string;
         "layout": string;
         "margin"?: number;
+        "offset": number;
         "opacity"?: number;
         "padding"?: number;
         "parent": ISceneElement;
@@ -82,10 +83,11 @@ export namespace Components {
     interface LmDocument {
         "closeModal": () => Promise<void>;
         "controllerGuides": boolean;
+        "defaultPlacementLocation": number;
         "id": string;
         "setLayout": (layoutId: string) => Promise<void>;
+        "shadowsEnabled": boolean;
         "showModal": (id: string) => Promise<void>;
-        "startingDistance": number;
         "title": string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;
@@ -100,6 +102,7 @@ export namespace Components {
         "height": number;
         "id": string;
         "modal": boolean;
+        "offset": number;
         "parent": ISceneElement;
         "position": string;
         "sceneElement": LMImage;
@@ -147,6 +150,7 @@ export namespace Components {
         "fontSize": number;
         "height"?: number;
         "id": string;
+        "offset": number;
         "padding"?: number;
         "parent": ISceneElement;
         "position": string;
@@ -162,6 +166,7 @@ export namespace Components {
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
+        "offset": number;
         "parent": ISceneElement;
         "pause": () => Promise<void>;
         "placeholder": number;
@@ -345,6 +350,7 @@ declare namespace LocalJSX {
         "itemVerticalAlign"?: string;
         "layout"?: string;
         "margin"?: number;
+        "offset"?: number;
         "opacity"?: number;
         "padding"?: number;
         "parent"?: ISceneElement;
@@ -360,8 +366,9 @@ declare namespace LocalJSX {
     }
     interface LmDocument {
         "controllerGuides"?: boolean;
+        "defaultPlacementLocation"?: number;
         "id"?: string;
-        "startingDistance"?: number;
+        "shadowsEnabled"?: boolean;
         "title"?: string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;
@@ -375,6 +382,7 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "modal"?: boolean;
+        "offset"?: number;
         "onClick"?: (event: LmImageCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmImageCustomEvent<string>) => void;
         "parent"?: ISceneElement;
@@ -403,7 +411,7 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "offset"?: number;
-        "onAddElementToRoot"?: (event: LmModalCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: LmModalCustomEvent<ISceneElement>) => void;
         "onClick"?: (event: LmModalCustomEvent<any>) => void;
         "onHidden"?: (event: LmModalCustomEvent<any>) => void;
         "onShown"?: (event: LmModalCustomEvent<any>) => void;
@@ -422,6 +430,7 @@ declare namespace LocalJSX {
         "fontSize"?: number;
         "height"?: number;
         "id"?: string;
+        "offset"?: number;
         "onClick"?: (event: LmTextCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: ISceneElement;
@@ -437,6 +446,7 @@ declare namespace LocalJSX {
     interface LmVideo {
         "height"?: number;
         "id"?: string;
+        "offset"?: number;
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmVideoCustomEvent<string>) => void;
         "parent"?: ISceneElement;

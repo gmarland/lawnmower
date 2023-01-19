@@ -6,7 +6,8 @@ import {
     LinearFilter,
     TextureLoader,
     ClampToEdgeWrapping,
-    RepeatWrapping
+    RepeatWrapping,
+    DoubleSide
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -44,7 +45,10 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LMImageConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, position, id, offset);
 
         this._src = src;
 
@@ -337,10 +341,14 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
             
             const geometry = PlaneUtils.getPlane(this._calculatedWidth, this._calculatedHeight, this._borderRadius);
             
-            const material = MaterialUtils.getBasicMaterial({
+            const materialOptions = {
                 map: imageTexture,
                 transparent: false
-            });
+            };
+
+            if (this.offset) materialOptions["side"] = DoubleSide;
+
+            const material = MaterialUtils.getBasicMaterial(materialOptions);
             
             const mesh = new Mesh(geometry, material);
             mesh.cast = true;

@@ -9,7 +9,8 @@ import {
     PolyhedronGeometry,
     Color,
     Group,
-    LinearFilter
+    LinearFilter,
+    DoubleSide
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -52,7 +53,10 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LMVideoConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, position, id, offset);
 
         this._src = src;
 
@@ -424,10 +428,14 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
 
         const geometry = new PolyhedronGeometry(vertices, faces, this._calculatedHeight/2, 0);
         
-        const material = new MeshBasicMaterial({
+        const materialOptions = {
             color: new Color("#ffffff"),
             transparent: false
-        });
+        };
+
+        if (this.offset) materialOptions["side"] = DoubleSide;
+
+        const material = new MeshBasicMaterial(materialOptions);
 
         const playMesh =  new Mesh(geometry, material);
         playMesh.invisible = true;

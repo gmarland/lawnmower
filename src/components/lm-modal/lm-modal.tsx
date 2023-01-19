@@ -61,7 +61,7 @@ export class LmModal {
 
   @Event() public hidden: EventEmitter;
 
-  @Event() public addElementToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<ISceneElement>;
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
