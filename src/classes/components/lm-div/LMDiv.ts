@@ -4,7 +4,6 @@ import {
     Object3D,
     Vector3,
     Box3,
-    DoubleSide,
     Group
 } from 'three';
 
