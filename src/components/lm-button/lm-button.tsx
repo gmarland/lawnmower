@@ -49,7 +49,7 @@ export class LmButton {
 
   @Prop() public height?: number;
 
-  @Prop() public borderRadius: number = 0;
+  @Prop() public borderRadius: number = 10;
 
   @Prop() public fontFamily: string = "Arial";
 
@@ -61,7 +61,7 @@ export class LmButton {
   
   @Prop() public backgroundColor: string;
 
-  @Prop() public padding?: number;
+  @Prop() public padding?: number = 15;
 
   @Prop() public visible: boolean = true;
 
@@ -298,9 +298,7 @@ export class LmButton {
 
   render() {
     return (
-      <Host>
-        <slot></slot>
-      </Host>
+      <Host />
     );
   }
 
