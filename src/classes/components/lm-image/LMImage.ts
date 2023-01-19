@@ -346,13 +346,22 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
                 transparent: false
             };
 
-            if (this.offset) materialOptions["side"] = DoubleSide;
-
             const material = MaterialUtils.getBasicMaterial(materialOptions);
             
             const mesh = new Mesh(geometry, material);
-            mesh.cast = true;
-            mesh.receiveShadow = true;
+        
+            if (this.shadowsEnabled) {
+                if ((this.offset != null) && (this.offset !== 0)) mesh.castShadow = true;
+                else mesh.castShadow = false;
+    
+                mesh.receiveShadow = true;
+            }
+            else {
+                mesh.receiveShadow = false;
+                mesh.castShadow = false;
+            }
+
+            console.log(this.offset, mesh)
             
             if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
     

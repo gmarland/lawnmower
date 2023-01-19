@@ -488,15 +488,23 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
             };
         }
 
-        if (this.offset) materialOptions["side"] = DoubleSide;
-
         const material = MaterialUtils.getBasicMaterial(materialOptions);
 
         const geometry = PlaneUtils.getPlane(width, height, this._borderRadius);
 
         const main = new Mesh(geometry, material);
-        main.castShadow = true;
-        main.receiveShadow = true;
+        
+        if (this.shadowsEnabled) {
+            if ((this.offset != null) && (this.offset !== 0)) main.castShadow = true;
+            else main.castShadow = false;
+
+            main.receiveShadow = true;
+        }
+        else {
+            main.receiveShadow = false;
+            main.castShadow = false;
+        }
+        
         main.name = "body";
 
         return main;
