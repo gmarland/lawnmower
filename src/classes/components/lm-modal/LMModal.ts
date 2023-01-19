@@ -352,7 +352,7 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
             }
 
             this._mesh = this.buildDialogMesh(dialogWidth, dialogHeight);
-            this._closeButtonMesh = this.buildCloseMesh(dialogWidth, dialogHeight);
+            this._closeButtonMesh = this.buildCloseMesh(dialogHeight);
             
             this.content.add(this._mesh);
             this.content.add(this._closeButtonMesh);
@@ -381,7 +381,7 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         return dialogGroup;
     }
 
-    private buildCloseMesh(dialogWidth: number, dialogHeight: number): Mesh {
+    private buildCloseMesh(dialogHeight: number): Mesh {
         const buttonGroup = new Object3D();
 
         const buttonContainerMargin = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth, this._closeButtonWidth, this._borderRadius), MaterialUtils.getBasicMaterial({
