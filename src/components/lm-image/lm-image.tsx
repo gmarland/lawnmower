@@ -28,9 +28,13 @@ export class LmImage {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public offset: number;
 
   @Prop() public position: string;
 
@@ -151,9 +155,11 @@ export class LmImage {
 
   componentWillLoad() {
     this.sceneElement = new LMImage(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
+        shadowsEnabled: this.shadowsEnabled,
         width: this.width, 
         height: this.height,
-        borderRadius: this.borderRadius
+        borderRadius: this.borderRadius,
+        offset: this.offset
     });
 
     this.sceneElement.onClick =async  () => {

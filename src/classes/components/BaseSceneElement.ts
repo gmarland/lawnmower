@@ -6,6 +6,8 @@ import {
 import { ISceneElement } from './ISceneElement';
 
 export class BaseSceneElement {
+    private _shadowsEnabled: boolean;
+    
     private _initialized: boolean;
     
     private _parent: ISceneElement;
@@ -16,22 +18,39 @@ export class BaseSceneElement {
 
     private _content: Group;
 
-    constructor(parent: ISceneElement, position: Vector3, id: string) {
+    private _offset?: number;
+
+    constructor(parent: ISceneElement, shadowsEnabled: boolean, position: Vector3, id: string, offset?: number) {
         this._initialized = false;
 
         this._parent = parent;
 
+        this._shadowsEnabled = shadowsEnabled;
+        
         this._position = position;
         
         this._id = id;
 
+        this._offset = offset;
+
         this._content = new Group();
+
+        if (this._offset) this.content.translateZ(this._offset);
+        else this.content.translateZ(1);
     }
 
     ////////// Getters
 
+    public get shadowsEnabled(): boolean {
+        return this._shadowsEnabled;
+    }
+
     public get initialized(): boolean {
         return this._initialized;
+    }
+
+    public get offset(): number {
+        return this._offset
     }
     
     public get parent(): Group {
@@ -62,6 +81,10 @@ export class BaseSceneElement {
 
     public set initialized(value: boolean) {
         this._initialized = value;
+    }
+    
+    public set offset(value: number) {
+        this._offset = value;
     }
     
     public set content(value: Group) {

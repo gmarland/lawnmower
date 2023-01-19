@@ -1,4 +1,5 @@
 import { 
+    MeshLambertMaterial,
     MeshBasicMaterial,
     PlaneGeometry,
     Mesh,
@@ -14,6 +15,8 @@ import {
 
 import { Dimensions } from '../../geometry/Dimensions';
 import { GeometryUtils } from '../../geometry/GeometryUtils';
+import { MaterialUtils } from '../../geometry/MaterialUtils';
+import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { BaseSceneElement } from '../BaseSceneElement';
@@ -52,7 +55,10 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LMVideoConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+
+        super(parent, config.shadowsEnabled, position, id, offset);
 
         this._src = src;
 
@@ -62,8 +68,6 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
         if (config.height) this._initialHeight = config.height;
 
         this._placeholderTimestamp = config.placeholderTimestamp;
-        
-        this.content.translateZ(1);
     }
 
     ////////// Getters
@@ -397,15 +401,25 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
         return new Promise(async (resolve) => {
             const imageTexture = await this.buildTexture(width, height);
 
-            const geometry = new PlaneGeometry(this._calculatedWidth, this._calculatedHeight);
-            const material = new MeshBasicMaterial({
+            const geometry = PlaneUtils.getPlane(this._calculatedWidth, this._calculatedHeight, 0);
+
+            const material = MaterialUtils.getBasicMaterial({
                 map: imageTexture,
                 transparent: false
             });
             
             const mesh = new Mesh(geometry, material);
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
+            
+            if (this.shadowsEnabled) {
+                if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) mesh.castShadow = true;
+                else mesh.castShadow = false;
+
+                mesh.receiveShadow = true;
+            }
+            else {
+                mesh.receiveShadow = false;
+                mesh.castShadow = false;
+            }
             
             resolve(mesh);
         });
@@ -422,8 +436,8 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
             2, 1, 0
         ];
 
-        const geometry = new PolyhedronGeometry(vertices, faces, this._calculatedHeight/2, 0);
-        
+        const geometry = new PolyhedronGeometry(vertices, faces, this._calculatedHeight/2, 0)
+
         const material = new MeshBasicMaterial({
             color: new Color("#ffffff"),
             transparent: false
@@ -437,8 +451,6 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
         playMesh.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
         playMesh.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
         playMesh.translateZ(1);
-        
-        this.content.translateZ(1);
 
         return playMesh;
     }

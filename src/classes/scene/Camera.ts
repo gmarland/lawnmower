@@ -11,9 +11,9 @@ import { ISceneElement } from '../components/ISceneElement';
 export class Camera {
     private _scene: Scene;
 
-    private _container: HTMLDivElement;
+    private _shadowsEnabled: boolean;
 
-    private _basePlaneWidth: number;
+    private _container: HTMLDivElement;
 
     private _camera: PerspectiveCamera;
     private _light: DirectionalLight;
@@ -26,12 +26,14 @@ export class Camera {
     private _near: number = 0.1;
     private _far: number;
 
-    constructor(container: HTMLDivElement, scene: Scene, basePlaneWidth: number) {
+    constructor(container: HTMLDivElement, scene: Scene, shadowsEnabled: boolean, defaultSceneRadius: number) {
         this._scene = scene;
+
+        this._shadowsEnabled = shadowsEnabled;
 
         this._container = container;
         
-        this._basePlaneWidth = basePlaneWidth;
+        this._far = defaultSceneRadius*2;
 
         this.buildCamera();
     }
@@ -50,6 +52,15 @@ export class Camera {
  
     public get far(): number {
         return this._far;
+    }
+
+    public set far(value: number) {
+        this._far = value;
+
+        this._camera.far = this._far;
+        this._camera.updateProjectionMatrix();
+
+        if (this._shadowsEnabled && this._light) this._light.updateShadowDistance();
     }
 
     public addLightToCamera(light: DirectionalLight) {
@@ -139,7 +150,6 @@ export class Camera {
     private buildCamera(): void {
         this._fov = 75;
         this._aspect = (this._container.clientWidth/this._container.clientHeight);
-        this._far = this._basePlaneWidth*3;
         
         this._camera = new PerspectiveCamera(this._fov, this._aspect, this._near, this._far);
 
@@ -147,6 +157,5 @@ export class Camera {
     }
 
     public Update(): void {
-        //if (this._light) this._light.lookAt(this._camera.lookAt)
     }
 }

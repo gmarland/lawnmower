@@ -6,7 +6,8 @@ import {
     LinearFilter,
     TextureLoader,
     ClampToEdgeWrapping,
-    RepeatWrapping
+    RepeatWrapping,
+    DoubleSide
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -44,7 +45,10 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LMImageConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, config.shadowsEnabled, position, id, offset);
 
         this._src = src;
 
@@ -343,9 +347,18 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
             });
             
             const mesh = new Mesh(geometry, material);
-            mesh.cast = true;
-            mesh.receiveShadow = true;
-            
+        
+            if (this.shadowsEnabled) {
+                if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) mesh.castShadow = true;
+                else mesh.castShadow = false;
+    
+                mesh.receiveShadow = true;
+            }
+            else {
+                mesh.receiveShadow = false;
+                mesh.castShadow = false;
+            }
+
             if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
     
             resolve(mesh);

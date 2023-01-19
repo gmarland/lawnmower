@@ -1,4 +1,6 @@
-export interface LMTextConfig {
+import { BaseConfig } from "../BaseConfig";
+
+export interface LMTextConfig extends BaseConfig {
     width?: number;
     
     height?: number;

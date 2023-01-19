@@ -29,23 +29,25 @@ export class LmDocument {
 
   @Prop({ reflect: true }) public id: string = "";
 
-  @Prop() startingDistance: number = 500;
+  @Prop() public defaultPlacementLocation: number = 500;
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   @Prop() public controllerGuides: boolean = true;
 
-  @Prop() title: string = "Lawnmower";
+  @Prop() public title: string = "Lawnmower";
 
-  @Prop() titlecardBackgroundImage?: string = null;
+  @Prop() public titlecardBackgroundImage?: string = null;
 
-  @Prop() titlecardBackground?: string = "#222222";
+  @Prop() public titlecardBackground?: string = "#222222";
 
-  @Prop() titlecardFontFamily: string = "Arial";
+  @Prop() public titlecardFontFamily: string = "Arial";
 
-  @Prop() titlecardFontColor: string = "#EEEFF3";
+  @Prop() public titlecardFontColor: string = "#EEEFF3";
 
-  @Prop() titlecardFontSize: string = "4em";
+  @Prop() public titlecardFontSize: string = "4em";
 
   private _sceneContainer: HTMLDivElement;
 
@@ -165,6 +167,7 @@ export class LmDocument {
         element["parent"] = this._mainScene;
         element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
+        element["shadowsEnabled"] = this.shadowsEnabled;
 
         sequenceNo++;
       }
@@ -172,7 +175,7 @@ export class LmDocument {
   }
 
   componentDidLoad() {
-    this._mainScene.init(this.vrEnabled, this.controllerGuides, this._sceneContainer, this.startingDistance);
+    this._mainScene.init(this.vrEnabled, this.shadowsEnabled, this.controllerGuides, this._sceneContainer, this.defaultPlacementLocation);
       
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();

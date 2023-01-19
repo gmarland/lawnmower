@@ -1,4 +1,6 @@
-export interface LMAssetConfig {
+import { BaseConfig } from "../BaseConfig";
+
+export interface LMAssetConfig extends BaseConfig {
     activeAnimation: string;
     
     radius: number;

@@ -28,9 +28,13 @@ export class LmText {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
+
+  @Prop() public offset: number;
 
   @Prop() public position: string;
 
@@ -268,6 +272,7 @@ export class LmText {
     }
 
     this.sceneElement = new LMText(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
+      shadowsEnabled: this.shadowsEnabled,
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,
@@ -277,7 +282,8 @@ export class LmText {
       height: this.height, 
       borderRadius: this.borderRadius,
       backgroundColor: this.backgroundColor,
-      padding: this.padding
+      padding: this.padding,
+      offset: this.offset
     });
 
     this.sceneElement.onClick = () => {

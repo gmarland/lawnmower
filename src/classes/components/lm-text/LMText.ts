@@ -3,7 +3,8 @@ import {
     Group,
     Vector3,
     CanvasTexture,
-    LinearFilter
+    LinearFilter,
+    DoubleSide
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -53,7 +54,10 @@ export class LMText extends BaseSceneElement implements ISceneElement {
     public onClick?: Function = null;
 
     constructor(parent: ISceneElement, position: Vector3, id: string, text: string, config: LMTextConfig) {
-        super(parent, position, id);
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, config.shadowsEnabled, position, id, offset);
 
         this._text = text;
         
@@ -365,14 +369,27 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         
         const geometry = PlaneUtils.getPlane(buildWidth, this._calculatedHeight, this._borderRadius);
         
-        const material = MaterialUtils.getBasicMaterial({
+        const materialOptions = {
             map: textTexture,
             transparent: false
-        });
+        };
+
+        if (this.offset && this.shadowsEnabled) materialOptions["side"] = DoubleSide;
+
+        const material = MaterialUtils.getBasicMaterial(materialOptions);
         
         const mesh = new Mesh(geometry, material);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        
+        if (this.shadowsEnabled) {
+            if ((this.offset != null) && (this.offset !== 0)) mesh.castShadow = true;
+            else mesh.castShadow = false;
+
+            mesh.receiveShadow = true;
+        }
+        else {
+            mesh.receiveShadow = false;
+            mesh.castShadow = false;
+        }
     
         if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
 

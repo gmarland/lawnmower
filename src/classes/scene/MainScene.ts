@@ -21,9 +21,11 @@ import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
 
 export class MainScene {
-    public _defaultSceneRadius: number = 1000;
+    public _defaultSceneRadius: number = 500;
 
     private _vrEnabled: boolean;
+
+    private _shadowsEnabled: boolean;
 
     private _skyboxColor: number = 0xefefef;
     private _skyboxOpacity: number = 1;
@@ -87,20 +89,22 @@ export class MainScene {
         this._id = value;
     }
 
-    public init(vrEnabled: boolean, controllerGuides: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
+    public init(vrEnabled: boolean, shadowsEnabled: boolean, controllerGuides: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
         this._vrEnabled = vrEnabled;
+
+        this._shadowsEnabled = shadowsEnabled;
 
         this._parentElement = parentElement;
         if (startingDistance) this._defaultSceneRadius = startingDistance;
         
         this._clock = new Clock();
 
-        this._camera = new Camera(this._parentElement, this._scene, this._defaultSceneRadius);
+        this._camera = new Camera(this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
         this._camera.setPosition(0, 0, 0);
 
-        this._lighting = new Lighting(this._scene, this._camera);
+        this._lighting = new Lighting(this._scene, this._camera, this._shadowsEnabled);
 
-        this._renderer = new Renderer(this._vrEnabled, this._camera, this._parentElement, this._skyboxColor, this._skyboxOpacity);
+        this._renderer = new Renderer(this._vrEnabled, this._camera, this._parentElement, this._shadowsEnabled, this._skyboxColor, this._skyboxOpacity);
 
         if (this._vrEnabled) {
             const leftController = this._renderer.getController(0);

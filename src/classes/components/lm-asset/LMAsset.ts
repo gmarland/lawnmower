@@ -53,22 +53,25 @@ export class LMAsset extends BaseSceneElement implements ISceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, assetConfig: LMAssetConfig) {
-        super(parent, position, id);
+    constructor(parent: ISceneElement, position: Vector3, id: string, src: string, config: LMAssetConfig) {
+        let offset = null;
+        if (config.offset) offset = config.offset;
+        
+        super(parent, config.shadowsEnabled, position, id, offset);
 
         this._src = src;
 
-        this._activeAnimation = assetConfig.activeAnimation;
+        this._activeAnimation = config.activeAnimation;
 
-        this._radius = assetConfig.radius;
+        this._radius = config.radius;
 
-        this._xRotation = assetConfig.xRotation;
-        this._yRotation = assetConfig.yRotation;
-        this._zRotation = assetConfig.zRotation;
+        this._xRotation = config.xRotation;
+        this._yRotation = config.yRotation;
+        this._zRotation = config.zRotation;
 
-        this._xRotationSpeed = assetConfig.xRotationSpeed;
-        this._yRotationSpeed = assetConfig.yRotationSpeed;
-        this._zRotationSpeed = assetConfig.zRotationSpeed;
+        this._xRotationSpeed = config.xRotationSpeed;
+        this._yRotationSpeed = config.yRotationSpeed;
+        this._zRotationSpeed = config.zRotationSpeed;
     }
 
     ////////// Getters
@@ -377,8 +380,17 @@ export class LMAsset extends BaseSceneElement implements ISceneElement {
                 await new Promise<void>((resolve): void => {
                     new AssetLoader().load(this._src).then((loadedAssetDetail) => {
                         this._loadedAsset = loadedAssetDetail.element;
-                        this._loadedAsset.receiveShadow = true;
-                        this._loadedAsset.receiveShadow = true;
+                        
+                        if (this.shadowsEnabled) {
+                            if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) this._loadedAsset.castShadow = true;
+                            else this._loadedAsset.castShadow = false;
+
+                            this._loadedAsset.receiveShadow = true;
+                        }
+                        else {
+                            this._loadedAsset.receiveShadow = false;
+                            this._loadedAsset.castShadow = false;
+                        }
     
                         this._animations = loadedAssetDetail.animations;
 

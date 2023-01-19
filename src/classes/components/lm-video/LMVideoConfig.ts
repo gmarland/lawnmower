@@ -1,4 +1,6 @@
-export interface LMVideoConfig {
+import { BaseConfig } from "../BaseConfig";
+
+export interface LMVideoConfig extends BaseConfig {
     placeholderTimestamp: number;
 
     width: number;

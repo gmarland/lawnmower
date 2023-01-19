@@ -26,6 +26,7 @@ export namespace Components {
         "reset": () => Promise<void>;
         "sceneElement": LM360Video;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "videoHeightSegments": number;
         "videoRadius": number;
@@ -64,6 +65,7 @@ export namespace Components {
         "itemVerticalAlign": string;
         "layout": string;
         "margin"?: number;
+        "offset": number;
         "opacity"?: number;
         "padding"?: number;
         "parent": ISceneElement;
@@ -72,6 +74,7 @@ export namespace Components {
         "removeElement": (element: any) => Promise<void>;
         "sceneElement": LMDiv;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "verticalAlign": string;
         "vrEnabled": boolean;
         "width": number;
@@ -82,10 +85,11 @@ export namespace Components {
     interface LmDocument {
         "closeModal": () => Promise<void>;
         "controllerGuides": boolean;
+        "defaultPlacementLocation": number;
         "id": string;
         "setLayout": (layoutId: string) => Promise<void>;
+        "shadowsEnabled": boolean;
         "showModal": (id: string) => Promise<void>;
-        "startingDistance": number;
         "title": string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;
@@ -100,10 +104,12 @@ export namespace Components {
         "height": number;
         "id": string;
         "modal": boolean;
+        "offset": number;
         "parent": ISceneElement;
         "position": string;
         "sceneElement": LMImage;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -116,6 +122,7 @@ export namespace Components {
         "position": string;
         "sceneElement": LMLayout;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "vrEnabled": boolean;
     }
     interface LmModal {
@@ -134,6 +141,7 @@ export namespace Components {
         "parent": ISceneElement;
         "position": string;
         "sceneElement": LMModal;
+        "shadowsEnabled": boolean;
         "show": () => Promise<void>;
         "vrEnabled": boolean;
         "width": number;
@@ -147,11 +155,13 @@ export namespace Components {
         "fontSize": number;
         "height"?: number;
         "id": string;
+        "offset": number;
         "padding"?: number;
         "parent": ISceneElement;
         "position": string;
         "sceneElement": LMText;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "text": string;
         "textDecoration": string;
         "visible": boolean;
@@ -162,6 +172,7 @@ export namespace Components {
         "destroy": () => Promise<void>;
         "height": number;
         "id": string;
+        "offset": number;
         "parent": ISceneElement;
         "pause": () => Promise<void>;
         "placeholder": number;
@@ -171,6 +182,7 @@ export namespace Components {
         "reset": () => Promise<void>;
         "sceneElement": LMVideo;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -188,6 +200,7 @@ export namespace Components {
         "parent": ISceneElement;
         "position": string;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "show": (isPlaying: boolean) => Promise<void>;
         "vrEnabled": boolean;
         "width": number;
@@ -310,6 +323,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LM360Video;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "videoHeightSegments"?: number;
         "videoRadius"?: number;
@@ -345,12 +359,14 @@ declare namespace LocalJSX {
         "itemVerticalAlign"?: string;
         "layout"?: string;
         "margin"?: number;
+        "offset"?: number;
         "opacity"?: number;
         "padding"?: number;
         "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMDiv;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "verticalAlign"?: string;
         "vrEnabled"?: boolean;
         "width"?: number;
@@ -360,8 +376,9 @@ declare namespace LocalJSX {
     }
     interface LmDocument {
         "controllerGuides"?: boolean;
+        "defaultPlacementLocation"?: number;
         "id"?: string;
-        "startingDistance"?: number;
+        "shadowsEnabled"?: boolean;
         "title"?: string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;
@@ -375,12 +392,14 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "modal"?: boolean;
+        "offset"?: number;
         "onClick"?: (event: LmImageCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmImageCustomEvent<string>) => void;
         "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMImage;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -392,6 +411,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMLayout;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "vrEnabled"?: boolean;
     }
     interface LmModal {
@@ -403,7 +423,7 @@ declare namespace LocalJSX {
         "height"?: number;
         "id"?: string;
         "offset"?: number;
-        "onAddElementToRoot"?: (event: LmModalCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: LmModalCustomEvent<ISceneElement>) => void;
         "onClick"?: (event: LmModalCustomEvent<any>) => void;
         "onHidden"?: (event: LmModalCustomEvent<any>) => void;
         "onShown"?: (event: LmModalCustomEvent<any>) => void;
@@ -411,6 +431,7 @@ declare namespace LocalJSX {
         "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMModal;
+        "shadowsEnabled"?: boolean;
         "vrEnabled"?: boolean;
         "width"?: number;
     }
@@ -422,12 +443,14 @@ declare namespace LocalJSX {
         "fontSize"?: number;
         "height"?: number;
         "id"?: string;
+        "offset"?: number;
         "onClick"?: (event: LmTextCustomEvent<any>) => void;
         "padding"?: number;
         "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMText;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "text"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
@@ -437,6 +460,7 @@ declare namespace LocalJSX {
     interface LmVideo {
         "height"?: number;
         "id"?: string;
+        "offset"?: number;
         "onClick"?: (event: LmVideoCustomEvent<any>) => void;
         "onShowModalDialog"?: (event: LmVideoCustomEvent<string>) => void;
         "parent"?: ISceneElement;
@@ -445,6 +469,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMVideo;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -454,14 +479,15 @@ declare namespace LocalJSX {
         "backgroundColor"?: string;
         "height"?: number;
         "id"?: string;
-        "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<ISceneElement>) => void;
         "onClose"?: Function;
         "onPause"?: Function;
         "onPlay"?: Function;
-        "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
+        "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<ISceneElement>) => void;
         "parent"?: ISceneElement;
         "position"?: string;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "vrEnabled"?: boolean;
         "width"?: number;
         "x"?: number;

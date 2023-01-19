@@ -27,6 +27,8 @@ export class LmModal {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
@@ -61,7 +63,7 @@ export class LmModal {
 
   @Event() public hidden: EventEmitter;
 
-  @Event() public addElementToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<ISceneElement>;
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {
@@ -196,16 +198,17 @@ export class LmModal {
 
   componentWillLoad() {
     this.sceneElement = new LMModal(this.parent, GeometryUtils.parsePositionString(this.position), this.id, { 
-        baseImagePath: getAssetPath('assets'),
-        width: this.width, 
-        height: this.height,
-        offset: this.offset,
-        padding: this.padding,
-        backgroundColor: this.backgroundColor,
-        borderColor: this.borderColor,
-        borderRadius: this.borderRadius,
-        borderWidth: this.borderWidth,
-        closeButtonWidth: this.closeButtonWidth
+      shadowsEnabled: this.shadowsEnabled,
+      baseImagePath: getAssetPath('assets'),
+      width: this.width, 
+      height: this.height,
+      offset: this.offset,
+      padding: this.padding,
+      backgroundColor: this.backgroundColor,
+      borderColor: this.borderColor,
+      borderRadius: this.borderRadius,
+      borderWidth: this.borderWidth,
+      closeButtonWidth: this.closeButtonWidth
     });
 
     this.sceneElement.modalShown = () => {

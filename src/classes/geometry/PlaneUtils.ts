@@ -1,8 +1,9 @@
 import { 
     BufferGeometry,
-    PlaneGeometry,
+    BoxGeometry,
     Shape,
     ShapeGeometry,
+    ExtrudeGeometry,
     Mesh,
     Box3,
     Vector3
@@ -18,8 +19,8 @@ export class PlaneUtils {
         }
     }
 
-    public static getSquaredPlane(width: number, height: number): PlaneGeometry {
-        return new PlaneGeometry(width, height);
+    public static getSquaredPlane(width: number, height: number): BoxGeometry {
+        return new BoxGeometry(width, height, 0.5);
     }
 
     public static getRoundedPlane(width: number, height: number, radius: number): ShapeGeometry {
@@ -46,7 +47,15 @@ export class PlaneUtils {
         
         shape.bezierCurveTo( x, y+radius, x, y, x + radius, y );
 
-        const geometry = new ShapeGeometry( shape );
+        const geometry = new ExtrudeGeometry(shape, {
+            steps: 1,
+            depth: 0.5,
+            bevelEnabled: false,
+            bevelThickness: 0,
+            bevelSize: 0,
+            bevelOffset: 0,
+            bevelSegments: 0
+        });
 
         return geometry;
     }

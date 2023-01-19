@@ -1,4 +1,6 @@
-export interface LMModalConfig {
+import { BaseConfig } from "../BaseConfig";
+
+export interface LMModalConfig extends BaseConfig {
     baseImagePath: string;
 
     width: number;

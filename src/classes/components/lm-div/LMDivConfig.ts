@@ -2,8 +2,9 @@ import { HorizontalAlign } from "../../geometry/HorizontalAlign";
 import { ItemHorizontalAlign } from "../../geometry/ItemHorizontalAlign";
 import { ItemVerticalAlign } from "../../geometry/ItemVerticalAlign";
 import { VerticalAlign } from "../../geometry/VerticalAlign";
+import { BaseConfig } from "../BaseConfig";
 
-export interface LMDivConfig {  
+export interface LMDivConfig extends BaseConfig {  
     verticalAlign: VerticalAlign;
 
     horizontalAlign: HorizontalAlign;
