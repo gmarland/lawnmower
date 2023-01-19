@@ -341,12 +341,10 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
             
             const geometry = PlaneUtils.getPlane(this._calculatedWidth, this._calculatedHeight, this._borderRadius);
             
-            const materialOptions = {
+            const material = MaterialUtils.getBasicMaterial({
                 map: imageTexture,
                 transparent: false
-            };
-
-            const material = MaterialUtils.getBasicMaterial(materialOptions);
+            });
             
             const mesh = new Mesh(geometry, material);
         
@@ -361,8 +359,6 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
                 mesh.castShadow = false;
             }
 
-            console.log(this.offset, mesh)
-            
             if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
     
             resolve(mesh);
