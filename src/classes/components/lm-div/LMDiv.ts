@@ -495,7 +495,7 @@ export class LMDiv extends BaseSceneElement implements ISceneElement {
         const main = new Mesh(geometry, material);
         
         if (this.shadowsEnabled) {
-            if ((this.offset != null) && (this.offset !== 0)) main.castShadow = true;
+            if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) main.castShadow = true;
             else main.castShadow = false;
 
             main.receiveShadow = true;

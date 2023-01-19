@@ -382,7 +382,7 @@ export class LMAsset extends BaseSceneElement implements ISceneElement {
                         this._loadedAsset = loadedAssetDetail.element;
                         
                         if (this.shadowsEnabled) {
-                            if ((this.offset != null) && (this.offset !== 0)) this._loadedAsset.castShadow = true;
+                            if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) this._loadedAsset.castShadow = true;
                             else this._loadedAsset.castShadow = false;
 
                             this._loadedAsset.receiveShadow = true;

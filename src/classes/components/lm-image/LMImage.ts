@@ -349,7 +349,7 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
             const mesh = new Mesh(geometry, material);
         
             if (this.shadowsEnabled) {
-                if ((this.offset != null) && (this.offset !== 0)) mesh.castShadow = true;
+                if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) mesh.castShadow = true;
                 else mesh.castShadow = false;
     
                 mesh.receiveShadow = true;

@@ -353,7 +353,7 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
 
             this._mesh = this.buildDialogMesh(dialogWidth, dialogHeight);
             this._closeButtonMesh = this.buildCloseMesh(dialogWidth, dialogHeight);
-
+            
             this.content.add(this._mesh);
             this.content.add(this._closeButtonMesh);
 
@@ -367,13 +367,13 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         const outerMesh = new Mesh(PlaneUtils.getPlane(dialogWidth+(this._borderWidth*2), dialogHeight+(this._borderWidth*2), this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._borderColor)
         }));
+        outerMesh.translateZ(-0.5);
+
+        this.applyShadows(outerMesh);
 
         const innerMesh = new Mesh(PlaneUtils.getPlane(dialogWidth, dialogHeight, this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._backgroundColor)
         }));
-
-        innerMesh.castShadow = true;
-        innerMesh.receiveShadow = true;
         
         dialogGroup.add(outerMesh);
         dialogGroup.add(innerMesh);
@@ -389,6 +389,8 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
             side: DoubleSide
         }));
         buttonContainerMargin.translateZ(0.5);
+
+        this.applyShadows(buttonContainerMargin);
 
         const buttonContainer = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth-2, this._closeButtonWidth-2, this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._backgroundColor),
@@ -411,6 +413,17 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         buttonGroup.translateZ(0.5);
 
         return buttonGroup;
+    }
+
+    private applyShadows(mesh: Mesh): void {
+        if (this.shadowsEnabled) {
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+        }
+        else {
+            mesh.receiveShadow = false;
+            mesh.castShadow = false;
+        }
     }
 
     private destroyMesh(): void {

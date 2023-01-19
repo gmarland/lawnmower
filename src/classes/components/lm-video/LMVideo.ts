@@ -242,7 +242,6 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
         return new Promise(async (resolve) => {
             if (!this.initialized) await this.draw();
             
-            console.log(this.id, this.offset, this.content)
             resolve(this.content);
         });
     }
@@ -413,7 +412,7 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
             const mesh = new Mesh(geometry, material);
             
             if (this.shadowsEnabled) {
-                if ((this.offset != null) && (this.offset !== 0)) mesh.castShadow = true;
+                if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) mesh.castShadow = true;
                 else mesh.castShadow = false;
 
                 mesh.receiveShadow = true;
