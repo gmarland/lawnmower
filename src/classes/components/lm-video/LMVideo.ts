@@ -1,7 +1,5 @@
 import { 
-    MeshLambertMaterial,
     MeshBasicMaterial,
-    PlaneGeometry,
     Mesh,
     Vector3,
     Box3,
