@@ -61,7 +61,7 @@ export class LmLayout {
   }
 
   componentWillLoad() {
-    this.sceneElement = new LMLayout(this.parent, GeometryUtils.parsePositionString(this.position), this.id);
+    this.sceneElement = new LMLayout(this.parent, this.shadowsEnabled, GeometryUtils.parsePositionString(this.position), this.id);
 
     let sequenceNo = 1;
 
@@ -70,6 +70,7 @@ export class LmLayout {
         element["parent"] = this.sceneElement;
         element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
+        element["shadowsEnabled"] = this.shadowsEnabled;
 
         sequenceNo++;
       }

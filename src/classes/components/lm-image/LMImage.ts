@@ -48,7 +48,7 @@ export class LMImage extends BaseSceneElement implements ISceneElement {
         let offset = null;
         if (config.offset) offset = config.offset;
         
-        super(parent, position, id, offset);
+        super(parent, config.shadowsEnabled, position, id, offset);
 
         this._src = src;
 

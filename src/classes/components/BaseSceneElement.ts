@@ -6,6 +6,8 @@ import {
 import { ISceneElement } from './ISceneElement';
 
 export class BaseSceneElement {
+    private _shadowsEnabled: boolean;
+    
     private _initialized: boolean;
     
     private _parent: ISceneElement;
@@ -18,11 +20,13 @@ export class BaseSceneElement {
 
     private _offset?: number;
 
-    constructor(parent: ISceneElement, position: Vector3, id: string, offset?: number) {
+    constructor(parent: ISceneElement, shadowsEnabled: boolean, position: Vector3, id: string, offset?: number) {
         this._initialized = false;
 
         this._parent = parent;
 
+        this._shadowsEnabled = shadowsEnabled;
+        
         this._position = position;
         
         this._id = id;
@@ -36,6 +40,10 @@ export class BaseSceneElement {
     }
 
     ////////// Getters
+
+    public get shadowsEnabled(): boolean {
+        return this._shadowsEnabled;
+    }
 
     public get initialized(): boolean {
         return this._initialized;

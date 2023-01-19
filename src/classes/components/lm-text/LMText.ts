@@ -57,7 +57,7 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         let offset = null;
         if (config.offset) offset = config.offset;
         
-        super(parent, position, id, offset);
+        super(parent, config.shadowsEnabled, position, id, offset);
 
         this._text = text;
         
@@ -374,7 +374,7 @@ export class LMText extends BaseSceneElement implements ISceneElement {
             transparent: false
         };
 
-        if (this.offset) materialOptions["side"] = DoubleSide;
+        if (this.offset && this.shadowsEnabled) materialOptions["side"] = DoubleSide;
 
         const material = MaterialUtils.getBasicMaterial(materialOptions);
         

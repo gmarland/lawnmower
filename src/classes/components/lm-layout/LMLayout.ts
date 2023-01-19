@@ -17,8 +17,8 @@ export class LMLayout extends BaseSceneElement implements ISceneElement {
 
     private _childElements: Map<number, ISceneElement> = new Map<number, ISceneElement>();
 
-    constructor(parent: ISceneElement, position: Vector3, id: string) {
-        super(parent, position, id);
+    constructor(parent: ISceneElement, shadowsEnabled: boolean, position: Vector3, id: string) {
+        super(parent, shadowsEnabled, position, id);
 
         this.content.name = "layout";
         this.content.visible = false;
