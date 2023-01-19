@@ -404,7 +404,6 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
             const geometry = PlaneUtils.getPlane(this._calculatedWidth, this._calculatedHeight, 0);
 
             const material = MaterialUtils.getBasicMaterial({
-                generateMipmaps: true,
                 map: imageTexture,
                 transparent: false
             });

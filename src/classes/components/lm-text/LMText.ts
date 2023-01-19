@@ -381,7 +381,7 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         const mesh = new Mesh(geometry, material);
         
         if (this.shadowsEnabled) {
-            if ((this.parent && (this.parent instanceof MainScene)) || ((this.offset != null) && (this.offset !== 0))) mesh.castShadow = true;
+            if ((this.offset != null) && (this.offset !== 0)) mesh.castShadow = true;
             else mesh.castShadow = false;
 
             mesh.receiveShadow = true;
