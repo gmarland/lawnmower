@@ -26,6 +26,8 @@ export class LmLayout {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
   
   @Element() el: HTMLElement

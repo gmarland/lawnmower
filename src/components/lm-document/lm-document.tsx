@@ -167,6 +167,7 @@ export class LmDocument {
         element["parent"] = this._mainScene;
         element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
+        element["shadowsEnabled"] = this.shadowsEnabled;
 
         sequenceNo++;
       }

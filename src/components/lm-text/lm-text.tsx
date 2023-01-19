@@ -28,6 +28,8 @@ export class LmText {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
@@ -270,6 +272,7 @@ export class LmText {
     }
 
     this.sceneElement = new LMText(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
+      shadowsEnabled: this.shadowsEnabled,
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,

@@ -28,6 +28,8 @@ export class LmVideo {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
@@ -190,6 +192,7 @@ export class LmVideo {
 
   componentWillLoad() {
     this.sceneElement = new LMVideo(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
+      shadowsEnabled: this.shadowsEnabled,
       offset: this.offset,
       width: this.width, 
       height: this.height,

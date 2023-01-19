@@ -33,6 +33,8 @@ export class LmDiv {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
@@ -259,6 +261,7 @@ export class LmDiv {
 
   componentWillLoad() {
     const config = {
+      shadowsEnabled: this.shadowsEnabled,
       offset: this.offset,
       verticalAlign: VerticalAlign[this.verticalAlign],
       horizontalAlign: HorizontalAlign[this.horizontalAlign],
@@ -286,6 +289,7 @@ export class LmDiv {
         element["parent"] = this.sceneElement;
         element["sequenceNo"] = sequenceNo;
         element["vrEnabled"] = this.vrEnabled;
+        element["shadowsEnabled"] = this.shadowsEnabled;
 
         sequenceNo++;
       }

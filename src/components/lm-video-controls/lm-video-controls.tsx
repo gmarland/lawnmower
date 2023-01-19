@@ -28,6 +28,8 @@ export class LmVideoControls {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Prop() public position: string;
@@ -54,9 +56,9 @@ export class LmVideoControls {
 
   // *** Component specific
 
-  @Event() public addElementToRoot: EventEmitter<SceneElement>;
+  @Event() public addElementToRoot: EventEmitter<ISceneElement>;
 
-  @Event() public updateRootElementPosition: EventEmitter<SceneElement>;
+  @Event() public updateRootElementPosition: EventEmitter<ISceneElement>;
 
   private _videoControls: LMVideoControls;
 
@@ -179,6 +181,8 @@ export class LmVideoControls {
 
   componentWillLoad() {
     this._videoControls = new LMVideoControls(this.parent, GeometryUtils.parsePositionString(this.position), this.id, {
+      shadowsEnabled: this.shadowsEnabled,
+      offset: 0,
       vrEnabled: this.vrEnabled,
       baseImagePath: getAssetPath('assets'),
       backgroundColor: this.backgroundColor,

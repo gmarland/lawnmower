@@ -26,6 +26,7 @@ export namespace Components {
         "reset": () => Promise<void>;
         "sceneElement": LM360Video;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "videoHeightSegments": number;
         "videoRadius": number;
@@ -73,6 +74,7 @@ export namespace Components {
         "removeElement": (element: any) => Promise<void>;
         "sceneElement": LMDiv;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "verticalAlign": string;
         "vrEnabled": boolean;
         "width": number;
@@ -107,6 +109,7 @@ export namespace Components {
         "position": string;
         "sceneElement": LMImage;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -119,6 +122,7 @@ export namespace Components {
         "position": string;
         "sceneElement": LMLayout;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "vrEnabled": boolean;
     }
     interface LmModal {
@@ -137,6 +141,7 @@ export namespace Components {
         "parent": ISceneElement;
         "position": string;
         "sceneElement": LMModal;
+        "shadowsEnabled": boolean;
         "show": () => Promise<void>;
         "vrEnabled": boolean;
         "width": number;
@@ -156,6 +161,7 @@ export namespace Components {
         "position": string;
         "sceneElement": LMText;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "text": string;
         "textDecoration": string;
         "visible": boolean;
@@ -176,6 +182,7 @@ export namespace Components {
         "reset": () => Promise<void>;
         "sceneElement": LMVideo;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -193,6 +200,7 @@ export namespace Components {
         "parent": ISceneElement;
         "position": string;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "show": (isPlaying: boolean) => Promise<void>;
         "vrEnabled": boolean;
         "width": number;
@@ -315,6 +323,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LM360Video;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "videoHeightSegments"?: number;
         "videoRadius"?: number;
@@ -357,6 +366,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMDiv;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "verticalAlign"?: string;
         "vrEnabled"?: boolean;
         "width"?: number;
@@ -389,6 +399,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMImage;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -400,6 +411,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMLayout;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "vrEnabled"?: boolean;
     }
     interface LmModal {
@@ -419,6 +431,7 @@ declare namespace LocalJSX {
         "parent"?: ISceneElement;
         "position"?: string;
         "sceneElement"?: LMModal;
+        "shadowsEnabled"?: boolean;
         "vrEnabled"?: boolean;
         "width"?: number;
     }
@@ -437,6 +450,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMText;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "text"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
@@ -455,6 +469,7 @@ declare namespace LocalJSX {
         "position"?: string;
         "sceneElement"?: LMVideo;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -464,14 +479,15 @@ declare namespace LocalJSX {
         "backgroundColor"?: string;
         "height"?: number;
         "id"?: string;
-        "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
+        "onAddElementToRoot"?: (event: LmVideoControlsCustomEvent<ISceneElement>) => void;
         "onClose"?: Function;
         "onPause"?: Function;
         "onPlay"?: Function;
-        "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<SceneElement>) => void;
+        "onUpdateRootElementPosition"?: (event: LmVideoControlsCustomEvent<ISceneElement>) => void;
         "parent"?: ISceneElement;
         "position"?: string;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "vrEnabled"?: boolean;
         "width"?: number;
         "x"?: number;

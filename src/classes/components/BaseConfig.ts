@@ -1,5 +1,5 @@
 export interface BaseConfig {
-    vrEnabled: boolean;
+    shadowsEnabled: boolean;
 
     offset: number;
 }
