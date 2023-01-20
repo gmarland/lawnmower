@@ -18,9 +18,9 @@ import { TextAlignment } from '../constants/TextAlignment';
 
 import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
-import { LMTextConfig } from './LMTextConfig';
+import { LMButtonConfig } from './LMButtonConfig';
 
-export class LMText extends BaseSceneElement implements ISceneElement {
+export class LMButton extends BaseSceneElement implements ISceneElement {
     private _fontSize: number;
     private _fontFamily: string;
 
@@ -42,8 +42,8 @@ export class LMText extends BaseSceneElement implements ISceneElement {
 
     private _calculatedHeight?: number = null;
 
-    private _textAlignment = TextAlignment.Left;
-
+    private _textAlignment = TextAlignment.Center;
+    
     private _backgroundColor: string = "";
     private _fontColor: string = "";
 
@@ -56,7 +56,7 @@ export class LMText extends BaseSceneElement implements ISceneElement {
 
     public onClick?: Function = null;
 
-    constructor(parent: ISceneElement, position: Vector3, id: string, text: string, config: LMTextConfig) {
+    constructor(parent: ISceneElement, position: Vector3, id: string, text: string, config: LMButtonConfig) {
         let offset = null;
         if (config.offset) offset = config.offset;
         
@@ -74,11 +74,11 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         if (config.height) this._initialHeight = config.height;
 
         this._borderRadius = config.borderRadius;
+
+        this._textAlignment = config.textAlignment;
         
         if (config.backgroundColor) this._backgroundColor = config.backgroundColor;
         else this._backgroundColor = "#ffffff";
-
-        this._textAlignment = config.textAlignment;
         
         if (config.fontColor) this._fontColor = config.fontColor;
         else this._fontColor = "#000000";

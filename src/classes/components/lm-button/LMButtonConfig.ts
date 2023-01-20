@@ -1,7 +1,7 @@
 import { BaseConfig } from "../BaseConfig";
 import { TextAlignment } from "../constants/TextAlignment";
 
-export interface LMTextConfig extends BaseConfig {
+export interface LMButtonConfig extends BaseConfig {
     width?: number;
     
     height?: number;

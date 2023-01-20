@@ -3,24 +3,25 @@ import {
   Host, 
   h, 
   Element, 
-  Prop,
+  Prop, 
+  Watch,
+  Method,
   Event,
-  EventEmitter,
-  Watch
+  EventEmitter
 } from '@stencil/core';
-
-import { ISceneElement } from '../../classes/components/ISceneElement';
-import { LMText } from '../../classes/components/lm-text/LMText';
-import { Method } from '@stencil/core/internal';
-import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
 import { TextAlignment } from '../../classes/components/constants/TextAlignment';
 
+import { ISceneElement } from '../../classes/components/ISceneElement';
+import { LMButton } from '../../classes/components/lm-button/LMButton';
+
+import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
+
 @Component({
-  tag: 'lm-text',
-  styleUrl: 'lm-text.scss',
+  tag: 'lm-button',
+  styleUrl: 'lm-button.scss',
   shadow: false
 })
-export class LmText {
+export class LmButton {
   // *** Required for positioning ***
 
   @Prop() public parent: ISceneElement;
@@ -39,7 +40,7 @@ export class LmText {
 
   @Prop() public position: string;
 
-  @Prop({ mutable: true }) public sceneElement: LMText;
+  @Prop({ mutable: true }) public sceneElement: LMButton;
 
   @Prop({ reflect: true }) public id: string = "";
 
@@ -49,9 +50,9 @@ export class LmText {
 
   @Prop() public height?: number;
 
-  @Prop() public borderRadius: number = 0;
+  @Prop() public borderRadius: number = 10;
 
-  @Prop() public textAlignment: string = "Left";
+  @Prop() public textAlignment: string = "Center";
 
   @Prop() public fontFamily: string = "Arial";
 
@@ -63,7 +64,7 @@ export class LmText {
   
   @Prop() public backgroundColor: string;
 
-  @Prop() public padding?: number;
+  @Prop() public padding?: number = 15;
 
   @Prop() public visible: boolean = true;
 
@@ -137,11 +138,11 @@ export class LmText {
     });
   }
 
-  @Watch('fontFamily')
-  private updateFontFamily(newValue: string): Promise<void> {
+  @Watch('textAlignment')
+  private updateTextAlignment(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
       if (this.sceneElement) {
-        this.sceneElement.fontFamily = newValue;
+        this.sceneElement.textAlignment = TextAlignment[newValue];
   
         const dimensionsUpdated = await this.sceneElement.draw();
         if (dimensionsUpdated) await this.sceneElement.drawParent();
@@ -151,11 +152,11 @@ export class LmText {
     });
   }
 
-  @Watch('textAlignment')
-  private updateTextAlignment(newValue: string): Promise<void> {
+  @Watch('fontFamily')
+  private updateFontFamily(newValue: string): Promise<void> {
     return new Promise(async (resolve) => {
       if (this.sceneElement) {
-        this.sceneElement.textAlignment = TextAlignment[newValue];
+        this.sceneElement.fontFamily = newValue;
   
         const dimensionsUpdated = await this.sceneElement.draw();
         if (dimensionsUpdated) await this.sceneElement.drawParent();
@@ -288,7 +289,7 @@ export class LmText {
       }
     }
 
-    this.sceneElement = new LMText(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
+    this.sceneElement = new LMButton(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
       shadowsEnabled: this.shadowsEnabled,
       textAlignment: TextAlignment[this.textAlignment],
       fontFamily: this.fontFamily,
@@ -312,10 +313,11 @@ export class LmText {
   componentDidLoad() {
     this.parent.addChildElement(this.sequenceNo, this.sceneElement);
   }
-  
+
   render() {
     return (
       <Host />
     );
   }
+
 }

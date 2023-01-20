@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ISceneElement } from "./classes/components/ISceneElement";
 import { LM360Video } from "./classes/components/lm-360video/LM360Video";
 import { LMAsset } from "./classes/components/lm-asset/LMAsset";
+import { LMButton } from "./classes/components/lm-button/LMButton";
 import { LMDiv } from "./classes/components/lm-div/LMDiv";
 import { LMImage } from "./classes/components/lm-image/LMImage";
 import { LMLayout } from "./classes/components/lm-layout/LMLayout";
@@ -52,6 +53,29 @@ export namespace Components {
         "yRotationSpeed": number;
         "zRotation": number;
         "zRotationSpeed": number;
+    }
+    interface LmButton {
+        "backgroundColor": string;
+        "borderRadius": number;
+        "destroy": () => Promise<void>;
+        "fontColor": string;
+        "fontFamily": string;
+        "fontSize": number;
+        "height"?: number;
+        "id": string;
+        "offset": number;
+        "padding"?: number;
+        "parent": ISceneElement;
+        "position": string;
+        "sceneElement": LMButton;
+        "sequenceNo": number;
+        "shadowsEnabled": boolean;
+        "text": string;
+        "textAlignment": string;
+        "textDecoration": string;
+        "visible": boolean;
+        "vrEnabled": boolean;
+        "width"?: number;
     }
     interface LmDiv {
         "append": (element: any) => Promise<void>;
@@ -163,6 +187,7 @@ export namespace Components {
         "sequenceNo": number;
         "shadowsEnabled": boolean;
         "text": string;
+        "textAlignment": string;
         "textDecoration": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -217,6 +242,10 @@ export interface LmAssetCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLLmAssetElement;
 }
+export interface LmButtonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLLmButtonElement;
+}
 export interface LmImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLLmImageElement;
@@ -249,6 +278,12 @@ declare global {
     var HTMLLmAssetElement: {
         prototype: HTMLLmAssetElement;
         new (): HTMLLmAssetElement;
+    };
+    interface HTMLLmButtonElement extends Components.LmButton, HTMLStencilElement {
+    }
+    var HTMLLmButtonElement: {
+        prototype: HTMLLmButtonElement;
+        new (): HTMLLmButtonElement;
     };
     interface HTMLLmDivElement extends Components.LmDiv, HTMLStencilElement {
     }
@@ -301,6 +336,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "lm-360video": HTMLLm360videoElement;
         "lm-asset": HTMLLmAssetElement;
+        "lm-button": HTMLLmButtonElement;
         "lm-div": HTMLLmDivElement;
         "lm-document": HTMLLmDocumentElement;
         "lm-image": HTMLLmImageElement;
@@ -348,6 +384,29 @@ declare namespace LocalJSX {
         "yRotationSpeed"?: number;
         "zRotation"?: number;
         "zRotationSpeed"?: number;
+    }
+    interface LmButton {
+        "backgroundColor"?: string;
+        "borderRadius"?: number;
+        "fontColor"?: string;
+        "fontFamily"?: string;
+        "fontSize"?: number;
+        "height"?: number;
+        "id"?: string;
+        "offset"?: number;
+        "onClick"?: (event: LmButtonCustomEvent<any>) => void;
+        "padding"?: number;
+        "parent"?: ISceneElement;
+        "position"?: string;
+        "sceneElement"?: LMButton;
+        "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
+        "text"?: string;
+        "textAlignment"?: string;
+        "textDecoration"?: string;
+        "visible"?: boolean;
+        "vrEnabled"?: boolean;
+        "width"?: number;
     }
     interface LmDiv {
         "backgroundColor"?: string;
@@ -452,6 +511,7 @@ declare namespace LocalJSX {
         "sequenceNo"?: number;
         "shadowsEnabled"?: boolean;
         "text"?: string;
+        "textAlignment"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -497,6 +557,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "lm-360video": Lm360video;
         "lm-asset": LmAsset;
+        "lm-button": LmButton;
         "lm-div": LmDiv;
         "lm-document": LmDocument;
         "lm-image": LmImage;
@@ -513,6 +574,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "lm-360video": LocalJSX.Lm360video & JSXBase.HTMLAttributes<HTMLLm360videoElement>;
             "lm-asset": LocalJSX.LmAsset & JSXBase.HTMLAttributes<HTMLLmAssetElement>;
+            "lm-button": LocalJSX.LmButton & JSXBase.HTMLAttributes<HTMLLmButtonElement>;
             "lm-div": LocalJSX.LmDiv & JSXBase.HTMLAttributes<HTMLLmDivElement>;
             "lm-document": LocalJSX.LmDocument & JSXBase.HTMLAttributes<HTMLLmDocumentElement>;
             "lm-image": LocalJSX.LmImage & JSXBase.HTMLAttributes<HTMLLmImageElement>;
