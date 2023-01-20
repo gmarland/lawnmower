@@ -71,6 +71,7 @@ export namespace Components {
         "sequenceNo": number;
         "shadowsEnabled": boolean;
         "text": string;
+        "textAlignment": string;
         "textDecoration": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -186,6 +187,7 @@ export namespace Components {
         "sequenceNo": number;
         "shadowsEnabled": boolean;
         "text": string;
+        "textAlignment": string;
         "textDecoration": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -400,6 +402,7 @@ declare namespace LocalJSX {
         "sequenceNo"?: number;
         "shadowsEnabled"?: boolean;
         "text"?: string;
+        "textAlignment"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
@@ -508,6 +511,7 @@ declare namespace LocalJSX {
         "sequenceNo"?: number;
         "shadowsEnabled"?: boolean;
         "text"?: string;
+        "textAlignment"?: string;
         "textDecoration"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;

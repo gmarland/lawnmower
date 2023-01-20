@@ -14,6 +14,7 @@ import { PlaneUtils } from '../../geometry/PlaneUtils';
 import { MainScene } from '../../scene/MainScene';
 import { SceneElementPlacement } from '../../scene/SceneElementPlacement';
 import { BaseSceneElement } from '../BaseSceneElement';
+import { TextAlignment } from '../constants/TextAlignment';
 
 import { ISceneElement } from "../ISceneElement";
 import { LMLayout } from '../lm-layout/LMLayout';
@@ -40,6 +41,8 @@ export class LMText extends BaseSceneElement implements ISceneElement {
     private _borderRadius: number;
 
     private _calculatedHeight?: number = null;
+
+    private _textAlignment = TextAlignment.Left;
 
     private _backgroundColor: string = "";
     private _fontColor: string = "";
@@ -74,6 +77,8 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         
         if (config.backgroundColor) this._backgroundColor = config.backgroundColor;
         else this._backgroundColor = "#ffffff";
+
+        this._textAlignment = config.textAlignment;
         
         if (config.fontColor) this._fontColor = config.fontColor;
         else this._fontColor = "#000000";
@@ -120,6 +125,10 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         return this._borderRadius;
     }
 
+    public get textAlignment(): TextAlignment {
+        return this._textAlignment;
+    }
+
     public get fontFamily(): string {
         return this._fontFamily;
     }
@@ -164,6 +173,10 @@ export class LMText extends BaseSceneElement implements ISceneElement {
     
     public set borderRadius(value: number) {
         this._borderRadius = value;
+    }
+
+    public set textAlignment(value: TextAlignment) {
+        this._textAlignment = value;
     }
 
     public set fontFamily(value: string) {
@@ -490,10 +503,22 @@ export class LMText extends BaseSceneElement implements ISceneElement {
 
         context.fillStyle = this._fontColor;
 
+        const centerPosition = this._calculatedWidth/2;
+
         for (let i = 0; i<lines.length; i++) {
             const writePosition = this._padding + (lineHeight*(i+1)) - textDimensions.actualBoundingBoxDescent;
 
-            context.fillText(lines[i], this._padding, writePosition);
+            const lineWidth = context.measureText(lines[i]).width;
+    
+            if (this._textAlignment == TextAlignment.Left) {
+                context.fillText(lines[i], this._padding, writePosition);
+            }
+            else if (this._textAlignment == TextAlignment.Center) {
+                context.fillText(lines[i], centerPosition-(lineWidth/2), writePosition);
+            }
+            else if (this._textAlignment == TextAlignment.Right) {
+                context.fillText(lines[i], this._calculatedWidth-lineWidth-this._padding, writePosition);
+            }
         }
         
         const textTexture = new CanvasTexture(context.canvas);
