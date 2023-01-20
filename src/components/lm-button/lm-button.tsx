@@ -9,6 +9,7 @@ import {
   Event,
   EventEmitter
 } from '@stencil/core';
+import { TextAlignment } from '../../classes/components/constants/TextAlignment';
 
 import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMButton } from '../../classes/components/lm-button/LMButton';
@@ -50,6 +51,8 @@ export class LmButton {
   @Prop() public height?: number;
 
   @Prop() public borderRadius: number = 10;
+
+  @Prop() public textAlignment: string = "Left";
 
   @Prop() public fontFamily: string = "Arial";
 
@@ -126,6 +129,20 @@ export class LmButton {
     return new Promise(async (resolve) => {
       if (this.sceneElement) {
         this.sceneElement.borderRadius = newValue;
+  
+        const dimensionsUpdated = await this.sceneElement.draw();
+        if (dimensionsUpdated) await this.sceneElement.drawParent();
+      }
+
+      resolve();
+    });
+  }
+
+  @Watch('textAlignment')
+  private updateTextAlignment(newValue: string): Promise<void> {
+    return new Promise(async (resolve) => {
+      if (this.sceneElement) {
+        this.sceneElement.textAlignment = TextAlignment[newValue];
   
         const dimensionsUpdated = await this.sceneElement.draw();
         if (dimensionsUpdated) await this.sceneElement.drawParent();
@@ -274,6 +291,7 @@ export class LmButton {
 
     this.sceneElement = new LMButton(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.text, { 
       shadowsEnabled: this.shadowsEnabled,
+      textAlignment: TextAlignment[this.textAlignment],
       fontFamily: this.fontFamily,
       fontSize: this.fontSize,
       fontColor: this.fontColor,
