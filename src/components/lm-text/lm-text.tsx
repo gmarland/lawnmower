@@ -51,7 +51,7 @@ export class LmText {
 
   @Prop() public borderRadius: number = 0;
 
-  @Prop() public textAlignment: string = "Center";
+  @Prop() public textAlignment: string = "Left";
 
   @Prop() public fontFamily: string = "Arial";
 

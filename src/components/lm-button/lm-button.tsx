@@ -52,7 +52,7 @@ export class LmButton {
 
   @Prop() public borderRadius: number = 10;
 
-  @Prop() public textAlignment: string = "Left";
+  @Prop() public textAlignment: string = "Center";
 
   @Prop() public fontFamily: string = "Arial";
 
