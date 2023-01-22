@@ -3,8 +3,7 @@ import {
     Group,
     Vector3,
     CanvasTexture,
-    LinearFilter,
-    DoubleSide
+    LinearFilter
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -386,8 +385,6 @@ export class LMButton extends BaseSceneElement implements ISceneElement {
             map: textTexture,
             transparent: false
         };
-
-        if (this.offset && this.shadowsEnabled) materialOptions["side"] = DoubleSide;
 
         const material = MaterialUtils.getBasicMaterial(materialOptions);
         

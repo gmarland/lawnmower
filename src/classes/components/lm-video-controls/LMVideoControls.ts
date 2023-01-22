@@ -80,8 +80,7 @@ export class LMVideoControls extends BaseSceneElement implements ISceneElement {
     ////////// Getters
 
     public get placementLocation(): SceneElementPlacement {
-        if (this._vrEnabled) return SceneElementPlacement.PlacedAtCamera;
-        else return SceneElementPlacement.AttachedToCamera;
+        return SceneElementPlacement.AttachedToCamera;
     }
     
     public get dimensions(): Dimensions {

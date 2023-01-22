@@ -103,7 +103,7 @@ export class MainScene {
         
         this._clock = new Clock();
 
-        this._sceneCamera = new Camera(this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
+        this._sceneCamera = new Camera(this._vrEnabled, this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
         this._sceneCamera.setPosition(0, 0, 0);
 
         this._lighting = new Lighting(this._scene, this._sceneCamera, this._shadowsEnabled);
@@ -225,10 +225,10 @@ export class MainScene {
 
                 this._modalContainer.add(modalDialog);
             }
-            if (childElement.placementLocation == SceneElementPlacement.AttachedToCamera) {
+            else if (childElement.placementLocation == SceneElementPlacement.AttachedToCamera) {
                 await this._sceneCamera.addElementToCamera(childElement);
             }
-            if (childElement.placementLocation == SceneElementPlacement.PlacedAtCamera) {
+            else if (childElement.placementLocation == SceneElementPlacement.PlacedAtCamera) {
                 await this._sceneCamera.addElementAtCamera(childElement);
             }
 

@@ -3,8 +3,7 @@ import {
     Group,
     Vector3,
     CanvasTexture,
-    LinearFilter,
-    DoubleSide
+    LinearFilter
 } from 'three';
 
 import { Dimensions } from '../../geometry/Dimensions';
@@ -387,8 +386,6 @@ export class LMText extends BaseSceneElement implements ISceneElement {
             transparent: false
         };
 
-        if (this.offset && this.shadowsEnabled) materialOptions["side"] = DoubleSide;
-
         const material = MaterialUtils.getBasicMaterial(materialOptions);
         
         const mesh = new Mesh(geometry, material);
@@ -405,6 +402,7 @@ export class LMText extends BaseSceneElement implements ISceneElement {
         }
     
         if (this._borderRadius > 0) PlaneUtils.generateMeshUVs(mesh);
+        mesh.material.needsUpdate = true;
 
         return mesh;
     }
