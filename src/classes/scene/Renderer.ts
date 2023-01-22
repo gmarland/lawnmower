@@ -1,6 +1,7 @@
 import { 
     Scene,
     WebGLRenderer,
+    MathUtils,
     PCFSoftShadowMap
 } from 'three';
 
@@ -8,6 +9,8 @@ import { Camera } from './Camera/Camera';
 
 export class Renderer {
     private _vrEnabled: boolean;
+
+    private _camera: Camera;
 
     private _renderer: WebGLRenderer;
 
@@ -20,6 +23,8 @@ export class Renderer {
 
     constructor(vrEnabled: boolean, camera: Camera, container: HTMLDivElement, shadowsEnabled: boolean, skyboxColor: number, skyboxOpacity: number) {
         this._vrEnabled = vrEnabled;
+
+        this._camera = camera;
 
         this._container = container;
 
@@ -39,6 +44,8 @@ export class Renderer {
 
         if (this._vrEnabled) {
             this._renderer.xr.enabled = true;
+
+            this._camera.fov = MathUtils.radToDeg((Math.atan(1.0 / this._renderer.xr.getCamera().projectionMatrix.elements[5] ) * 2.0));
         }
 
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);

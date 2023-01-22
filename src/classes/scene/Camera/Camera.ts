@@ -9,6 +9,8 @@ import {
 import { ISceneElement } from '../../components/ISceneElement';
 
 export class Camera {
+    private _vrEnabled: boolean;
+
     private _scene: Scene;
 
     private _shadowsEnabled: boolean;
@@ -26,7 +28,9 @@ export class Camera {
     private _near: number = 0.1;
     private _far: number;
 
-    constructor(container: HTMLDivElement, scene: Scene, shadowsEnabled: boolean, defaultSceneRadius: number) {
+    constructor(vrEnabled: boolean, container: HTMLDivElement, scene: Scene, shadowsEnabled: boolean, defaultSceneRadius: number) {
+        this._vrEnabled = vrEnabled;
+
         this._scene = scene;
 
         this._shadowsEnabled = shadowsEnabled;
@@ -61,6 +65,10 @@ export class Camera {
     public get far(): number {
         return this._far;
     }
+ 
+    public set fov(value: number) {
+        this._fov = value;
+    }
 
     public set far(value: number) {
         this._far = value;
@@ -91,6 +99,7 @@ export class Camera {
             this._scene.add(elementContent);
             
             elementContent.name = "placedAtCamera";
+            elementContent.translateZ(this._camera.position.z + elementPosition.z);
 
             resolve();
         });
@@ -124,7 +133,8 @@ export class Camera {
             elementContent.translateZ(elementPosition.z*-1);
             elementContent.translateX(elementPosition.x);
             
-            var vFOV = MathUtils.degToRad(this._camera.fov);
+            var vFOV = MathUtils.degToRad(this._fov);
+            
             var height = 2 * Math.tan( vFOV / 2 ) * elementPosition.z;
 
             elementContent.translateY(((height/2)*-1) + (element.dimensions.height/2) + elementPosition.y);
