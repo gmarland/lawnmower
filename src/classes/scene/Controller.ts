@@ -9,7 +9,8 @@ import {
     Group
 } from 'three';
 
-import { XRControllerModelFactory, XRControllerModel } from '../../libs/three/controllers/XRControllerModelFactory.js';
+import { XRControllerModelFactory, XRControllerModel } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+
 import { GeometryUtils } from '../geometry/GeometryUtils.js';
 
 import { ControllerPositionType } from "./ControllerPosition";
