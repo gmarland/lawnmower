@@ -45,7 +45,7 @@ export class LmModal {
   
   @Prop() public height?: number;
   
-  @Prop() public offset: number = 50;
+  @Prop() public offset: number = 100;
   
   @Prop() public padding: number = 10;
 
