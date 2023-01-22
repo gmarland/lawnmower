@@ -6,7 +6,7 @@ import {
     DirectionalLight
 } from 'three';
 
-import { ISceneElement } from '../components/ISceneElement';
+import { ISceneElement } from '../../components/ISceneElement';
 
 export class Camera {
     private _scene: Scene;
@@ -36,6 +36,14 @@ export class Camera {
         this._far = defaultSceneRadius*2;
 
         this.buildCamera();
+    }
+
+    public get camera(): PerspectiveCamera {
+        return this._camera;
+    }
+
+    public get position(): Vector3 {
+        return this._camera.position;
     }
  
     public get fov(): number {
@@ -124,14 +132,6 @@ export class Camera {
             
             resolve();
         });
-    }
-
-    public getCamera(): PerspectiveCamera {
-        return this._camera;
-    }
-
-    public getPosition(): Vector3 {
-        return this._camera.position;
     }
 
     public setPosition(x: number, y: number, z: number): void {

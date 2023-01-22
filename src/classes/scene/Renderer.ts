@@ -4,7 +4,7 @@ import {
     PCFSoftShadowMap
 } from 'three';
 
-import { Camera } from './Camera';
+import { Camera } from './Camera/Camera';
 
 export class Renderer {
     private _vrEnabled: boolean;
@@ -57,6 +57,10 @@ export class Renderer {
         this._container.appendChild(this._renderer.domElement);
     }
 
+    public get domElement(): any {
+        return this._renderer.domElement;
+    }
+
     public get webGLRenderer(): WebGLRenderer {
         return this._renderer;
     }
@@ -69,8 +73,8 @@ export class Renderer {
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
     }
 
-    public render(scene: Scene, camera: Camera): void {
-        this._renderer.render(scene, camera.getCamera());
+    public render(scene: Scene, sceneCamera: Camera): void {
+        this._renderer.render(scene, sceneCamera.camera);
     }
 
     public getController(controllerNumber: number): any {

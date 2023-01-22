@@ -8,17 +8,20 @@ import {
     WebGLRenderer
 } from 'three';
 
-import { Camera } from '../scene/Camera';
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+
+import { Camera } from '../scene/Camera/Camera';
 import { Renderer } from '../scene/Renderer';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
-import { Controller } from './Controller';
-import { ControllerPositionType } from './ControllerPosition';
+import { Controller } from './Camera/Controller';
+import { ControllerPositionType } from './Camera/ControllerPosition';
 
 import { ISceneElement } from '../components/ISceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
+import { FirstPersonControls } from './Camera/FirstPersonControls';
 
 export class MainScene {
     public _defaultSceneRadius: number = 500;
@@ -43,10 +46,11 @@ export class MainScene {
 
     private _lighting: Lighting;
 
-    private _camera: Camera;
+    private _sceneCamera: Camera;
     private _renderer: Renderer;
 
     private _controllers: Controller[] = new Array<Controller>();
+    private _controls: OrbitControls;
 
     private _selectedLayout?: string = null;
 
@@ -99,20 +103,14 @@ export class MainScene {
         
         this._clock = new Clock();
 
-        this._camera = new Camera(this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
-        this._camera.setPosition(0, 0, 0);
+        this._sceneCamera = new Camera(this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
+        this._sceneCamera.setPosition(0, 0, 0);
 
-        this._lighting = new Lighting(this._scene, this._camera, this._shadowsEnabled);
+        this._lighting = new Lighting(this._scene, this._sceneCamera, this._shadowsEnabled);
 
-        this._renderer = new Renderer(this._vrEnabled, this._camera, this._parentElement, this._shadowsEnabled, this._skyboxColor, this._skyboxOpacity);
+        this._renderer = new Renderer(this._vrEnabled, this._sceneCamera, this._parentElement, this._shadowsEnabled, this._skyboxColor, this._skyboxOpacity);
 
-        if (this._vrEnabled) {
-            const leftController = this._renderer.getController(0);
-            if (leftController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Left, controllerGuides, leftController, this._renderer.getControllerGrip(0)));
-
-            const rightController = this._renderer.getController(1);
-            if (rightController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Right, controllerGuides, rightController, this._renderer.getControllerGrip(1)));
-        }
+        this.initializeControls(controllerGuides);
 
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
@@ -161,7 +159,7 @@ export class MainScene {
     }
 
     public onClick() {
-        this._raycaster.setFromCamera(this._mouse, this._camera.getCamera());
+        this._raycaster.setFromCamera(this._mouse, this._sceneCamera.camera);
 
         const intersects = this._raycaster.intersectObjects(this._scene.children);
         
@@ -188,7 +186,7 @@ export class MainScene {
 
     public async updateRootElementPosition(childElement: ISceneElement): Promise<void> {
         return new Promise(async (resolve) => {
-            await this._camera.updateCameraElementPosition(childElement);
+            await this._sceneCamera.updateCameraElementPosition(childElement);
 
             resolve();
         });
@@ -228,10 +226,10 @@ export class MainScene {
                 this._modalContainer.add(modalDialog);
             }
             if (childElement.placementLocation == SceneElementPlacement.AttachedToCamera) {
-                await this._camera.addElementToCamera(childElement);
+                await this._sceneCamera.addElementToCamera(childElement);
             }
             if (childElement.placementLocation == SceneElementPlacement.PlacedAtCamera) {
-                await this._camera.addElementAtCamera(childElement);
+                await this._sceneCamera.addElementAtCamera(childElement);
             }
 
             resolve();
@@ -255,7 +253,7 @@ export class MainScene {
     }
 
     public resize(): void {
-        this._camera.resize();
+        this._sceneCamera.resize();
         this._renderer.resize();
     }
     
@@ -315,12 +313,25 @@ export class MainScene {
         })
     }
 
+    private initializeControls(controllerGuides: boolean) {
+        if (this._vrEnabled) {
+            const leftController = this._renderer.getController(0);
+            if (leftController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Left, controllerGuides, leftController, this._renderer.getControllerGrip(0)));
+
+            const rightController = this._renderer.getController(1);
+            if (rightController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Right, controllerGuides, rightController, this._renderer.getControllerGrip(1)));
+        }
+        else {
+            this._controls = new FirstPersonControls(this._scene, this._sceneCamera, this._parentElement);
+        }
+    }
+
     private startRender(): void {
         if (this._vrEnabled) {
             this._renderer.setAnimationLoop(() => {
                 this.update();
         
-                this._renderer.render(this._scene, this._camera);
+                this._renderer.render(this._scene, this._sceneCamera);
             } );
         }
         else {
@@ -331,7 +342,7 @@ export class MainScene {
     private renderScene(): void {
         this.update();
 
-        this._renderer.render(this._scene, this._camera);
+        this._renderer.render(this._scene, this._sceneCamera);
 
         requestAnimationFrame(() => this.renderScene());
     }
@@ -350,8 +361,11 @@ export class MainScene {
                 this.updateController(this._controllers[i]);
             }
         }
+        else {
+            this._controls.update();
+        }
 
-        if (this._camera) this._camera.Update();
+        if (this._sceneCamera) this._sceneCamera.Update();
     }
 
     private updateController(controller: Controller) {
