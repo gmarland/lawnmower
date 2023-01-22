@@ -3,7 +3,7 @@ import {
     DirectionalLight,
     AmbientLight
 } from 'three';
-import { Camera } from './Camera';
+import { Camera } from './Camera/Camera';
 
 export class Lighting {
     private _scene: Scene;

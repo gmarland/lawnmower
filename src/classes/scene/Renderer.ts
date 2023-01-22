@@ -4,7 +4,7 @@ import {
     PCFSoftShadowMap
 } from 'three';
 
-import { Camera } from './Camera';
+import { Camera } from './Camera/Camera';
 
 export class Renderer {
     private _vrEnabled: boolean;

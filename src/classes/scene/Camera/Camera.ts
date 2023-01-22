@@ -6,7 +6,7 @@ import {
     DirectionalLight
 } from 'three';
 
-import { ISceneElement } from '../components/ISceneElement';
+import { ISceneElement } from '../../components/ISceneElement';
 
 export class Camera {
     private _scene: Scene;

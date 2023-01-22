@@ -10,17 +10,18 @@ import {
 
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
-import { Camera } from '../scene/Camera';
+import { Camera } from '../scene/Camera/Camera';
 import { Renderer } from '../scene/Renderer';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
-import { Controller } from './Controller';
-import { ControllerPositionType } from './ControllerPosition';
+import { Controller } from './Camera/Controller';
+import { ControllerPositionType } from './Camera/ControllerPosition';
 
 import { ISceneElement } from '../components/ISceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
+import { FirstPersonControls } from './Camera/FirstPersonControls';
 
 export class MainScene {
     public _defaultSceneRadius: number = 500;
@@ -321,7 +322,7 @@ export class MainScene {
             if (rightController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Right, controllerGuides, rightController, this._renderer.getControllerGrip(1)));
         }
         else {
-            this._controls = new OrbitControls(this._sceneCamera.camera, this._renderer.domElement);
+            this._controls = new FirstPersonControls(this._scene, this._sceneCamera, this._parentElement);
         }
     }
 
