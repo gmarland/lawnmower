@@ -20,7 +20,7 @@ export class PlaneUtils {
     }
 
     public static getSquaredPlane(width: number, height: number): BoxGeometry {
-        return new BoxGeometry(width, height, 0.5);
+        return new BoxGeometry(width, height, 1);
     }
 
     public static getRoundedPlane(width: number, height: number, radius: number): ShapeGeometry {

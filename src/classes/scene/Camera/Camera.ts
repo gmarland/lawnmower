@@ -91,7 +91,6 @@ export class Camera {
             this._scene.add(elementContent);
             
             elementContent.name = "placedAtCamera";
-            elementContent.translateZ(this._camera.position.z + elementPosition.z);
 
             resolve();
         });
@@ -157,9 +156,9 @@ export class Camera {
     }
 
     public Update(): void {
-        var vector = new Vector3( 0, 0, -1 );
-        vector.applyQuaternion(this._camera.quaternion );
+        let dirVector = new Vector3(0,0,0);
+        this._camera.getWorldDirection( dirVector );
         
-        this._light.lookAt(vector)
+        this._light.lookAt(dirVector)
     }
 }

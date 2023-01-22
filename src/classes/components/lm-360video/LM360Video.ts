@@ -4,7 +4,6 @@ import {
     Vector3,
     CanvasTexture,
     VideoTexture,
-    DoubleSide,
     Group,
     MeshBasicMaterial,
     SphereGeometry
@@ -353,8 +352,7 @@ export class LM360Video extends BaseSceneElement implements ISceneElement {
             }
 
             const material1 = new MeshBasicMaterial({ 
-                map: imageTexture,
-                side: DoubleSide
+                map: imageTexture
             });
 
             const mesh1 = new Mesh( geometry1, material1 );
