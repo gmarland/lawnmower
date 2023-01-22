@@ -157,5 +157,9 @@ export class Camera {
     }
 
     public Update(): void {
+        var vector = new Vector3( 0, 0, -1 );
+        vector.applyQuaternion(this._camera.quaternion );
+        
+        this._light.lookAt(vector)
     }
 }
