@@ -6,9 +6,9 @@ import {
     DirectionalLight
 } from 'three';
 
-import { ISceneElement } from '../components/ISceneElement';
+import { ISceneElement } from '../../components/ISceneElement';
 
-export class SceneCamera {
+export class Camera {
     private _vrEnabled: boolean;
 
     private _scene: Scene;

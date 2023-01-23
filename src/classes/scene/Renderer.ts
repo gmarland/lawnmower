@@ -11,6 +11,8 @@ import { RenderCamera } from './RenderCamera';
 export class Renderer {
     private _vrEnabled: boolean;
 
+    private _camera: SceneCamera;
+
     private _renderer: WebGLRenderer;
 
     private _container: HTMLDivElement;
@@ -22,6 +24,8 @@ export class Renderer {
 
     constructor(vrEnabled: boolean, camera: SceneCamera, container: HTMLDivElement, shadowsEnabled: boolean, skyboxColor: number, skyboxOpacity: number) {
         this._vrEnabled = vrEnabled;
+
+        this._camera = camera;
 
         this._container = container;
 

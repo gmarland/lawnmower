@@ -11,7 +11,7 @@ import {
 
 import { XRControllerModelFactory, XRControllerModel } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 
-import { GeometryUtils } from '../geometry/GeometryUtils.js';
+import { GeometryUtils } from '../../geometry/GeometryUtils.js';
 
 import { ControllerPositionType } from "./ControllerPosition";
 

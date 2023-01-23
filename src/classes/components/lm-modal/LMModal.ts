@@ -4,7 +4,6 @@ import {
     Object3D,
     Color,
     Box3,
-    DoubleSide,
     TextureLoader
 } from 'three';
 
@@ -385,23 +384,20 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         const buttonGroup = new Object3D();
 
         const buttonContainerMargin = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth, this._closeButtonWidth, this._borderRadius), MaterialUtils.getBasicMaterial({
-            color: new Color(this._borderColor),
-            side: DoubleSide
+            color: new Color(this._borderColor)
         }));
         buttonContainerMargin.translateZ(0.5);
 
         this.applyShadows(buttonContainerMargin);
 
         const buttonContainer = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth-2, this._closeButtonWidth-2, this._borderRadius), MaterialUtils.getBasicMaterial({
-            color: new Color(this._backgroundColor),
-            side: DoubleSide
+            color: new Color(this._backgroundColor)
         }));
         buttonContainer.translateZ(1);
 
         const button = new Mesh(PlaneUtils.getSquaredPlane(this._closeButtonWidth-(this._closeButtonWidth/2), this._closeButtonWidth-(this._closeButtonWidth/2)), MaterialUtils.getBasicMaterial({
             map: new TextureLoader().load(this._baseImagePath + '/close.png'),
-            transparent: true,
-            side: DoubleSide
+            transparent: true
         }));
         button.translateZ(1.5);
 

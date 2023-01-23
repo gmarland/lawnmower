@@ -157,6 +157,13 @@ export class LmDocument {
     this._mainScene.onClick();
   }
 
+  private contextMenu(e: PointerEvent): boolean {
+    e.stopPropagation();
+    e.preventDefault();
+
+    return false;
+  }
+
   componentWillLoad() {
     this._mainScene = new MainScene(this._mousePoint);
 
@@ -192,7 +199,7 @@ export class LmDocument {
 
   render() {
     return (
-      <Host>
+      <Host onContextMenu={(e) => this.contextMenu(e) }>
         <div ref={(el) => this._sceneContainer = el as HTMLDivElement } 
           class="scene-container"
           onMouseMove={(e: MouseEvent) => this.mouseMove(e)}

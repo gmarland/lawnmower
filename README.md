@@ -1,2 +1,2 @@
 # lawnmower
-A library to build 2d VR layouts using HTML style tags
+lawnmower is web component library that allows VR layouts to be built using HTML tags.

@@ -15,20 +15,19 @@ import {
     RepeatWrapping
 } from 'three';
 
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-
 import { SceneCamera } from './SceneCamera';
 import { Renderer } from '../scene/Renderer';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
 import { SceneElementPlacement } from './SceneElementPlacement';
-import { Controller } from './Controller';
-import { ControllerPositionType } from './ControllerPosition';
+import { Controller } from './Camera/Controller';
+import { ControllerPositionType } from './Camera/ControllerPosition';
 
 import { ISceneElement } from '../components/ISceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
 import { RenderCamera } from './RenderCamera';
+import { FirstPersonControls } from './Camera/FirstPersonControls';
 
 export class MainScene {
     public _defaultSceneRadius: number = 500;
@@ -115,7 +114,7 @@ export class MainScene {
         
         this._clock = new Clock();
 
-        this._sceneCamera = new SceneCamera(this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
+        this._sceneCamera = new SceneCamera(this._vrEnabled, this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
         this._sceneCamera.setPosition(0, 0, 0);
 
         this._lighting = new Lighting(this._scene, this._sceneCamera, this._shadowsEnabled);
@@ -254,10 +253,10 @@ export class MainScene {
 
                 this._modalContainer.add(modalDialog);
             }
-            if (childElement.placementLocation == SceneElementPlacement.AttachedToCamera) {
+            else if (childElement.placementLocation == SceneElementPlacement.AttachedToCamera) {
                 await this._sceneCamera.addElementToCamera(childElement);
             }
-            if (childElement.placementLocation == SceneElementPlacement.PlacedAtCamera) {
+            else if (childElement.placementLocation == SceneElementPlacement.PlacedAtCamera) {
                 await this._sceneCamera.addElementAtCamera(childElement);
             }
 
@@ -351,7 +350,7 @@ export class MainScene {
             if (rightController) this._controllers.push(new Controller(this._scene, ControllerPositionType.Right, controllerGuides, rightController, this._renderer.getControllerGrip(1)));
         }
         else {
-            this._controls = new OrbitControls(this._sceneCamera.camera, this._renderer.domElement);
+            this._controls = new FirstPersonControls(this._scene, this._sceneCamera, this._parentElement);
         }
     }
 
