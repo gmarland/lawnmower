@@ -15,7 +15,7 @@ import {
     RepeatWrapping
 } from 'three';
 
-import { SceneCamera } from './SceneCamera';
+import { SceneCamera } from './Camera/SceneCamera';
 import { Renderer } from '../scene/Renderer';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
@@ -61,7 +61,7 @@ export class MainScene {
     private _renderer: Renderer;
 
     private _controllers: Controller[] = new Array<Controller>();
-    private _controls: OrbitControls;
+    private _controls: FirstPersonControls;
 
     private _selectedLayout?: string = null;
 

@@ -4,7 +4,7 @@ import {
     AmbientLight
 } from 'three';
 
-import { SceneCamera } from './SceneCamera';
+import { SceneCamera } from './Camera/SceneCamera';
 
 export class Lighting {
     private _scene: Scene;

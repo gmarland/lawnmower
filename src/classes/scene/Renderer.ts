@@ -5,7 +5,7 @@ import {
     PCFSoftShadowMap
 } from 'three';
 
-import { SceneCamera } from './SceneCamera';
+import { SceneCamera } from './Camera/SceneCamera';
 import { RenderCamera } from './RenderCamera';
 
 export class Renderer {
