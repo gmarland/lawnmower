@@ -3,17 +3,18 @@ import {
     Object3D,
     PerspectiveCamera
 } from 'three';
+
 import { GeometryUtils } from '../../geometry/GeometryUtils';
 
-import { Camera } from './Camera';
 import { ControlsAction } from './ControlsAction';
+import { SceneCamera } from './SceneCamera';
 
 export class FirstPersonControls {
     private _scene: Scene;
 
     private _enabled: boolean;
 
-    private _camera: Camera;
+    private _camera: SceneCamera;
 
     private _pitchObject: Object3D;
     private _yawObject: Object3D;
@@ -35,7 +36,7 @@ export class FirstPersonControls {
     
     private _touchStartPosition?: Touch = null;
 
-    constructor (scene: Scene, camera: Camera, container: HTMLElement, movementSpeed?: number) {
+    constructor (scene: Scene, camera: SceneCamera, container: HTMLElement, movementSpeed?: number) {
         this._scene = scene;
 
         this._enabled = true;

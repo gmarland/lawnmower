@@ -5,12 +5,17 @@ import {
     Vector2,
     Object3D,
     Box3,
-    WebGLRenderer
+    WebGLRenderer,
+    WebGLRenderTarget,
+    Mesh,
+    PlaneBufferGeometry,
+    MeshBasicMaterial,
+    LinearFilter,
+    NearestFilter,
+    RepeatWrapping
 } from 'three';
 
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-
-import { Camera } from '../scene/Camera/Camera';
+import { SceneCamera } from './Camera/SceneCamera';
 import { Renderer } from '../scene/Renderer';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
@@ -21,6 +26,7 @@ import { ControllerPositionType } from './Camera/ControllerPosition';
 import { ISceneElement } from '../components/ISceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
+import { RenderCamera } from './RenderCamera';
 import { FirstPersonControls } from './Camera/FirstPersonControls';
 
 export class MainScene {
@@ -37,6 +43,11 @@ export class MainScene {
 
     private _scene = new Scene();
 
+    private _renderScene = new Scene();
+    private _renderCamera: RenderCamera;
+    private _sceneRenderTarget: WebGLRenderTarget;
+    private _renderPlane: Mesh;
+
     private _id: string;
 
     private _raycaster: Raycaster;
@@ -46,11 +57,11 @@ export class MainScene {
 
     private _lighting: Lighting;
 
-    private _sceneCamera: Camera;
+    private _sceneCamera: SceneCamera;
     private _renderer: Renderer;
 
     private _controllers: Controller[] = new Array<Controller>();
-    private _controls: OrbitControls;
+    private _controls: FirstPersonControls;
 
     private _selectedLayout?: string = null;
 
@@ -103,7 +114,7 @@ export class MainScene {
         
         this._clock = new Clock();
 
-        this._sceneCamera = new Camera(this._vrEnabled, this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
+        this._sceneCamera = new SceneCamera(this._vrEnabled, this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
         this._sceneCamera.setPosition(0, 0, 0);
 
         this._lighting = new Lighting(this._scene, this._sceneCamera, this._shadowsEnabled);
@@ -114,6 +125,23 @@ export class MainScene {
 
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
+
+        this._renderCamera = new RenderCamera();
+
+        this._sceneRenderTarget = new WebGLRenderTarget(this._parentElement.clientWidth, this._parentElement.clientHeight, {
+            minFilter: LinearFilter,
+            magFilter:  NearestFilter,
+            wrapS: RepeatWrapping
+        });
+        
+        this._renderPlane = new Mesh(new PlaneBufferGeometry(2, 2, 1, 1),
+                                    new MeshBasicMaterial({
+                                        map: this._sceneRenderTarget.texture
+                                    }));
+
+        this._renderScene.add(this._renderPlane);
+
+        this._renderCamera = new RenderCamera();
 
         this.startRender();
 
@@ -342,7 +370,10 @@ export class MainScene {
     private renderScene(): void {
         this.update();
 
+        this._renderer.setRenderedTarget(this._sceneRenderTarget);
         this._renderer.render(this._scene, this._sceneCamera);
+        this._renderer.setRenderedTarget(null);
+        this._renderer.render(this._renderScene, this._renderCamera);
 
         requestAnimationFrame(() => this.renderScene());
     }

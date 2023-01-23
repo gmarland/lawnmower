@@ -3,12 +3,13 @@ import {
     DirectionalLight,
     AmbientLight
 } from 'three';
-import { Camera } from './Camera/Camera';
+
+import { SceneCamera } from './Camera/SceneCamera';
 
 export class Lighting {
     private _scene: Scene;
 
-    private _camera: Camera;
+    private _camera: SceneCamera;
 
     private _shadowsEnabled: boolean;
 
@@ -16,7 +17,7 @@ export class Lighting {
 
     private _ambientLight: AmbientLight;
 
-    constructor(scene: Scene, camera: Camera, shadowsEnabled: boolean) {
+    constructor(scene: Scene, camera: SceneCamera, shadowsEnabled: boolean) {
         this._scene = scene;
 
         this._camera = camera;
