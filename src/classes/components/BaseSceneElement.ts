@@ -36,7 +36,7 @@ export class BaseSceneElement {
         this._content = new Group();
 
         if (this._offset) this.content.translateZ(this._offset);
-        else this.content.translateZ(1);
+        else this.content.translateZ(5);
     }
 
     ////////// Getters

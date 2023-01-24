@@ -2,7 +2,9 @@ import {
     Scene,
     WebGLRenderer,
     MathUtils,
-    PCFSoftShadowMap
+    PCFSoftShadowMap,
+    WebGLRenderTarget,
+    OrthographicCamera
 } from 'three';
 
 import { Camera } from './Camera/Camera';
@@ -35,12 +37,10 @@ export class Renderer {
 
         this._renderer = new WebGLRenderer({ 
             powerPreference: this._vrEnabled ? "high-performance" : "default",
-            antialias: true, 
-            alpha: true,
-            logarithmicDepthBuffer: true,
-            colorManagement: true,
-            sortObjects: true 
+            antialias: true,
         });
+
+        //this._renderer.autoClear = false;
 
         if (this._vrEnabled) {
             this._renderer.xr.enabled = true;
@@ -50,7 +50,8 @@ export class Renderer {
 
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
         this._renderer.setClearColor(this._skyboxColor, this._skyboxOpacity);
-        this._renderer.setPixelRatio(window.devicePixelRatio);
+        
+        this._renderer.setPixelRatio(2);
 
         if (this._shadowsEnabled) {
             this._renderer.shadowMap.enabled = true;
@@ -80,8 +81,26 @@ export class Renderer {
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
     }
 
-    public render(scene: Scene, sceneCamera: Camera): void {
-        this._renderer.render(scene, sceneCamera.camera);
+    public clear() {
+        this._renderer.clear();
+    }
+
+    public clearDepth() {
+        this._renderer.clearDepth();
+    }
+
+    public setRenderTarget(target?: WebGLRenderTarget) {
+        this._renderer.setRenderTarget(target);
+    }
+
+    public render(scene: Scene, sceneCamera: Camera, target?: WebGLRenderTarget): void {
+        if (target) this._renderer.render(scene, sceneCamera.camera, target);
+        else this._renderer.render(scene, sceneCamera.camera);
+    }
+
+    public renderC(scene: Scene, sceneCamera: OrthographicCamera, target?: WebGLRenderTarget): void {
+        if (target) this._renderer.render(scene, sceneCamera, target);
+        else this._renderer.render(scene, sceneCamera);
     }
 
     public getController(controllerNumber: number): any {

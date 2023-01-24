@@ -1,7 +1,8 @@
 import { 
     Scene,
     DirectionalLight,
-    AmbientLight
+    AmbientLight,
+    PointLight
 } from 'three';
 import { Camera } from './Camera/Camera';
 
@@ -27,13 +28,14 @@ export class Lighting {
             this._ambientLight = new AmbientLight(0xffffff, 0.2);
             this._scene.add(this._ambientLight);
     
-            this._light = new DirectionalLight(0xffffff, 0.8);
+            this._light = new PointLight(0xffffff, 0.8, this._camera.far*2, 0);
     
             this._light.castShadow = true;
 
             this.updateShadowDistance();
 
-            this._camera.addLightToCamera(this._light);
+            this._scene.add(this._light);
+            //this._camera.addLightToCamera(this._light);
         }
         else {
             this._ambientLight = new AmbientLight(0xffffff, 1);  
@@ -42,11 +44,12 @@ export class Lighting {
     }
 
     public updateShadowDistance(): void {
-        this._light.shadow.camera.top = this._camera.far;
+        /*this._light.shadow.camera.top = this._camera.far;
         this._light.shadow.camera.bottom = this._camera.far*-1;
         this._light.shadow.camera.left = this._camera.far*-1;
-        this._light.shadow.camera.right = this._camera.far;
+        this._light.shadow.camera.right = this._camera.far;*/
         this._light.shadow.camera.near = this._camera.near;
         this._light.shadow.camera.far = this._camera.far;
+        this._light.shadow.bias = -0.001;
     }
 }
