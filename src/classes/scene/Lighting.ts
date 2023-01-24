@@ -35,7 +35,6 @@ export class Lighting {
             this.updateShadowDistance();
 
             this._scene.add(this._light);
-            //this._camera.addLightToCamera(this._light);
         }
         else {
             this._ambientLight = new AmbientLight(0xffffff, 1);  
@@ -44,10 +43,6 @@ export class Lighting {
     }
 
     public updateShadowDistance(): void {
-        /*this._light.shadow.camera.top = this._camera.far;
-        this._light.shadow.camera.bottom = this._camera.far*-1;
-        this._light.shadow.camera.left = this._camera.far*-1;
-        this._light.shadow.camera.right = this._camera.far;*/
         this._light.shadow.camera.near = this._camera.near;
         this._light.shadow.camera.far = this._camera.far;
         this._light.shadow.bias = -0.001;

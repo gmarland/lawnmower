@@ -2,6 +2,7 @@ import {
     Vector3,
     Mesh,
     Object3D,
+    Group,
     Color,
     Box3,
     TextureLoader
@@ -336,13 +337,18 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
                 await this._childElement.draw();
 
                 const childContent = await this._childElement.getContent();
+
+                const childContentContainar = new Group();
+
+                childContentContainar.add(childContent);
                 
-                const dimensions = new Box3().setFromObject(childContent);
+                const dimensions = new Box3().setFromObject(childContentContainar);
 
-                childContent.translateX(((dimensions.max.x+dimensions.min.x)/2)*-1);
-                childContent.translateY(((dimensions.max.y+dimensions.min.y)/2)*-1);
+                childContentContainar.translateX(((dimensions.max.x+dimensions.min.x)/2)*-1);
+                childContentContainar.translateY(((dimensions.max.y+dimensions.min.y)/2)*-1);
+                childContentContainar.translateZ(4);
 
-                this.content.add(childContent);
+                this.content.add(childContentContainar);
             
                 const updatedDimensions = new Box3().setFromObject(this.content);
     
@@ -366,13 +372,13 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         const outerMesh = new Mesh(PlaneUtils.getPlane(dialogWidth+(this._borderWidth*2), dialogHeight+(this._borderWidth*2), this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._borderColor)
         }));
-        outerMesh.translateZ(-0.5);
 
         this.applyShadows(outerMesh);
 
         const innerMesh = new Mesh(PlaneUtils.getPlane(dialogWidth, dialogHeight, this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._backgroundColor)
         }));
+        innerMesh.translateZ(2);
         
         dialogGroup.add(outerMesh);
         dialogGroup.add(innerMesh);
@@ -386,27 +392,27 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
         const buttonContainerMargin = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth, this._closeButtonWidth, this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._borderColor)
         }));
-        buttonContainerMargin.translateZ(0.5);
+        buttonContainerMargin.translateZ(2);
 
         this.applyShadows(buttonContainerMargin);
 
         const buttonContainer = new Mesh(PlaneUtils.getPlane(this._closeButtonWidth-2, this._closeButtonWidth-2, this._borderRadius), MaterialUtils.getBasicMaterial({
             color: new Color(this._backgroundColor)
         }));
-        buttonContainer.translateZ(1);
+        buttonContainer.translateZ(4);
 
         const button = new Mesh(PlaneUtils.getSquaredPlane(this._closeButtonWidth-(this._closeButtonWidth/2), this._closeButtonWidth-(this._closeButtonWidth/2)), MaterialUtils.getBasicMaterial({
             map: new TextureLoader().load(this._baseImagePath + '/close.png'),
             transparent: true
         }));
-        button.translateZ(1.5);
+        button.translateZ(6);
 
         buttonGroup.add(buttonContainerMargin);
         buttonGroup.add(buttonContainer);
         buttonGroup.add(button);
 
         buttonGroup.translateY(((dialogHeight/2)*-1) - (GeometryUtils.getDimensions(buttonGroup).height/2) - 5);
-        buttonGroup.translateZ(0.5);
+        buttonGroup.translateZ(2);
 
         return buttonGroup;
     }
