@@ -5,14 +5,7 @@ import {
     Vector2,
     Object3D,
     Box3,
-    WebGLRenderer,
-    WebGLRenderTarget,
-    Mesh,
-    PlaneBufferGeometry,
-    MeshBasicMaterial,
-    LinearFilter,
-    NearestFilter,
-    RepeatWrapping
+    WebGLRenderer
 } from 'three';
 
 import { SceneCamera } from './Camera/SceneCamera';
