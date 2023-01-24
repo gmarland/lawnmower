@@ -1,18 +1,15 @@
 import { 
     Scene,
     WebGLRenderer,
-    MathUtils,
-    PCFSoftShadowMap,
-    WebGLRenderTarget,
-    OrthographicCamera
+    PCFSoftShadowMap
 } from 'three';
 
-import { Camera } from './Camera/Camera';
+import { SceneCamera } from './Camera/SceneCamera';
 
 export class Renderer {
     private _vrEnabled: boolean;
 
-    private _camera: Camera;
+    private _camera: SceneCamera;
 
     private _renderer: WebGLRenderer;
 
@@ -23,7 +20,7 @@ export class Renderer {
     private _skyboxColor: number;
     private _skyboxOpacity: number;
 
-    constructor(vrEnabled: boolean, camera: Camera, container: HTMLDivElement, shadowsEnabled: boolean, skyboxColor: number, skyboxOpacity: number) {
+    constructor(vrEnabled: boolean, camera: SceneCamera, container: HTMLDivElement, shadowsEnabled: boolean, skyboxColor: number, skyboxOpacity: number) {
         this._vrEnabled = vrEnabled;
 
         this._camera = camera;
@@ -44,8 +41,6 @@ export class Renderer {
 
         if (this._vrEnabled) {
             this._renderer.xr.enabled = true;
-
-            this._camera.fov = MathUtils.radToDeg((Math.atan(1.0 / this._renderer.xr.getCamera().projectionMatrix.elements[5] ) * 2.0));
         }
 
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
@@ -81,26 +76,8 @@ export class Renderer {
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
     }
 
-    public clear() {
-        this._renderer.clear();
-    }
-
-    public clearDepth() {
-        this._renderer.clearDepth();
-    }
-
-    public setRenderTarget(target?: WebGLRenderTarget) {
-        this._renderer.setRenderTarget(target);
-    }
-
-    public render(scene: Scene, sceneCamera: Camera, target?: WebGLRenderTarget): void {
-        if (target) this._renderer.render(scene, sceneCamera.camera, target);
-        else this._renderer.render(scene, sceneCamera.camera);
-    }
-
-    public renderC(scene: Scene, sceneCamera: OrthographicCamera, target?: WebGLRenderTarget): void {
-        if (target) this._renderer.render(scene, sceneCamera, target);
-        else this._renderer.render(scene, sceneCamera);
+    public render(scene: Scene, sceneCamera: SceneCamera): void {
+        this._renderer.render(scene, sceneCamera.camera);
     }
 
     public getController(controllerNumber: number): any {

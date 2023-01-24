@@ -8,7 +8,7 @@ import {
 
 import { ISceneElement } from '../../components/ISceneElement';
 
-export class Camera {
+export class SceneCamera {
     private _vrEnabled: boolean;
 
     private _scene: Scene;

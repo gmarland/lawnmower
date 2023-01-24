@@ -5,12 +5,17 @@ import {
     Vector2,
     Object3D,
     Box3,
-    WebGLRenderer
+    WebGLRenderer,
+    WebGLRenderTarget,
+    Mesh,
+    PlaneBufferGeometry,
+    MeshBasicMaterial,
+    LinearFilter,
+    NearestFilter,
+    RepeatWrapping
 } from 'three';
 
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-
-import { Camera } from '../scene/Camera/Camera';
+import { SceneCamera } from './Camera/SceneCamera';
 import { Renderer } from '../scene/Renderer';
 import { Lighting } from './Lighting';
 import { GeometryUtils } from '../geometry/GeometryUtils';
@@ -46,11 +51,11 @@ export class MainScene {
 
     private _lighting: Lighting;
 
-    private _sceneCamera: Camera;
+    private _sceneCamera: SceneCamera;
     private _renderer: Renderer;
 
     private _controllers: Controller[] = new Array<Controller>();
-    private _controls: OrbitControls;
+    private _controls: FirstPersonControls;
 
     private _selectedLayout?: string = null;
 
@@ -103,7 +108,7 @@ export class MainScene {
         
         this._clock = new Clock();
 
-        this._sceneCamera = new Camera(this._vrEnabled, this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
+        this._sceneCamera = new SceneCamera(this._vrEnabled, this._parentElement, this._scene, this._shadowsEnabled, this._defaultSceneRadius);
         this._sceneCamera.setPosition(0, 0, 0);
 
         this._lighting = new Lighting(this._scene, this._sceneCamera, this._shadowsEnabled);
