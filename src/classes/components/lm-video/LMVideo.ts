@@ -448,7 +448,7 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
 
         playMesh.translateX(((playMeshBox.max.x-playMeshBox.min.x)/2)*-1);
         playMesh.translateY(((playMeshBox.max.y-playMeshBox.min.y)/2)*-1);
-        playMesh.translateZ(1);
+        playMesh.translateZ(5);
 
         return playMesh;
     }
