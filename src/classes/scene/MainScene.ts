@@ -26,7 +26,6 @@ import { ControllerPositionType } from './Camera/ControllerPosition';
 import { ISceneElement } from '../components/ISceneElement';
 import { LMModal } from '../components/lm-modal/LMModal';
 import { LMLayout } from '../components/lm-layout/LMLayout';
-import { RenderCamera } from './RenderCamera';
 import { FirstPersonControls } from './Camera/FirstPersonControls';
 
 export class MainScene {
@@ -42,11 +41,6 @@ export class MainScene {
     private _parentElement: HTMLDivElement;
 
     private _scene = new Scene();
-
-    private _renderScene = new Scene();
-    private _renderCamera: RenderCamera;
-    private _sceneRenderTarget: WebGLRenderTarget;
-    private _renderPlane: Mesh;
 
     private _id: string;
 
@@ -125,23 +119,6 @@ export class MainScene {
 
         this._scene.add(this._mainObjectContainer);
         this._scene.add(this._modalContainer);
-
-        this._renderCamera = new RenderCamera();
-
-        this._sceneRenderTarget = new WebGLRenderTarget(this._parentElement.clientWidth, this._parentElement.clientHeight, {
-            minFilter: LinearFilter,
-            magFilter:  NearestFilter,
-            wrapS: RepeatWrapping
-        });
-        
-        this._renderPlane = new Mesh(new PlaneBufferGeometry(2, 2, 1, 1),
-                                    new MeshBasicMaterial({
-                                        map: this._sceneRenderTarget.texture
-                                    }));
-
-        this._renderScene.add(this._renderPlane);
-
-        this._renderCamera = new RenderCamera();
 
         this.startRender();
 
@@ -370,10 +347,7 @@ export class MainScene {
     private renderScene(): void {
         this.update();
 
-        this._renderer.setRenderedTarget(this._sceneRenderTarget);
         this._renderer.render(this._scene, this._sceneCamera);
-        this._renderer.setRenderedTarget(null);
-        this._renderer.render(this._renderScene, this._renderCamera);
 
         requestAnimationFrame(() => this.renderScene());
     }

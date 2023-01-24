@@ -20,7 +20,7 @@ export class PlaneUtils {
     }
 
     public static getSquaredPlane(width: number, height: number): BoxGeometry {
-        return new BoxGeometry(width, height, 0.5);
+        return new BoxGeometry(width, height, 1);
     }
 
     public static getRoundedPlane(width: number, height: number, radius: number): ShapeGeometry {
@@ -49,7 +49,7 @@ export class PlaneUtils {
 
         const geometry = new ExtrudeGeometry(shape, {
             steps: 1,
-            depth: 0.5,
+            depth: 1,
             bevelEnabled: false,
             bevelThickness: 0,
             bevelSize: 0,

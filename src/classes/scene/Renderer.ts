@@ -1,12 +1,10 @@
 import { 
     Scene,
     WebGLRenderer,
-    WebGLRenderTarget,
     PCFSoftShadowMap
 } from 'three';
 
 import { SceneCamera } from './Camera/SceneCamera';
-import { RenderCamera } from './RenderCamera';
 
 export class Renderer {
     private _vrEnabled: boolean;
@@ -36,12 +34,10 @@ export class Renderer {
 
         this._renderer = new WebGLRenderer({ 
             powerPreference: this._vrEnabled ? "high-performance" : "default",
-            antialias: true, 
-            alpha: true,
-            logarithmicDepthBuffer: true,
-            colorManagement: true,
-            sortObjects: true 
+            antialias: true,
         });
+
+        //this._renderer.autoClear = false;
 
         if (this._vrEnabled) {
             this._renderer.xr.enabled = true;
@@ -49,7 +45,8 @@ export class Renderer {
 
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
         this._renderer.setClearColor(this._skyboxColor, this._skyboxOpacity);
-        this._renderer.setPixelRatio(window.devicePixelRatio);
+        
+        this._renderer.setPixelRatio(2);
 
         if (this._shadowsEnabled) {
             this._renderer.shadowMap.enabled = true;
@@ -79,12 +76,8 @@ export class Renderer {
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
     }
 
-    public setRenderedTarget(target: WebGLRenderTarget) {
-        this._renderer.setRenderTarget(target);
-    }
-
-    public render(scene: Scene, renderCamera: SceneCamera | RenderCamera): void {
-        this._renderer.render(scene, renderCamera.camera);
+    public render(scene: Scene, sceneCamera: SceneCamera): void {
+        this._renderer.render(scene, sceneCamera.camera);
     }
 
     public getController(controllerNumber: number): any {

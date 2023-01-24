@@ -166,9 +166,11 @@ export class SceneCamera {
     }
 
     public Update(): void {
-        let dirVector = new Vector3(0,0,0);
-        this._camera.getWorldDirection( dirVector );
-        
-        this._light.lookAt(dirVector)
+        if (this._light) {
+            let dirVector = new Vector3(0,0,0);
+            this._camera.getWorldDirection( dirVector );
+            
+            this._light.lookAt(dirVector);
+        }
     }
 }
