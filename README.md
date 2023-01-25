@@ -1,5 +1,5 @@
-# lawnmowerjs
-lawnmowerjs is web component library that allows VR layouts to be built using HTML tags.
+# lawnmowerJS
+lawnmowerJS is web component library that allows VR layouts to be built using HTML tags.
 
 The aim of this library is to make building a basic VR website as easy to get going with as your first GeoCities site.
 
@@ -13,7 +13,7 @@ Documentation for all the available tasks can be located in the <a href="https:/
 
 ## Installation
 
-You can easily include lawnmowerjs in an HTML file by linking to script and CSS file on the CDN:
+You can easily include lawnmowerJS in an HTML file by linking to script and CSS file on the CDN:
 
 <pre>
 &lt;head&gt;
