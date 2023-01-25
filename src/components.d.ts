@@ -7,10 +7,13 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ISceneElement } from "./classes/components/ISceneElement";
 import { LM360Video } from "./classes/components/lm-360video/LM360Video";
-import { Group } from "three";
+import { Group, Scene } from "three";
 import { LMAsset } from "./classes/components/lm-asset/LMAsset";
 import { LMButton } from "./classes/components/lm-button/LMButton";
 import { LMDiv } from "./classes/components/lm-div/LMDiv";
+import { Renderer } from "./classes/scene/Renderer.js";
+import { SceneCamera } from "./classes/scene/Camera/SceneCamera.js";
+import { Lighting } from "./classes/scene/Lighting.js";
 import { LMImage } from "./classes/components/lm-image/LMImage";
 import { LMLayout } from "./classes/components/lm-layout/LMLayout";
 import { LMModal } from "./classes/components/lm-modal/LMModal";
@@ -117,6 +120,10 @@ export namespace Components {
         "closeModal": () => Promise<void>;
         "controllerGuides": boolean;
         "defaultPlacementLocation": number;
+        "getCamera": () => Promise<SceneCamera>;
+        "getLighting": () => Promise<Lighting>;
+        "getRenderer": () => Promise<Renderer>;
+        "getScene": () => Promise<Scene>;
         "id": string;
         "setLayout": (layoutId: string) => Promise<void>;
         "shadowsEnabled": boolean;

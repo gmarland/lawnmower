@@ -10,7 +10,8 @@ import {
 } from '@stencil/core';
  
 import { 
-    Vector2
+  Scene,
+  Vector2
 } from 'three';
 
 import { VRButton } from '../../utils/VRButton.js';
@@ -18,6 +19,9 @@ import { VRButton } from '../../utils/VRButton.js';
 import ResizeObserver from "resize-observer-polyfill";
 
 import { MainScene } from '../../classes/scene/MainScene';
+import { Renderer } from '../../classes/scene/Renderer.js';
+import { SceneCamera } from '../../classes/scene/Camera/SceneCamera.js';
+import { Lighting } from '../../classes/scene/Lighting.js';
 
 @Component({
   tag: 'lm-document',
@@ -146,6 +150,34 @@ export class LmDocument {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getScene(): Promise<Scene> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.scene);
+    });
+  }
+
+  @Method()
+  public async getRenderer(): Promise<Renderer> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.renderer);
+    });
+  }
+
+  @Method()
+  public async getCamera(): Promise<SceneCamera> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.sceneCamera);
+    });
+  }
+
+  @Method()
+  public async getLighting(): Promise<Lighting> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.lighting);
     });
   }
 

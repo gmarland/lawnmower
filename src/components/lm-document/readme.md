@@ -34,6 +34,46 @@ Type: `Promise<void>`
 
 
 
+### `getCamera() => Promise<SceneCamera>`
+
+
+
+#### Returns
+
+Type: `Promise<SceneCamera>`
+
+
+
+### `getLighting() => Promise<Lighting>`
+
+
+
+#### Returns
+
+Type: `Promise<Lighting>`
+
+
+
+### `getRenderer() => Promise<Renderer>`
+
+
+
+#### Returns
+
+Type: `Promise<Renderer>`
+
+
+
+### `getScene() => Promise<Scene>`
+
+
+
+#### Returns
+
+Type: `Promise<Scene>`
+
+
+
 ### `setLayout(layoutId: string) => Promise<void>`
 
 

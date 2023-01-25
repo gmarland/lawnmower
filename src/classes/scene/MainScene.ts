@@ -79,6 +79,18 @@ export class MainScene {
         return this._id;
     }
 
+    public get scene(): Scene {
+        return this._scene;
+    }
+
+    public get sceneCamera(): SceneCamera {
+        return this._sceneCamera;
+    }
+
+    public get lighting(): Lighting {
+        return this._lighting;
+    }
+
     public get renderer(): Renderer {
         return this._renderer;
     }
