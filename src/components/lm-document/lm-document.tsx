@@ -10,7 +10,8 @@ import {
 } from '@stencil/core';
  
 import { 
-    Vector2
+  Scene,
+  Vector2
 } from 'three';
 
 import { VRButton } from '../../utils/VRButton.js';
@@ -18,6 +19,9 @@ import { VRButton } from '../../utils/VRButton.js';
 import ResizeObserver from "resize-observer-polyfill";
 
 import { MainScene } from '../../classes/scene/MainScene';
+import { Renderer } from '../../classes/scene/Renderer.js';
+import { SceneCamera } from '../../classes/scene/Camera/SceneCamera.js';
+import { Lighting } from '../../classes/scene/Lighting.js';
 
 @Component({
   tag: 'lm-document',
@@ -28,6 +32,10 @@ export class LmDocument {
   @Element() el: HTMLElement
 
   @Prop({ reflect: true }) public id: string = "";
+
+  @Prop() public skyboxColor: string = "#efefef";
+
+  @Prop() public skyboxOpacity: number = 1;
 
   @Prop() public defaultPlacementLocation: number = 500;
 
@@ -149,6 +157,34 @@ export class LmDocument {
     });
   }
 
+  @Method()
+  public async getScene(): Promise<Scene> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.scene);
+    });
+  }
+
+  @Method()
+  public async getRenderer(): Promise<Renderer> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.renderer);
+    });
+  }
+
+  @Method()
+  public async getCamera(): Promise<SceneCamera> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.sceneCamera);
+    });
+  }
+
+  @Method()
+  public async getLighting(): Promise<Lighting> {
+    return new Promise(async (resolve) => {
+      resolve(this._mainScene.lighting);
+    });
+  }
+
   private mouseMove(event: MouseEvent): void {
     this._mousePoint.set((event.clientX/this._sceneContainer.clientWidth)*2-1, -(event.clientY/this._sceneContainer.clientHeight )*2+1);
   }
@@ -182,7 +218,7 @@ export class LmDocument {
   }
 
   componentDidLoad() {
-    this._mainScene.init(this.vrEnabled, this.shadowsEnabled, this.controllerGuides, this._sceneContainer, this.defaultPlacementLocation);
+    this._mainScene.init(this.skyboxColor, this.skyboxOpacity, this.vrEnabled, this.shadowsEnabled, this.controllerGuides, this._sceneContainer, this.defaultPlacementLocation);
       
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();

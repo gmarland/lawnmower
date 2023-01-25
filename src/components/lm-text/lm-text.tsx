@@ -9,6 +9,8 @@ import {
   Watch
 } from '@stencil/core';
 
+import { Group } from 'three';
+
 import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMText } from '../../classes/components/lm-text/LMText';
 import { Method } from '@stencil/core/internal';
@@ -258,6 +260,13 @@ export class LmText {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
     });
   }
 

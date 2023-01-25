@@ -13,6 +13,8 @@
 | `defaultPlacementLocation` | `default-placement-location` |             | `number`  | `500`         |
 | `id`                       | `id`                         |             | `string`  | `""`          |
 | `shadowsEnabled`           | `shadows-enabled`            |             | `boolean` | `true`        |
+| `skyboxColor`              | `skybox-color`               |             | `string`  | `"#efefef"`   |
+| `skyboxOpacity`            | `skybox-opacity`             |             | `number`  | `1`           |
 | `title`                    | `title`                      |             | `string`  | `"Lawnmower"` |
 | `titlecardBackground`      | `titlecard-background`       |             | `string`  | `"#222222"`   |
 | `titlecardBackgroundImage` | `titlecard-background-image` |             | `string`  | `null`        |
@@ -31,6 +33,46 @@
 #### Returns
 
 Type: `Promise<void>`
+
+
+
+### `getCamera() => Promise<SceneCamera>`
+
+
+
+#### Returns
+
+Type: `Promise<SceneCamera>`
+
+
+
+### `getLighting() => Promise<Lighting>`
+
+
+
+#### Returns
+
+Type: `Promise<Lighting>`
+
+
+
+### `getRenderer() => Promise<Renderer>`
+
+
+
+#### Returns
+
+Type: `Promise<Renderer>`
+
+
+
+### `getScene() => Promise<Scene>`
+
+
+
+#### Returns
+
+Type: `Promise<Scene>`
 
 
 

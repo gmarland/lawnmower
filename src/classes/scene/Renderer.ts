@@ -1,7 +1,8 @@
 import { 
     Scene,
     WebGLRenderer,
-    PCFSoftShadowMap
+    PCFSoftShadowMap,
+    Color
 } from 'three';
 
 import { SceneCamera } from './Camera/SceneCamera';
@@ -17,10 +18,10 @@ export class Renderer {
 
     private _shadowsEnabled: boolean;
 
-    private _skyboxColor: number;
+    private _skyboxColor: string;
     private _skyboxOpacity: number;
 
-    constructor(vrEnabled: boolean, camera: SceneCamera, container: HTMLDivElement, shadowsEnabled: boolean, skyboxColor: number, skyboxOpacity: number) {
+    constructor(vrEnabled: boolean, camera: SceneCamera, container: HTMLDivElement, shadowsEnabled: boolean, skyboxColor: string, skyboxOpacity: number) {
         this._vrEnabled = vrEnabled;
 
         this._camera = camera;
@@ -44,7 +45,7 @@ export class Renderer {
         }
 
         this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
-        this._renderer.setClearColor(this._skyboxColor, this._skyboxOpacity);
+        this._renderer.setClearColor(new Color(this._skyboxColor), this._skyboxOpacity);
         
         this._renderer.setPixelRatio(2);
 

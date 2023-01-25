@@ -36,6 +36,16 @@
 
 ## Methods
 
+### `getSceneObject() => Promise<Group>`
+
+
+
+#### Returns
+
+Type: `Promise<Group>`
+
+
+
 ### `getVisible() => Promise<boolean>`
 
 
