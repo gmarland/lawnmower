@@ -29,11 +29,15 @@ export class LmAsset {
 
   @Prop() public vrEnabled: boolean = true;
 
+  @Prop() public shadowsEnabled: boolean = true;
+
   // *** Component specific
 
   @Element() el: HTMLElement
 
   @Prop() public position: string;
+
+  @Prop() public offset: number;
 
   @Prop({ mutable: true }) public sceneElement: LMAsset;
 
@@ -192,6 +196,8 @@ export class LmAsset {
 
   componentWillLoad() {
     this.sceneElement = new LMAsset(this.parent, GeometryUtils.parsePositionString(this.position), this.id, this.src, { 
+      shadowsEnabled: this.shadowsEnabled,
+      offset: this.offset,
       activeAnimation: this.activeAnimation,
       radius: this.radius, 
       xRotation: this.xRotation,
