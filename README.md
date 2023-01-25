@@ -17,9 +17,9 @@ Documentation for all the available tasks can be located in the <a href="https:/
 You can easily include lawnmower in an HTML file by linking to script and CSS file on the CDN:
 
 <pre>
-  <head>
-      <script type="module" src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.esm.js"></script>
-      <script nomodule src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.js"></script>
-      <link rel="stylesheet"https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"></link>
-  </head>
+&lt;head&gt;
+  &lt;script type="module" src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.esm.js"&gt;&lt;/script&gt;
+  &lt;script nomodule src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.js"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet"https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"&gt;&lt;/link&gt;
+&lt;/head&gt;
 </pre>
