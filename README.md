@@ -166,3 +166,101 @@ These methods can be called after retrieving the page element using standard Jav
     <td>Calling this closes all open modal dialogs.</td>
   </tr>
 </table>
+
+
+## lm-div
+
+#### HTML Properties
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>The id of the HTML element on the page</td>
+    <td>none</td>
+  </tr>
+  <tr>
+    <td>position</td>
+    <td></td>
+    <td>none</td>
+  </tr>
+  <tr>
+    <td>layout</td>
+    <td></td>
+    <td>Row</td>
+  </tr>
+  <tr>
+    <td>offset</td>
+    <td></td>
+    <td>none</td>
+  </tr>
+  <tr>
+    <td>width</td>
+    <td></td>
+    <td>none</td>
+  </tr>
+  <tr>
+    <td>height</td>
+    <td></td>
+    <td>none</td>
+  </tr>
+  <tr>
+    <td>border-radius</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>margin</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>padding</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>background-color</td>
+    <td></td>
+    <td>none</td>
+  </tr>
+  <tr>
+    <td>vertical-align</td>
+    <td></td>
+    <td>Top</td>
+  </tr>
+  <tr>
+    <td>horizontal-align</td>
+    <td></td>
+    <td>Center</td>
+  </tr>
+  <tr>
+    <td>item-vertical-align</td>
+    <td></td>
+    <td>Top</td>
+  </tr>
+  <tr>
+    <td>item-horizontal-align</td>
+    <td></td>
+    <td>Center</td>
+  </tr>
+  <tr>
+    <td>x-rotation</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>y-rotation</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>z-rotation</td>
+    <td></td>
+    <td>0</td>
+  </tr>
+</table>
