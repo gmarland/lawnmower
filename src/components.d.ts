@@ -39,11 +39,13 @@ export namespace Components {
         "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
         "id": string;
+        "offset": number;
         "parent": ISceneElement;
         "position": string;
         "radius": number;
         "sceneElement": LMAsset;
         "sequenceNo": number;
+        "shadowsEnabled": boolean;
         "src": string;
         "visible": boolean;
         "vrEnabled": boolean;
@@ -369,12 +371,14 @@ declare namespace LocalJSX {
     interface LmAsset {
         "activeAnimation"?: string;
         "id"?: string;
+        "offset"?: number;
         "onClick"?: (event: LmAssetCustomEvent<any>) => void;
         "parent"?: ISceneElement;
         "position"?: string;
         "radius"?: number;
         "sceneElement"?: LMAsset;
         "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
         "src"?: string;
         "visible"?: boolean;
         "vrEnabled"?: boolean;
