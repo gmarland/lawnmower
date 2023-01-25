@@ -13,6 +13,8 @@
 | `defaultPlacementLocation` | `default-placement-location` |             | `number`  | `500`         |
 | `id`                       | `id`                         |             | `string`  | `""`          |
 | `shadowsEnabled`           | `shadows-enabled`            |             | `boolean` | `true`        |
+| `skyboxColor`              | `skybox-color`               |             | `string`  | `"#efefef"`   |
+| `skyboxOpacity`            | `skybox-opacity`             |             | `number`  | `1`           |
 | `title`                    | `title`                      |             | `string`  | `"Lawnmower"` |
 | `titlecardBackground`      | `titlecard-background`       |             | `string`  | `"#222222"`   |
 | `titlecardBackgroundImage` | `titlecard-background-image` |             | `string`  | `null`        |

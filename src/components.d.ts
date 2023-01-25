@@ -128,6 +128,8 @@ export namespace Components {
         "setLayout": (layoutId: string) => Promise<void>;
         "shadowsEnabled": boolean;
         "showModal": (id: string) => Promise<void>;
+        "skyboxColor": string;
+        "skyboxOpacity": number;
         "title": string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;
@@ -460,6 +462,8 @@ declare namespace LocalJSX {
         "defaultPlacementLocation"?: number;
         "id"?: string;
         "shadowsEnabled"?: boolean;
+        "skyboxColor"?: string;
+        "skyboxOpacity"?: number;
         "title"?: string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;

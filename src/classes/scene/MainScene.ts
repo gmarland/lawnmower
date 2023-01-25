@@ -28,8 +28,8 @@ export class MainScene {
 
     private _shadowsEnabled: boolean;
 
-    private _skyboxColor: number = 0xefefef;
-    private _skyboxOpacity: number = 1;
+    private _skyboxColor: string;
+    private _skyboxOpacity: number;
 
     private _parentElement: HTMLDivElement;
 
@@ -103,7 +103,11 @@ export class MainScene {
         this._id = value;
     }
 
-    public init(vrEnabled: boolean, shadowsEnabled: boolean, controllerGuides: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
+    public init(skyboxColor: string, skyboxOpacity: number, vrEnabled: boolean, shadowsEnabled: boolean, controllerGuides: boolean, parentElement: HTMLDivElement, startingDistance: number): void {
+        this._skyboxColor = skyboxColor;
+
+        this._skyboxOpacity = skyboxOpacity;
+        
         this._vrEnabled = vrEnabled;
 
         this._shadowsEnabled = shadowsEnabled;

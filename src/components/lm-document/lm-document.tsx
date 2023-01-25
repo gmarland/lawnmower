@@ -33,6 +33,10 @@ export class LmDocument {
 
   @Prop({ reflect: true }) public id: string = "";
 
+  @Prop() public skyboxColor: string = "#efefef";
+
+  @Prop() public skyboxOpacity: number = 1;
+
   @Prop() public defaultPlacementLocation: number = 500;
 
   @Prop() public vrEnabled: boolean = true;
@@ -214,7 +218,7 @@ export class LmDocument {
   }
 
   componentDidLoad() {
-    this._mainScene.init(this.vrEnabled, this.shadowsEnabled, this.controllerGuides, this._sceneContainer, this.defaultPlacementLocation);
+    this._mainScene.init(this.skyboxColor, this.skyboxOpacity, this.vrEnabled, this.shadowsEnabled, this.controllerGuides, this._sceneContainer, this.defaultPlacementLocation);
       
     let resizeObserver = new ResizeObserver(() => {
       this._mainScene.resize();
