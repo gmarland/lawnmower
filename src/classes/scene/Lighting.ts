@@ -1,6 +1,5 @@
 import { 
     Scene,
-    DirectionalLight,
     AmbientLight,
     PointLight
 } from 'three';
@@ -14,7 +13,7 @@ export class Lighting {
 
     private _shadowsEnabled: boolean;
 
-    private _light: DirectionalLight;
+    private _light: PointLight;
 
     private _ambientLight: AmbientLight;
 
@@ -30,7 +29,6 @@ export class Lighting {
             this._scene.add(this._ambientLight);
     
             this._light = new PointLight(0xffffff, 0.8, this._camera.far*2, 0);
-    
             this._light.castShadow = true;
 
             this.updateShadowDistance();
@@ -41,6 +39,14 @@ export class Lighting {
             this._ambientLight = new AmbientLight(0xffffff, 1);  
             this._scene.add(this._ambientLight);
         }
+    }
+
+    public get light(): PointLight {
+        return this._light;
+    }
+
+    public get ambientLight(): AmbientLight {
+        return this._ambientLight;
     }
 
     public updateShadowDistance(): void {
