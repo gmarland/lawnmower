@@ -45,4 +45,19 @@ lm-document is the root element for the VR layout
     <td>Sets the backgrund color for the title card that shows when VR is enabled</td>
     <td>#222222</td>
   </tr>
+  <tr>
+    <td>titlecard-Font-family</td>
+    <td>Sets the font used in the title card that shows when VR is enabled</td>
+    <td>Arial</td>
+  </tr>
+  <tr>
+    <td>titlecard-Font-color</td>
+    <td>Sets the color of the font used in the title card that shows when VR is enabled</td>
+    <td>#EEEFF3</td>
+  </tr>
+  <tr>
+    <td>titlecard-Font-size</td>
+    <td>Sets the size of the font used in the title card that shows when VR is enabled</td>
+    <td>4em</td>
+  </tr>
 </table>
