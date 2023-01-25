@@ -19,7 +19,7 @@ You can easily include lawnmowerJS in an HTML file by linking to script and CSS 
 &lt;head&gt;
   &lt;script type="module" src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.esm.js"&gt;&lt;/script&gt;
   &lt;script nomodule src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.js"&gt;&lt;/script&gt;
-  &lt;link rel="stylesheet"https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"&gt;&lt;/link&gt;
+  &lt;link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"&gt;&lt;/link&gt;
 &lt;/head&gt;
 </pre>
 
