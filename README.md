@@ -73,6 +73,11 @@ These properties can be retrieved or set after retrieving the page element using
 
 <table>
   <tr>
+    <td>id</td>
+    <td>The id of the HTML element on the page</td>
+    <td>none</td>
+  </tr>
+  <tr>
     <td>defaultPlacementLocation</td>
     <td>The distance root elements are placed from the camera it a position is not defined</td>
     <td>500</td>
@@ -121,5 +126,28 @@ These properties can be retrieved or set after retrieving the page element using
     <td>titlecardFontSize</td>
     <td>Sets the size of the font used in the title card that shows when VR is enabled</td>
     <td>4em</td>
+  </tr>
+</table>
+
+
+#### Javascript Methods
+
+These methods can be called after retrieving the page element using standard JavaScript such as document.getElementById().
+
+<table>
+  <tr>
+    <td>setLayout</td>
+    <td>layoutId - The id of the layout that should be displayed</td>
+    <td>Calling this will enable a specified layout within the scene. Only one layout can be active at a time and the default layout is called index.</td>
+  </tr>
+  <tr>
+    <td>showModal</td>
+    <td>modalId - The id of the modal dialog should be displayed</td>
+    <td>Calling this displays the selected modal dialog within the scene. Only one modal dialog may be active at a time.</td>
+  </tr>
+  <tr>
+    <td>closeModal</td>
+    <td></td>
+    <td>Calling this closes all open modal dialogs.</td>
   </tr>
 </table>
