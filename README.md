@@ -10,11 +10,11 @@ lm-document is the root element for the VR layout
 #### HTML Properties
 
 <table>
-  <th>
-    <td>Name</td>
-    <td>Description</td>
-    <td>Default</td>
-  </th>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
   <tr>
     <td>id</td>
     <td>The id of the HTML element on the page</td>
@@ -77,11 +77,11 @@ lm-document is the root element for the VR layout
 These properties can be retrieved or set after retrieving the page element using standard JavaScript such as document.getElementById().
 
 <table>
-  <th>
-    <td>Name</td>
-    <td>Description</td>
-    <td>Default</td>
-  </th>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
   <tr>
     <td>id</td>
     <td>The id of the HTML element on the page</td>
@@ -145,11 +145,11 @@ These properties can be retrieved or set after retrieving the page element using
 These methods can be called after retrieving the page element using standard JavaScript such as document.getElementById().
 
 <table>
-  <th>
-    <td>Method Name</td>
-    <td>Arguments</td>
-    <td>Description</td>
-  </th>
+  <tr>
+    <th>Method Name</th>
+    <th>Arguments</th>
+    <th>Description</th>
+  </tr>
   <tr>
     <td>setLayout</td>
     <td>layoutId - The id of the layout that should be displayed</td>
