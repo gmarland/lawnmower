@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ISceneElement } from "./classes/components/ISceneElement";
 import { LM360Video } from "./classes/components/lm-360video/LM360Video";
+import { Group } from "three";
 import { LMAsset } from "./classes/components/lm-asset/LMAsset";
 import { LMButton } from "./classes/components/lm-button/LMButton";
 import { LMDiv } from "./classes/components/lm-div/LMDiv";
@@ -19,6 +20,7 @@ export namespace Components {
     interface Lm360video {
         "close": () => Promise<void>;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "id": string;
         "parent": ISceneElement;
         "pause": () => Promise<void>;
@@ -38,6 +40,7 @@ export namespace Components {
         "activeAnimation": string;
         "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
+        "getSceneObject": () => Promise<Group>;
         "id": string;
         "offset": number;
         "parent": ISceneElement;
@@ -63,6 +66,7 @@ export namespace Components {
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
+        "getSceneObject": () => Promise<Group>;
         "height"?: number;
         "id": string;
         "offset": number;
@@ -84,6 +88,7 @@ export namespace Components {
         "backgroundColor": string;
         "borderRadius": number;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "height"?: number;
         "horizontalAlign": string;
         "id": string;
@@ -127,6 +132,7 @@ export namespace Components {
     interface LmImage {
         "borderRadius": number;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "height": number;
         "id": string;
         "modal": boolean;
@@ -143,6 +149,7 @@ export namespace Components {
     }
     interface LmLayout {
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "id": string;
         "parent": ISceneElement;
         "position": string;
@@ -158,6 +165,7 @@ export namespace Components {
         "borderWidth": number;
         "closeButtonWidth": number;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "getUUID": () => Promise<string>;
         "height"?: number;
         "hide": () => Promise<void>;
@@ -179,6 +187,7 @@ export namespace Components {
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
+        "getSceneObject": () => Promise<Group>;
         "height"?: number;
         "id": string;
         "offset": number;
@@ -197,6 +206,7 @@ export namespace Components {
     }
     interface LmVideo {
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "height": number;
         "id": string;
         "offset": number;
@@ -217,6 +227,7 @@ export namespace Components {
     }
     interface LmVideoControls {
         "backgroundColor": string;
+        "getSceneObject": () => Promise<Group>;
         "getVisible": () => Promise<boolean>;
         "height": number;
         "hide": () => Promise<void>;

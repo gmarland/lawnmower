@@ -8,6 +8,9 @@ import {
   getAssetPath,
   Watch
 } from '@stencil/core';
+
+import { Group } from 'three';
+
 import { Method } from '@stencil/sass/dist/declarations';
 
 import { ISceneElement } from '../../classes/components/ISceneElement';
@@ -150,6 +153,13 @@ export class LmVideoControls {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this._videoControls.getContent());
     });
   }
 

@@ -9,6 +9,9 @@ import {
   Event,
   EventEmitter
 } from '@stencil/core';
+
+import { Group } from 'three';
+
 import { TextAlignment } from '../../classes/components/constants/TextAlignment';
 
 import { ISceneElement } from '../../classes/components/ISceneElement';
@@ -259,6 +262,13 @@ export class LmButton {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
     });
   }
 

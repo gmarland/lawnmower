@@ -58,6 +58,16 @@ Type: `Promise<string[]>`
 
 
 
+### `getSceneObject() => Promise<Group>`
+
+
+
+#### Returns
+
+Type: `Promise<Group>`
+
+
+
 
 ----------------------------------------------
 
