@@ -9,7 +9,7 @@ Under the hood, it is using <a href="https://threejs.org">three.js</a> for its 3
 
 Each tag described starts with lm, such as <lm-div></lm-div> and try to be analogous to their HTML counterpart when rendered into 3D.
 
-Documentation for all the available tasks can be located in the <a href="https://github.com/gmarland/lawnmower/wiki" target="_blank">Wiki</a>
+Documentation for all the available tags can be located in the <a href="https://github.com/gmarland/lawnmower/wiki" target="_blank">Wiki</a>
 
 ## Installation
 
