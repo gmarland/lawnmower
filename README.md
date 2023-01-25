@@ -11,3 +11,15 @@ Each tag described starts with lm, such as <lm-div></lm-div> and try to be analo
 
 
 Documentation for all the available tasks can be located in the <a href="https://github.com/gmarland/lawnmower/wiki" target="_blank">Wiki</a>
+
+## Installation
+
+You can easily include lawnmower in an HTML file by linking to script and CSS file on the CDN:
+
+<pre>
+  <head>
+      <script type="module" src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.esm.js"></script>
+      <script nomodule src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.js"></script>
+      <link rel="stylesheet"https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"></link>
+  </head>
+</pre>
