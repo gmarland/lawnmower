@@ -92,3 +92,5 @@ The following HTML:
 Will render to the following 3D scene:
 
 <img src="https://lawnmowerjs.com/examples/ExampleSS.png" />
+
+NOTE: Designing a scene is easier by setting vr-enabled="false" on the lm-document and then re-enabling when you deploy the HTML page.
