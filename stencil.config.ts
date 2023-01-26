@@ -28,32 +28,17 @@ export const config: Config = {
           src: '**/*.{jpg,png}',
           dest: 'dist/components/assets',
           warn: true,
-        }
-      ]
-    },
-    {
-      type: 'dist-custom-elements',
-      copy: [
+        },
         {
           src: '**/*.{jpg,png}',
           dest: 'www/build/assets',
           warn: true,
-        }
-      ]
-    },
-    {
-      type: 'dist-custom-elements',
-      copy: [
+        },
         {
           src: 'styles/*.css',
           dest: 'dist/components',
           warn: true,
-        }
-      ]
-    },
-    {
-      type: 'dist-custom-elements',
-      copy: [
+        },
         {
           src: 'styles/*.css',
           dest: 'www/build',
