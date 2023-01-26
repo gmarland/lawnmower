@@ -427,10 +427,23 @@ export class LMText extends BaseSceneElement implements ISceneElement {
                 allLines.push(nline.trim());
             });
         });
-        
+
+        let textStartFound = false;
+        let textEndFound = false;
+
         let lines = Array<string>();
 
         if (allLines.length > 0) {
+            while(allLines.length > 0) {
+                if (allLines[0].trim().length == 0) allLines.splice(0, 1) 
+                else break;
+            }
+            
+            while(allLines.length > 0) {
+                if (allLines[(allLines.length-1)].trim().length == 0) allLines.splice((allLines.length-1), 1) 
+                else break;
+            }
+            
             if (width) {
                 this._calculatedWidth = width;
 
