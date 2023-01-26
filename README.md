@@ -74,6 +74,6 @@ The following HTML:
 &lt;/html&gt;
 </pre>
 
-Will render to the following scene:
+Will render to the following 3D scene:
 
 <img src="https://lawnmowerjs.com/examples/ExampleSS.png" />
