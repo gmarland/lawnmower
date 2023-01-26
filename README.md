@@ -1,7 +1,7 @@
 # lawnmowerJS
 lawnmowerJS is web component library that allows VR layouts to be built using HTML tags.
 
-The aim of this library is to make building a basic VR website as easy to get going with as your first GeoCities site.
+The aim of this library is to make building a basic VR website as easy to get going with as your first HTML site. No need for lots of contextual knowledge about 3D and VR, you can just start desiging.
 
 The library uses <a href="https://stenciljs.com">Stencil</a> to build web components that are, by their nature, framework independent and work much like any other DOM element. You can call them with JavaScript and set properties, listen for events and call methods.
 
