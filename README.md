@@ -29,3 +29,51 @@ You can also install lawnmowerjs through npm:
   npm install lawnmowerjs
 </pre>
 
+
+## Usage
+
+In order to generate a VR scene, you just need to create a HTML page, include the required libraries and start laying things out.
+
+The following HTML:
+
+<pre>&lt;html&gt;
+    &lt;head&gt;
+        &lt;link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"&gt;&lt;/link&gt;
+        &lt;script type="module" src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.esm.js"&gt;&lt;/script&gt;
+        &lt;script nomodule src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;lm-document id="main" default-placement-location="1000"&gt;
+            &lt;lm-div margin="10"&gt;
+               &lt;lm-div background-color="#00ffff" margin="20" layout="Column" item-vertical-align="Middle" padding="20"&gt;
+                &lt;lm-video id="video-1"
+                            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
+                            placeholder="10"
+                            width="500"&gt;&lt;/lm-video&gt;
+                &lt;lm-text id="text-1" width="500" text-alignment="Center" font-color="#ffffff" font-size="20" background-color="#222222" padding="15"&gt;
+                    First text area
+      
+                    This is an example
+                &lt;/lm-text&gt;  
+                &lt;lm-image src="https://lawnmowerjs.com/examples/gwenny.jpg" width="500"&gt;&lt;/lm-image&gt;
+              &lt;/lm-div&gt;
+              &lt;lm-text id="text-2" font-color="#ffffff" font-size="30" background-color="#0f00f1" padding="15"&gt;
+                Second text area
+      
+                This is another example
+              &lt;/lm-text&gt;  
+              &lt;lm-asset 
+                id="asset-1"
+                active-animation="Walk"
+                radius="400" 
+                y-rotation="90"
+                src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"&gt;&lt;/lm-asset&gt;
+            &lt;/lm-div&gt;
+        &lt;/lm-document&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+
+Will render to the following scene:
+
+<img src="https://lawnmowerjs.com/examples/ExampleSS.png" />
