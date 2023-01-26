@@ -7,7 +7,7 @@ The library uses <a href="https://stenciljs.com">Stencil</a> to build web compon
 
 Under the hood, it is using <a href="https://threejs.org">three.js</a> for its 3D and most elements allow access to their implementation (in case you want to fiddle with ther functionality).
 
-Each tag described starts with lm, such as <pre><lm-div></lm-div></pre> and try to be analogous to their HTML counterpart when rendered into 3D.
+Each tag described starts with lm, such as &lt;lm-div&gt;&lt;/lm-div&gt; and try to be analogous to their HTML counterpart when rendered into 3D.
 
 Documentation for all the available tags can be located in the <a href="https://github.com/gmarland/lawnmower/wiki" target="_blank">Wiki</a>
 
