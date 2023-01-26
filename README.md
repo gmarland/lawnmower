@@ -45,19 +45,34 @@ The following HTML:
     &lt;body&gt;
         &lt;lm-document id="main" default-placement-location="1000"&gt;
             &lt;lm-div margin="10"&gt;
-               &lt;lm-div background-color="#00ffff" margin="20" layout="Column" item-vertical-align="Middle" padding="20"&gt;
+               &lt;lm-div background-color="#00ffff" 
+                          margin="20" 
+                          layout="Column" 
+                          item-vertical-align="Middle" 
+                          padding="20"&gt;
                 &lt;lm-video id="video-1"
                             src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
                             placeholder="10"
                             width="500"&gt;&lt;/lm-video&gt;
-                &lt;lm-text id="text-1" width="500" text-alignment="Center" font-color="#ffffff" font-size="20" background-color="#222222" padding="15"&gt;
+                &lt;lm-text id="text-1" 
+                            width="500" 
+                            text-alignment="Center" 
+                            font-color="#ffffff" 
+                            font-size="20" 
+                            background-color="#222222" 
+                            padding="15"&gt;
                     First text area
       
                     This is an example
                 &lt;/lm-text&gt;  
-                &lt;lm-image src="https://lawnmowerjs.com/examples/gwenny.jpg" width="500"&gt;&lt;/lm-image&gt;
+                &lt;lm-image src="https://lawnmowerjs.com/examples/gwenny.jpg" 
+                              width="500"&gt;&lt;/lm-image&gt;
               &lt;/lm-div&gt;
-              &lt;lm-text id="text-2" font-color="#ffffff" font-size="30" background-color="#0f00f1" padding="15"&gt;
+              &lt;lm-text id="text-2" 
+                          font-color="#ffffff" 
+                          font-size="30" 
+                          background-color="#0f00f1" 
+                          padding="15"&gt;
                 Second text area
       
                 This is another example
