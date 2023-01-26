@@ -94,3 +94,38 @@ Will render to the following 3D scene:
 <img src="https://lawnmowerjs.com/examples/ExampleSS.png" />
 
 NOTE: Designing a scene is easier by setting vr-enabled="false" on the lm-document and then re-enabling when you deploy the HTML page.
+
+
+## HTML Tags
+
+The following tags are available for building your VR scene
+
+### lm-document
+lm-document is the root element for the VR layout. This must be the root element which all other lawnmower elements sit under.
+
+### lm-div
+This is the main tool for creating layouts in the VR scene. It works much like a regular HTML div but generates itself within a 3D environment.
+
+### lm-text
+The text element is a way to display text blocks in a VR environment. The can either be placed directly into a lm-document, lm-div or lm-modal.
+
+### lm-image
+The image element is a way to display images in a VR environment. The can either be placed directly into a lm-document, lm-div or lm-modal. They can be displayed inline or automatically pop out as part of a build in modal dialog.
+
+### lm-video
+The video element is a way to display videos in a VR environment. The can either be placed directly into a lm-document, lm-div or lm-modal. They can be displayed inline, automatically pop out as part of a build in modal dialog or play in 360.
+
+### lm-360video
+The 360 video element is a way to display 350 videos in a VR environment. The can either be placed directly into a lm-document and is not affected by being placed in a lm-div or lm-modal.
+
+### lm-asset
+The asset element is a way to load GLTF assets into a VR environment. The can either be placed directly into a lm-document, lm-div or lm-modal. Currently, the only file format that is supported is GLTF.
+
+### lm-button
+The button element is a way to display buttons in a VR environment and currently is functionaly similar to lm-text (although this may be extended in the future). The can either be placed directly into a lm-document, lm-div or lm-modal.
+
+### lm-button
+The layout is a way to wrap certain elements and only make them visible when a selected layout is enabled. For example, an image the is contained within a layout with the id="example" will only become visible when setLayout("example") is called on the lm-document.
+
+It is worth noting that only one layout may be anabled at a time.
+
