@@ -40,6 +40,26 @@ export const config: Config = {
           warn: true,
         }
       ]
+    },
+    {
+      type: 'dist-custom-elements',
+      copy: [
+        {
+          src: 'styles/*.css',
+          dest: 'dist/components',
+          warn: true,
+        }
+      ]
+    },
+    {
+      type: 'dist-custom-elements',
+      copy: [
+        {
+          src: 'styles/*.css',
+          dest: 'www/build',
+          warn: true,
+        }
+      ]
     }
   ]
 };

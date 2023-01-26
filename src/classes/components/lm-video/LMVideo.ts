@@ -369,7 +369,7 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
     
                     that._calculatedHeight = videoTexture.image.videoHeight/widthRatio;
                 }
-                else if (that.height !== null) {
+                else if (height !== null) {
                     that._calculatedHeight = height;
 
                     const heightRatio = videoTexture.image.videoHeight/height;
@@ -377,8 +377,8 @@ export class LMVideo extends BaseSceneElement implements ISceneElement {
                     that._calculatedWidth = videoTexture.image.videoWidth/heightRatio;
                 }
                 else {
-                    that._calculatedWidth = 0;
-                    that._calculatedWidth = 0;
+                    that._calculatedWidth = videoTexture.image.videoWidth;
+                    that._calculatedHeight = videoTexture.image.videoHeight;
                 }
 
                 videoTexture.generateMipmaps = false;
