@@ -10,6 +10,8 @@ import {
   Method
 } from '@stencil/core';
 
+import { Group } from 'three';
+
 import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMImage } from '../../classes/components/lm-image/LMImage';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
@@ -137,6 +139,13 @@ export class LmImage {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
     });
   }
 

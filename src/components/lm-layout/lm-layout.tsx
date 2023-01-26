@@ -7,6 +7,9 @@ import {
   Watch,
   Method
 } from '@stencil/core';
+
+import { Group } from 'three';
+
 import { ISceneElement } from '../../classes/components/ISceneElement';
 
 import { LMLayout } from '../../classes/components/lm-layout/LMLayout';
@@ -46,6 +49,13 @@ export class LmLayout {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
     });
   }
 

@@ -9,7 +9,7 @@ Under the hood, it is using <a href="https://threejs.org">three.js</a> for its 3
 
 Each tag described starts with lm, such as <lm-div></lm-div> and try to be analogous to their HTML counterpart when rendered into 3D.
 
-Documentation for all the available tasks can be located in the <a href="https://github.com/gmarland/lawnmower/wiki" target="_blank">Wiki</a>
+Documentation for all the available tags can be located in the <a href="https://github.com/gmarland/lawnmower/wiki" target="_blank">Wiki</a>
 
 ## Installation
 
@@ -19,6 +19,13 @@ You can easily include lawnmowerJS in an HTML file by linking to script and CSS 
 &lt;head&gt;
   &lt;script type="module" src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.esm.js"&gt;&lt;/script&gt;
   &lt;script nomodule src="https://lawnmowerjs.com/releases/0.0.1/lawnmower.js"&gt;&lt;/script&gt;
-  &lt;link rel="stylesheet"https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"&gt;&lt;/link&gt;
+  &lt;link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.1/lawnmower.css"&gt;&lt;/link&gt;
 &lt;/head&gt;
 </pre>
+
+You can also install lawnmowerjs through npm:
+
+<pre>
+  npm install lawnmowerjs
+</pre>
+

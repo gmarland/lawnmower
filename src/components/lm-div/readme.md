@@ -56,6 +56,16 @@ Type: `Promise<void>`
 
 
 
+### `getSceneObject() => Promise<Group>`
+
+
+
+#### Returns
+
+Type: `Promise<Group>`
+
+
+
 ### `prepend(element: any) => Promise<void>`
 
 

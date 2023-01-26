@@ -7,9 +7,13 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ISceneElement } from "./classes/components/ISceneElement";
 import { LM360Video } from "./classes/components/lm-360video/LM360Video";
+import { Group, Scene } from "three";
 import { LMAsset } from "./classes/components/lm-asset/LMAsset";
 import { LMButton } from "./classes/components/lm-button/LMButton";
 import { LMDiv } from "./classes/components/lm-div/LMDiv";
+import { Renderer } from "./classes/scene/Renderer.js";
+import { SceneCamera } from "./classes/scene/Camera/SceneCamera.js";
+import { Lighting } from "./classes/scene/Lighting.js";
 import { LMImage } from "./classes/components/lm-image/LMImage";
 import { LMLayout } from "./classes/components/lm-layout/LMLayout";
 import { LMModal } from "./classes/components/lm-modal/LMModal";
@@ -19,6 +23,7 @@ export namespace Components {
     interface Lm360video {
         "close": () => Promise<void>;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "id": string;
         "parent": ISceneElement;
         "pause": () => Promise<void>;
@@ -38,6 +43,7 @@ export namespace Components {
         "activeAnimation": string;
         "destroy": () => Promise<void>;
         "getAnimationNames": () => Promise<Array<string>>;
+        "getSceneObject": () => Promise<Group>;
         "id": string;
         "offset": number;
         "parent": ISceneElement;
@@ -63,6 +69,7 @@ export namespace Components {
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
+        "getSceneObject": () => Promise<Group>;
         "height"?: number;
         "id": string;
         "offset": number;
@@ -84,6 +91,7 @@ export namespace Components {
         "backgroundColor": string;
         "borderRadius": number;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "height"?: number;
         "horizontalAlign": string;
         "id": string;
@@ -112,10 +120,16 @@ export namespace Components {
         "closeModal": () => Promise<void>;
         "controllerGuides": boolean;
         "defaultPlacementLocation": number;
+        "getCamera": () => Promise<SceneCamera>;
+        "getLighting": () => Promise<Lighting>;
+        "getRenderer": () => Promise<Renderer>;
+        "getScene": () => Promise<Scene>;
         "id": string;
         "setLayout": (layoutId: string) => Promise<void>;
         "shadowsEnabled": boolean;
         "showModal": (id: string) => Promise<void>;
+        "skyboxColor": string;
+        "skyboxOpacity": number;
         "title": string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;
@@ -127,6 +141,7 @@ export namespace Components {
     interface LmImage {
         "borderRadius": number;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "height": number;
         "id": string;
         "modal": boolean;
@@ -143,6 +158,7 @@ export namespace Components {
     }
     interface LmLayout {
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "id": string;
         "parent": ISceneElement;
         "position": string;
@@ -158,6 +174,7 @@ export namespace Components {
         "borderWidth": number;
         "closeButtonWidth": number;
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "getUUID": () => Promise<string>;
         "height"?: number;
         "hide": () => Promise<void>;
@@ -179,6 +196,7 @@ export namespace Components {
         "fontColor": string;
         "fontFamily": string;
         "fontSize": number;
+        "getSceneObject": () => Promise<Group>;
         "height"?: number;
         "id": string;
         "offset": number;
@@ -197,6 +215,7 @@ export namespace Components {
     }
     interface LmVideo {
         "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
         "height": number;
         "id": string;
         "offset": number;
@@ -217,6 +236,7 @@ export namespace Components {
     }
     interface LmVideoControls {
         "backgroundColor": string;
+        "getSceneObject": () => Promise<Group>;
         "getVisible": () => Promise<boolean>;
         "height": number;
         "hide": () => Promise<void>;
@@ -442,6 +462,8 @@ declare namespace LocalJSX {
         "defaultPlacementLocation"?: number;
         "id"?: string;
         "shadowsEnabled"?: boolean;
+        "skyboxColor"?: string;
+        "skyboxOpacity"?: number;
         "title"?: string;
         "titlecardBackground"?: string;
         "titlecardBackgroundImage"?: string;

@@ -30,6 +30,16 @@ Type: `Promise<void>`
 
 
 
+### `getSceneObject() => Promise<Group>`
+
+
+
+#### Returns
+
+Type: `Promise<Group>`
+
+
+
 
 ----------------------------------------------
 

@@ -11,6 +11,8 @@ import {
   Watch
 } from '@stencil/core';
 
+import { Group } from 'three';
+
 import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMModal } from '../../classes/components/lm-modal/LMModal';
 import { GeometryUtils } from '../../classes/geometry/GeometryUtils';
@@ -64,6 +66,13 @@ export class LmModal {
   @Event() public hidden: EventEmitter;
 
   @Event() public addElementToRoot: EventEmitter<ISceneElement>;
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
+    });
+  }
 
   @Watch('id')
   private updateId(newValue: string): Promise<void> {

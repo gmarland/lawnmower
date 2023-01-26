@@ -7,6 +7,8 @@ import {
   Watch
 } from '@stencil/core';
 
+import { Group } from 'three';
+
 import { ISceneElement } from '../../classes/components/ISceneElement';
 import { LMDivLayout } from '../../classes/components/lm-div/LMDivLayout';
 import { ItemVerticalAlign } from '../../classes/geometry/ItemVerticalAlign';
@@ -206,6 +208,13 @@ export class LmDiv {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
     });
   }
 

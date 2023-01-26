@@ -10,6 +10,8 @@ import {
   Watch
 } from '@stencil/core';
 
+import { Group } from 'three';
+
 import { ISceneElement } from '../../classes/components/ISceneElement';
 
 import { LMAsset } from '../../classes/components/lm-asset/LMAsset';
@@ -175,6 +177,13 @@ export class LmAsset {
       }
 
       resolve();
+    });
+  }
+
+  @Method()
+  public async getSceneObject(): Promise<Group> {
+    return new Promise(async (resolve) => {
+      resolve(await this.sceneElement.getContent());
     });
   }
 
