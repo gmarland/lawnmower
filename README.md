@@ -23,6 +23,8 @@ You can easily include lawnmowerJS in an HTML file by linking to script and CSS 
 &lt;/head&gt;
 </pre>
 
+You can download and include the release associated to this repository.
+
 You can also install lawnmowerjs through npm:
 
 <pre>
