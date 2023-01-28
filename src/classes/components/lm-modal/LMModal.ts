@@ -430,8 +430,14 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
 
     private destroyMesh(): void {
         if (this._mesh) {
-            this._mesh.geometry.dispose();
-            this._mesh.material.dispose();
+            for (let i=(this._mesh.children.length-1); i>=0; i--) {
+                if (this._mesh.children[i]) {
+                    if (this._mesh.children[i].geometry) this._mesh.children[i].geometry.dispose();
+                    if (this._mesh.children[i].material) this._mesh.children[i].material.dispose();
+                    this._mesh.children[i] = null
+                }
+            }
+
             this._mesh = null;
         }
 
@@ -443,6 +449,8 @@ export class LMModal extends BaseSceneElement implements ISceneElement {
                     this._closeButtonMesh.children[i] = null
                 }
             }
+
+            this._closeButtonMesh = null;
         }
     }
 }
