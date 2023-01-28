@@ -230,6 +230,10 @@ export class MainScene {
                 }
 
                 this._mainObjectContainer.add(content);  
+
+                const maxDimension = GeometryUtils.getMaxDimensions(this._mainObjectContainer);
+
+                if (maxDimension > this._sceneCamera.far) this._sceneCamera.far = maxDimension;
             }
             else if (childElement.placementLocation == SceneElementPlacement.Modal) {
                 this._modalElements.push(childElement as LMModal);

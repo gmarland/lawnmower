@@ -58,6 +58,16 @@ export class GeometryUtils {
         }
     }
 
+    public static getMaxDimensions(obj: Object3D): number {
+        const dimensions = new Box3().setFromObject(obj);
+        
+        const width = (dimensions.max.x-dimensions.min.x);
+        const height = (dimensions.max.y-dimensions.min.y);
+        const depth = (dimensions.max.z-dimensions.min.z);
+
+        return (width > height ? (width > depth) ? width : depth  : (height > depth) ? height : depth);
+    }
+
     public static getClosestObject(selectedObjects: Array<any>): Mesh {
         let closestObject = null;
 

@@ -79,7 +79,7 @@ export class SceneCamera {
         if (this._shadowsEnabled && this._light) this._light.updateShadowDistance();
     }
 
-    public addLightToCamera(light: DirectionalLight) {
+    public addLightToCamera(light: DirectionalLight): void {
         this._light = light;
 
         this._camera.add(this._light);
@@ -147,7 +147,7 @@ export class SceneCamera {
         this._camera.position.set(x, y, z);
     }
 
-    public setLookAt(x: number, y: number, z: number) {
+    public setLookAt(x: number, y: number, z: number): void {
         this._camera.lookAt(new Vector3(x, y, z));
     }
 
