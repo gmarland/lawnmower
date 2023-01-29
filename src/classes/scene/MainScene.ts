@@ -308,9 +308,9 @@ export class MainScene {
 
                 const mainObjectBox = new Box3().setFromObject(this._mainObjectContainer);
 
-                this._mainObjectContainer.translateX(((mainObjectBox.max.x+mainObjectBox.min.x)/2)*-1);
-                this._mainObjectContainer.translateY(((mainObjectBox.max.y+mainObjectBox.min.y)/2)*-1);
-                this._mainObjectContainer.translateZ(((mainObjectBox.max.z+mainObjectBox.min.z)/2)*-1);
+                this._mainObjectContainer.x = (((mainObjectBox.max.x+mainObjectBox.min.x)/2)*-1);
+                this._mainObjectContainer.y = (((mainObjectBox.max.y+mainObjectBox.min.y)/2)*-1);
+                this._mainObjectContainer.z = (((mainObjectBox.max.z+mainObjectBox.min.z)/2)*-1);
 
                 this._drawing = false;
                 

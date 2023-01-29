@@ -77,7 +77,7 @@ export class LMLayout extends BaseSceneElement implements ISceneElement {
             for (let i=0; i< keys.length; i++) {
                 await this._childElements.get(keys[i]).enableLayout(layoutId);
             }
-    
+            
             await this.drawParent();
 
             resolve();
