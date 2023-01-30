@@ -1,5 +1,5 @@
-# lawnmowerJS
-lawnmowerJS is s web component library that allows VR layouts to be built using HTML tags.
+# lawnmower
+lawnmower is s web component library that allows VR layouts to be built using HTML tags.
 
 The aim of this library is to make building a basic VR website as easy to make as your first HTML site. No need for lots of contextual knowledge about 3D and VR, you can just start designing.
 
@@ -13,7 +13,7 @@ Documentation for all the available tags can be located in the <a href="https://
 
 ## Installation
 
-You can easily include lawnmowerJS in an HTML file by linking to script and CSS file on the CDN:
+You can easily include lawnmower in an HTML file by linking to script and CSS file on the CDN:
 
 <pre>
 &lt;head&gt;
