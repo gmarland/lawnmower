@@ -15,22 +15,21 @@ Documentation for all the available tags can be located in the <a href="https://
 
 You can easily include lawnmower in an HTML file by linking to script and CSS file on the CDN:
 
-<pre>
-&lt;head&gt;
-  &lt;script type="module" src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.esm.js"&gt;&lt;/script&gt;
-  &lt;script nomodule src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.js"&gt;&lt;/script&gt;
-  &lt;link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.3/lawnmower.css"&gt;&lt;/link&gt;
-&lt;/head&gt;
-</pre>
+```html
+<head>
+  <script type="module" src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.esm.js"></script>
+  <script nomodule src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.3/lawnmower.css"></link>
+</head>
+```
 
 You can download and include the release associated to this repository.
 
 You can also install lawnmowerjs through npm:
 
-<pre>
-  npm install lawnmowerjs
-</pre>
-
+```bash
+npm install lawnmowerjs
+```
 
 ## Usage
 
@@ -38,62 +37,65 @@ In order to generate a VR scene, you just need to create a HTML page, include th
 
 The following HTML:
 
-<pre>&lt;html&gt;
-    &lt;head&gt;
-        &lt;link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.3/lawnmower.css"&gt;&lt;/link&gt;
-        &lt;script type="module" src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.esm.js"&gt;&lt;/script&gt;
-        &lt;script nomodule src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.js"&gt;&lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;lm-document id="main" default-placement-location="1000"&gt;
-            &lt;lm-div margin="10"&gt;
-               &lt;lm-div background-color="#00ffff" 
+```html
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="https://lawnmowerjs.com/releases/0.0.3/lawnmower.css"></link>
+        <script type="module" src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.esm.js"></script>
+        <script nomodule src="https://lawnmowerjs.com/releases/0.0.3/lawnmower.js"></script>
+    </head>
+    <body>
+        <lm-document id="main" default-placement-location="1000">
+            <m-div margin="10">
+               <lm-div background-color="#00ffff" 
                           margin="20" 
                           layout="Column" 
                           item-vertical-align="Middle" 
-                          padding="20"&gt;
-                &lt;lm-video id="video-1"
+                          padding="20">
+                <lm-video id="video-1"
                             src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
                             placeholder="10"
-                            width="500"&gt;&lt;/lm-video&gt;
-                &lt;lm-text id="text-1" 
+                            width="500"></lm-video>
+                <lm-text id="text-1" 
                             width="500" 
                             text-alignment="Center" 
                             font-color="#ffffff" 
                             font-size="20" 
                             background-color="#222222" 
-                            padding="15"&gt;
+                            padding="15"&>
                     First text area
       
                     This is an example
-                &lt;/lm-text&gt;  
-                &lt;lm-image src="https://lawnmowerjs.com/examples/gwenny.jpg" 
-                              width="500"&gt;&lt;/lm-image&gt;
-              &lt;/lm-div&gt;
-              &lt;lm-text id="text-2" 
+                </lm-text>
+                <lm-image src="https://lawnmowerjs.com/examples/gwenny.jpg" 
+                              width="500"></lm-image>
+              </lm-div>
+              <lm-text id="text-2" 
                           font-color="#ffffff" 
                           font-size="30" 
                           background-color="#0f00f1" 
-                          padding="15"&gt;
+                          padding="15">
                 Second text area
       
                 This is another example
-              &lt;/lm-text&gt;  
-              &lt;lm-asset 
+              </lm-text>
+              <lm-asset 
                 id="asset-1"
                 active-animation="Walk"
                 radius="400" 
                 y-rotation="90"
-                src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"&gt;&lt;/lm-asset&gt;
-            &lt;/lm-div&gt;
-        &lt;/lm-document&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-</pre>
+                src="https://github.khronos.org/glTF-Sample-Viewer-Release/assets/models/2.0/Fox/glTF/Fox.gltf"></lm-asset>
+            </lm-div>
+        </lm-document>
+  </body>
+</html>
+```
 
 Will render to the following 3D scene:
 
+```html
 <img src="https://lawnmowerjs.com/examples/ExampleSS.png" />
+```
 
 There is also a demo video to show how to build a basic scene here https://www.youtube.com/watch?v=lGbip-beDY4
 
