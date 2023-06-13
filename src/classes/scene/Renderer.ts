@@ -5,6 +5,8 @@ import {
     Color
 } from 'three';
 
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+
 import { SceneCamera } from './Camera/SceneCamera';
 
 export class Renderer {
@@ -12,7 +14,8 @@ export class Renderer {
 
     private _camera: SceneCamera;
 
-    private _renderer: WebGLRenderer;
+    private _webGLRenderer: CSS3DRenderer;
+    private _cssRenderer: CSS3DRenderer;
 
     private _container: HTMLDivElement;
 
@@ -33,59 +36,67 @@ export class Renderer {
         this._skyboxColor = skyboxColor;
         this._skyboxOpacity = skyboxOpacity;
 
-        this._renderer = new WebGLRenderer({ 
+        this._cssRenderer = new CSS3DRenderer();
+
+        this._cssRenderer.setSize(this._container.clientWidth, this._container.clientHeight);
+
+        this._container.appendChild(this._cssRenderer.domElement);
+        
+        this._webGLRenderer = new WebGLRenderer({ 
             powerPreference: this._vrEnabled ? "high-performance" : "default",
             antialias: true,
         });
 
-        //this._renderer.autoClear = false;
-
         if (this._vrEnabled) {
-            this._renderer.xr.enabled = true;
+            this._webGLRenderer.xr.enabled = true;
         }
 
-        this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
-        this._renderer.setClearColor(new Color(this._skyboxColor), this._skyboxOpacity);
-        
-        this._renderer.setPixelRatio(2);
+        this._webGLRenderer.setSize(this._container.clientWidth, this._container.clientHeight);
+        this._webGLRenderer.setClearColor(new Color(this._skyboxColor), this._skyboxOpacity);
+        this._webGLRenderer.setPixelRatio(2);
 
         if (this._shadowsEnabled) {
-            this._renderer.shadowMap.enabled = true;
-            this._renderer.shadowMapSoft = true;
-            this._renderer.shadowMap.type = PCFSoftShadowMap;
-            this._renderer.shadowCameraNear = 3;
-            this._renderer.shadowCameraFar = camera.far;
-            this._renderer.shadowCameraFov = camera.fov;
+            this._webGLRenderer.shadowMap.enabled = true;
+            this._webGLRenderer.shadowMapSoft = true;
+            this._webGLRenderer.shadowMap.type = PCFSoftShadowMap;
+            this._webGLRenderer.shadowCameraNear = 3;
+            this._webGLRenderer.shadowCameraFar = camera.far;
+            this._webGLRenderer.shadowCameraFov = camera.fov;
         }
 
-        this._container.appendChild(this._renderer.domElement);
+        this._cssRenderer.domElement.appendChild(this._webGLRenderer.domElement);
     }
 
     public get domElement(): any {
-        return this._renderer.domElement;
+        return this._webGLRenderer.domElement;
     }
 
     public get webGLRenderer(): WebGLRenderer {
-        return this._renderer;
+        return this._webGLRenderer;
+    }
+
+    public get cssRenderer(): CSS3DRenderer {
+        return this._cssRenderer;
     }
 
     public setAnimationLoop(func: Function) {
-        this._renderer.setAnimationLoop(func);
+        this._webGLRenderer.setAnimationLoop(func);
     }
 
     public resize() {
-        this._renderer.setSize(this._container.clientWidth, this._container.clientHeight);
+        this._webGLRenderer.setSize(this._container.clientWidth, this._container.clientHeight);
     }
 
     public render(scene: Scene, sceneCamera: SceneCamera): void {
-        this._renderer.render(scene, sceneCamera.camera);
+        this._cssRenderer.render(scene, sceneCamera.camera);
+        this._webGLRenderer.render(scene, sceneCamera.camera);
     }
 
     public getController(controllerNumber: number): any {
-        return this._renderer.xr.getController(controllerNumber);
+        return this._webGLRenderer.xr.getController(controllerNumber);
     }
 
     public getControllerGrip(controllerNumber: number): any {
-        return this._renderer.xr.getControllerGrip(controllerNumber);
+        return this._webGLRenderer.xr.getControllerGrip(controllerNumber);
     }
 }

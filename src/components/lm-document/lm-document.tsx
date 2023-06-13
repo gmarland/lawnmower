@@ -227,7 +227,7 @@ export class LmDocument {
     resizeObserver.observe(this._sceneContainer);
 
     if (this.vrEnabled) {
-      this._vrLoadingContainer.appendChild(VRButton.createButton(this._mainScene.renderer.webGLRenderer, () => {
+        this._vrLoadingContainer.appendChild(VRButton.createButton(this._mainScene.renderer.webGLRenderer, this._mainScene.renderer.cssRenderer, () => {
         this._vrLoadingContainer.style.display = "none";
       }));
     }

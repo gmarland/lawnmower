@@ -1,5 +1,5 @@
 class VRButton {
-	static createButton( renderer, onClick ) {
+	static createButton(renderer, cssRenderer, onClick) {
 		const vrOnClick = onClick;
 
 		const button = document.createElement( 'button' );
@@ -12,10 +12,11 @@ class VRButton {
 				session.addEventListener( 'end', onSessionEnded );
 
 				await renderer.xr.setSession( session );
+				await cssRenderer.xr.setSession( session );
+
 				button.textContent = 'EXIT VR';
 
 				currentSession = session;
-
 			}
 
 			function onSessionEnded( /*event*/ ) {
@@ -27,8 +28,6 @@ class VRButton {
 				currentSession = null;
 
 			}
-
-			//
 
 			button.style.display = '';
 

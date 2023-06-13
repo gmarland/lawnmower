@@ -14,6 +14,7 @@ import { LMDiv } from "./classes/components/lm-div/LMDiv";
 import { Renderer } from "./classes/scene/Renderer.js";
 import { SceneCamera } from "./classes/scene/Camera/SceneCamera.js";
 import { Lighting } from "./classes/scene/Lighting.js";
+import { LMHTML } from "./classes/components/lm-html/LMHTML";
 import { LMImage } from "./classes/components/lm-image/LMImage";
 import { LMLayout } from "./classes/components/lm-layout/LMLayout";
 import { LMModal } from "./classes/components/lm-modal/LMModal";
@@ -137,6 +138,24 @@ export namespace Components {
         "titlecardFontFamily": string;
         "titlecardFontSize": string;
         "vrEnabled": boolean;
+    }
+    interface LmHtml {
+        "borderRadius": number;
+        "destroy": () => Promise<void>;
+        "getSceneObject": () => Promise<Group>;
+        "height": number;
+        "id": string;
+        "modal": boolean;
+        "offset": number;
+        "parent": ISceneElement;
+        "position": string;
+        "sceneElement": LMHTML;
+        "sequenceNo": number;
+        "shadowsEnabled": boolean;
+        "src": string;
+        "visible": boolean;
+        "vrEnabled": boolean;
+        "width": number;
     }
     interface LmImage {
         "borderRadius": number;
@@ -268,6 +287,10 @@ export interface LmButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLLmButtonElement;
 }
+export interface LmHtmlCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLLmHtmlElement;
+}
 export interface LmImageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLLmImageElement;
@@ -319,6 +342,12 @@ declare global {
         prototype: HTMLLmDocumentElement;
         new (): HTMLLmDocumentElement;
     };
+    interface HTMLLmHtmlElement extends Components.LmHtml, HTMLStencilElement {
+    }
+    var HTMLLmHtmlElement: {
+        prototype: HTMLLmHtmlElement;
+        new (): HTMLLmHtmlElement;
+    };
     interface HTMLLmImageElement extends Components.LmImage, HTMLStencilElement {
     }
     var HTMLLmImageElement: {
@@ -361,6 +390,7 @@ declare global {
         "lm-button": HTMLLmButtonElement;
         "lm-div": HTMLLmDivElement;
         "lm-document": HTMLLmDocumentElement;
+        "lm-html": HTMLLmHtmlElement;
         "lm-image": HTMLLmImageElement;
         "lm-layout": HTMLLmLayoutElement;
         "lm-modal": HTMLLmModalElement;
@@ -471,6 +501,24 @@ declare namespace LocalJSX {
         "titlecardFontFamily"?: string;
         "titlecardFontSize"?: string;
         "vrEnabled"?: boolean;
+    }
+    interface LmHtml {
+        "borderRadius"?: number;
+        "height"?: number;
+        "id"?: string;
+        "modal"?: boolean;
+        "offset"?: number;
+        "onClick"?: (event: LmHtmlCustomEvent<any>) => void;
+        "onShowModalDialog"?: (event: LmHtmlCustomEvent<string>) => void;
+        "parent"?: ISceneElement;
+        "position"?: string;
+        "sceneElement"?: LMHTML;
+        "sequenceNo"?: number;
+        "shadowsEnabled"?: boolean;
+        "src"?: string;
+        "visible"?: boolean;
+        "vrEnabled"?: boolean;
+        "width"?: number;
     }
     interface LmImage {
         "borderRadius"?: number;
@@ -586,6 +634,7 @@ declare namespace LocalJSX {
         "lm-button": LmButton;
         "lm-div": LmDiv;
         "lm-document": LmDocument;
+        "lm-html": LmHtml;
         "lm-image": LmImage;
         "lm-layout": LmLayout;
         "lm-modal": LmModal;
@@ -603,6 +652,7 @@ declare module "@stencil/core" {
             "lm-button": LocalJSX.LmButton & JSXBase.HTMLAttributes<HTMLLmButtonElement>;
             "lm-div": LocalJSX.LmDiv & JSXBase.HTMLAttributes<HTMLLmDivElement>;
             "lm-document": LocalJSX.LmDocument & JSXBase.HTMLAttributes<HTMLLmDocumentElement>;
+            "lm-html": LocalJSX.LmHtml & JSXBase.HTMLAttributes<HTMLLmHtmlElement>;
             "lm-image": LocalJSX.LmImage & JSXBase.HTMLAttributes<HTMLLmImageElement>;
             "lm-layout": LocalJSX.LmLayout & JSXBase.HTMLAttributes<HTMLLmLayoutElement>;
             "lm-modal": LocalJSX.LmModal & JSXBase.HTMLAttributes<HTMLLmModalElement>;

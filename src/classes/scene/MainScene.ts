@@ -95,10 +95,6 @@ export class MainScene {
         return this._renderer;
     }
 
-    public get webGLRenderer(): WebGLRenderer {
-        return this._renderer.webGLRenderer;
-    }
-
     public set id(value: string) {
         this._id = value;
     }
