@@ -40,11 +40,10 @@ export class Renderer {
 
         this._cssRenderer.setSize(this._container.clientWidth, this._container.clientHeight);
 
-        this._container.appendChild(this._cssRenderer.domElement);
         
         this._webGLRenderer = new WebGLRenderer({ 
             powerPreference: this._vrEnabled ? "high-performance" : "default",
-            antialias: true,
+            antialias: true
         });
 
         if (this._vrEnabled) {
@@ -64,7 +63,8 @@ export class Renderer {
             this._webGLRenderer.shadowCameraFov = camera.fov;
         }
 
-        this._cssRenderer.domElement.appendChild(this._webGLRenderer.domElement);
+        this._container.appendChild(this._webGLRenderer.domElement);
+        this._container.appendChild(this._cssRenderer.domElement);
     }
 
     public get domElement(): any {

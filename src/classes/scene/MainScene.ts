@@ -4,8 +4,7 @@ import {
     Raycaster,
     Vector2,
     Object3D,
-    Box3,
-    WebGLRenderer
+    Box3S
 } from 'three';
 
 import { SceneCamera } from './Camera/SceneCamera';
